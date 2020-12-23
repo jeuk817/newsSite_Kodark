@@ -1,14 +1,17 @@
 package com.kodark.news.dto;
+/**
+ * Comm_Report
+ * @author ys
+ * 2020-12-23
+ */
 
 import java.util.Date;
 
-public class ArticleReportDto {
+public class CommReport {	
 	private int id;
 	private String reason;
 	private Date createdAt;
 	private String doneFlag;
-	
-	
 	public int getId() {
 		return id;
 	}
@@ -21,23 +24,26 @@ public class ArticleReportDto {
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
-	public Date getCreated_at() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreated_at(Date created_at) {
-		this.createdAt = created_at;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
-	public String getDone_flag() {
+	public String getDoneFlag() {
 		return doneFlag;
 	}
-	public void setDone_flag(String done_flag) {
-		this.doneFlag = done_flag;
+	public void setDoneFlag(String doneFlag) {
+		this.doneFlag = doneFlag;
 	}
 	@Override
 	public String toString() {
-		return "ArticleReportDto [id=" + id + ", reason=" + reason + ", createdAt=" + createdAt + ", doneFlag="
-				+ doneFlag + "]";
+		return "CommReport [id=" + id + ", reason=" + reason + ", createdAt=" + createdAt + ", doneFlag=" + doneFlag
+				+ "]";
 	}
+	
+	
+
 	
 	
 }
