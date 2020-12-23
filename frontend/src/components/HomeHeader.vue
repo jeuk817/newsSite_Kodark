@@ -1,6 +1,11 @@
 <template>
   <div class="homeHeader">
-    home header
+    <div>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <span class="group pa-2"><v-icon>home</v-icon></span>
+    </div>
+    <div>body</div>
+    <div>foot</div>
   </div>
 </template>
 
