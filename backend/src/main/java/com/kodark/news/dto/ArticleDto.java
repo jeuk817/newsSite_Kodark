@@ -1,5 +1,6 @@
 package com.kodark.news.dto;
 
+
 import java.util.Date;
 
 /*
@@ -142,5 +143,5 @@ public class ArticleDto {
 				+ ", description=" + description + ", reputation=" + reputation + "]";
 	}
 	
-	
+
 }

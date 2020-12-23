@@ -1,5 +1,6 @@
 package com.kodark.news.dto;
 
+
 /*
  * 작성자 hj
  * 작성일 12.23
@@ -32,5 +33,6 @@ public class FaqDto {
 	public String toString() {
 		return "FaqDto [id=" + id + ", title=" + title + ", content=" + content + "]";
 	}
+
 
 }

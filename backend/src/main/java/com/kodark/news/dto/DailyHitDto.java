@@ -34,5 +34,5 @@ public class DailyHitDto {
 	public String toString() {
 		return "DailyHitDto [id=" + id + ", day=" + day + ", hit=" + hit + "]";
 	}
-	
+
 }

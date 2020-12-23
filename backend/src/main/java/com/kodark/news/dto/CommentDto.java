@@ -1,5 +1,6 @@
 package com.kodark.news.dto;
 
+
 import java.util.Date;
 
 /*
@@ -54,5 +55,5 @@ public class CommentDto {
 		return "CommentDto [id=" + id + ", commentId=" + commentId + ", content=" + content + ", createdAt=" + createdAt
 				+ ", delFlag=" + delFlag + "]";
 	}
-	
+
 }

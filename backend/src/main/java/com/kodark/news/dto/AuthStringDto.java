@@ -1,5 +1,6 @@
 package com.kodark.news.dto;
 
+
 import java.util.Date;
 
 /*
@@ -50,5 +51,5 @@ public class AuthStringDto {
 		return "AuthStringDto [id=" + id + ", email=" + email + ", authString=" + authString + ", createdAt="
 				+ createdAt + ", confirm=" + confirm + "]";
 	}
-	
+
 }

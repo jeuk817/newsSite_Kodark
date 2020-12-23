@@ -43,5 +43,5 @@ public class ArticleReportDto {
 		return "ArticleReportDto [id=" + id + ", reason=" + reason + ", createdAt=" + createdAt + ", doneFlag="
 				+ doneFlag + "]";
 	}
-	
+
 }
