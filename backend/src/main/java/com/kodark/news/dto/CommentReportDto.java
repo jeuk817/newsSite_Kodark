@@ -1,6 +1,5 @@
 package com.kodark.news.dto;
 
-
 import java.util.Date;
 
 /*
@@ -8,16 +7,16 @@ import java.util.Date;
  * 작성일 12.23
  */
 
-public class ForbiddenDto {
-	private String status;
+public class CommentReportDto {
+	private int id;
 	private String reason;
-	private Date endDate;
 	private Date createdAt;
-	public String getStatus() {
-		return status;
+	private String doneFlag;
+	public int getId() {
+		return id;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setId(int id) {
+		this.id = id;
 	}
 	public String getReason() {
 		return reason;
@@ -25,23 +24,23 @@ public class ForbiddenDto {
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
-	public Date getEndDate() {
-		return endDate;
-	}
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
 	public Date getCreatedAt() {
 		return createdAt;
 	}
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
+	public String getDoneFlag() {
+		return doneFlag;
+	}
+	public void setDoneFlag(String doneFlag) {
+		this.doneFlag = doneFlag;
+	}
 	
 	@Override
 	public String toString() {
-		return "ForbiddenDto [status=" + status + ", reason=" + reason + ", endDate=" + endDate + ", createdAt="
-				+ createdAt + "]";
+		return "CommentReportDto [id=" + id + ", reason=" + reason + ", createdAt=" + createdAt + ", doneFlag="
+				+ doneFlag + "]";
 	}
-
+	
 }

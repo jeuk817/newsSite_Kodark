@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.kodark.news.dto.QuestionDto;
 import com.kodark.news.dto.UserDto;
 
 /**
@@ -56,7 +57,6 @@ public class RestfulController {
 		 return null;
 	 }
 	
-	
 	/*
 	 * 메인네비정보
 	 * 
@@ -83,6 +83,7 @@ public class RestfulController {
 		return "/help";
 	}
 	
+
 	/*
 	 * 내문의글
 	 */
@@ -106,4 +107,5 @@ public class RestfulController {
 	public QuestionDto question() {
 		return null;
 	}
+
 }
