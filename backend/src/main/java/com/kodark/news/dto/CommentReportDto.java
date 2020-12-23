@@ -7,12 +7,11 @@ import java.util.Date;
  * 작성일 12.23
  */
 
-public class ArticleReportDto {
+public class CommentReportDto {
 	private int id;
 	private String reason;
 	private Date createdAt;
-	private Date doneFlag;
-	
+	private String doneFlag;
 	public int getId() {
 		return id;
 	}
@@ -31,16 +30,16 @@ public class ArticleReportDto {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	public Date getDoneFlag() {
+	public String getDoneFlag() {
 		return doneFlag;
 	}
-	public void setDoneFlag(Date doneFlag) {
+	public void setDoneFlag(String doneFlag) {
 		this.doneFlag = doneFlag;
 	}
 	
 	@Override
 	public String toString() {
-		return "ArticleReportDto [id=" + id + ", reason=" + reason + ", createdAt=" + createdAt + ", doneFlag="
+		return "CommentReportDto [id=" + id + ", reason=" + reason + ", createdAt=" + createdAt + ", doneFlag="
 				+ doneFlag + "]";
 	}
 	
