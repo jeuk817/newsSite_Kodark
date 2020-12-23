@@ -1,4 +1,4 @@
-package com.kodark.news;
+package a.b.c;
 
 import java.text.DateFormat;
 import java.util.Date;
