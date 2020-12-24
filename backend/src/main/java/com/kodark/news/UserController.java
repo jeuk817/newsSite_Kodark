@@ -1,24 +1,54 @@
 package com.kodark.news;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kodark.news.dto.SubscribeDto;
 import com.kodark.news.dto.UserDto;
-
+import com.kodark.news.service.UserService;
+/**
+ * 유저컨트롤러
+ * @author ys
+ * 2020-12-24
+ */
 @Controller
-@RequestMapping(value = "/user")
-public class UserController {
-	/*
-	 * 회원가입
-	 * 
-	 * 2020-12-23
-	 */
+@RequestMapping(value = "/users/*")
+public class UserController {	
+	
+	@Autowired
+	private UserService userservice;
+	//sign up
 	@RequestMapping(value = "/sign-up", method = RequestMethod.POST)
-	public UserDto signUp(UserDto user) {
+	public String signUp(UserDto dto)throws Exception {			
+		userservice.signUp(dto);
 		return null;
 	}
+	//sign in
+	@RequestMapping(value = "/sign-in", method = RequestMethod.POST)
+	public String login(UserDto dto, HttpServletRequest req, RedirectAttributes rttr) throws Exception{			
+		HttpSession session = req.getSession();
+		UserDto login = userservice.signIn(dto);		
+		if(login == null) {
+			session.setAttribute("user", null);
+			rttr.addFlashAttribute("msg", false);
+		}else {
+			session.setAttribute("user", login);
+		}
+		return "redirect:/";
+	}
+	//sign out
+	@RequestMapping(value = "/sign-out", method = RequestMethod.GET)
+	public String logout(HttpSession session) throws Exception{		
+		session.invalidate();		
+		return "redirect:/";
+	}
+	
 	/*
 	 * 회원정보
 	 * 
