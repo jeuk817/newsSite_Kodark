@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+  파일명: ArticleMapper.xml
+  설명: 기사글 Mapper 설정
+  작성일: 2020-12-24
+  작성자: 이종현
+ -->
+<mapper namespace="com.kodark.news.mappers.ArticleMapper">
+    <!-- 조회 -->
+    <!--
+	<select id="selectARTICLE" parameterType="int" resultType="hashmap">
+	  SELECT * FROM ARTICLE
+	</select>
+	-->
+	
+	<insert id="insertArticle">
+	  INSERT INTO ARTICLE (title,content,hit,status)
+	  VALUES (#{title},#{content},#{hit},#{status})
+	</insert>
+
+	<update id="updateArticle">
+	  UPDATE ARTICLE SET
+	    content = #{content},
+	    hit = #{hit},
+	    status = #{status}	
+	  where title = #{title}
+	</update>
+	
+	<delete id="deleteArticle">
+	  DELETE FROM ARTICLE WHERE title = #{title}
+	</delete>
+	
+</mapper>
