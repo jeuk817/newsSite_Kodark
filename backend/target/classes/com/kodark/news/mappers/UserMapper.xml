@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kodark.news.mappers.UserMapper">
+    <!-- 조회 -->
+	<select id="selectPerson" parameterType="int" resultType="hashmap">
+	  SELECT * FROM USER
+	</select>
+	
+	<insert id="insertUser">
+	  INSERT INTO USER (email,pwd,auth)
+	  VALUES (#{email},#{pwd},#{auth}})
+	</insert>
+
+	<update id="updateUser">
+	  UPDATE USER SET
+	    pwd = #{pwd},
+	    auth = #{auth},	
+	  where email = #{email}
+	</update>
+	
+	<delete id="deleteUser">
+	  DELETE FROM USER WHERE email = #{email}
+	</delete>
+	
+</mapper>
