@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- 
+  파일명: mybatis-config.xml
+  설명: mybatis 설정
+  작성일: 2020-12-24
+  작성자: 이종현
+-->
+<configuration>
+	<properties>
+		<property name="email" value="email"/>
+		<property name="pwd" value="pwd"/>
+		<property name="auth" value="auth"/>
+	</properties>
+	
+	<typeAliases>
+        <package name="com.kodark.news.dto" />
+    </typeAliases>
+</configuration>
