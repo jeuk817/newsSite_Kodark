@@ -14,7 +14,7 @@
         </div>
       </li>
       <li>
-        <v-btn depressed to="/ko/signIn">Sign in</v-btn>
+        <v-btn depressed to="/ko/auth/signIn">Sign in</v-btn>
       </li>
     </ul>
     <ul class="homeHeaderTop">
