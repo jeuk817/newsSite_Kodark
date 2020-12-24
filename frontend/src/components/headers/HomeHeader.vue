@@ -14,7 +14,7 @@
         </div>
       </li>
       <li>
-        <v-btn depressed>Sign in</v-btn>
+        <v-btn depressed to="/ko/signIn">Sign in</v-btn>
       </li>
     </ul>
     <ul class="homeHeaderTop">
@@ -27,7 +27,9 @@
         </div>
       </li>
       <li>
-        KoDark Times
+        <v-btn text large to="/ko/home">
+          KoDark Times
+        </v-btn>
       </li>
       <li>
         날씨 넣을 공간
@@ -74,10 +76,10 @@
 </template>
 
 <script>
-import { dateUtils } from './mixins/dateUtils'
+// import { dateUtils } from './mixins/dateUtils'
 
 export default {
-  mixins: [dateUtils],
+  // mixins: [dateUtils],
   data: () => ({
     today: '',
     sections: [{ rel: 'Politics', href: '/section/politics' }, { rel: 'Economy', href: '/section/economy' }, { rel: 'Society', href: '/section/society' }, { rel: 'Tech', href: '/section/tech' }, { rel: 'World', href: '/section/world' }, { rel: 'Sports', href: '/section/sports' }, { rel: 'Weather', href: '/section/weather' }]

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import HomeHeader from '../components/HomeHeader'
+import HomeHeader from '../components/headers/HomeHeader'
 import HelloWorld from '../components/HelloWorld'
 
 export default {
