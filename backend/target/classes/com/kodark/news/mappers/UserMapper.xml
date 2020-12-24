@@ -2,20 +2,13 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- 
-  파일명: UserMapper.xml
-  설명: 기사글 Mapper 설정
-  작성일: 2020-12-24
-  작성자: 이종현
- -->
+
 <mapper namespace="com.kodark.news.mappers.UserMapper">
     <!-- 조회 -->
-    <!--
 	<select id="selectPerson" parameterType="int" resultType="hashmap">
 	  SELECT * FROM USER
 	</select>
-	 -->
-	 
+	
 	<insert id="insertUser">
 	  INSERT INTO USER (email,pwd,auth)
 	  VALUES (#{email},#{pwd},#{auth}})
