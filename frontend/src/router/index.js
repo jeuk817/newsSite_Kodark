@@ -16,7 +16,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/ko/signIn',
+    path: '/ko/auth/:sign',
     component: AuthPage
   }
 ]
