@@ -4,7 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 
   파일명: UserMapper.xml
-  설명: 기사글 Mapper 설정
+  설명: 사용자 Mapper 설정
   작성일: 2020-12-24
   작성자: 이종현
  -->
@@ -28,8 +28,9 @@
 	  where email = #{email}
 	</update>
 	
+	<!-- 
 	<delete id="deleteUser">
 	  DELETE FROM USER WHERE email = #{email}
 	</delete>
-	
+	 -->
 </mapper>

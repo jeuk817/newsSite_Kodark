@@ -29,8 +29,17 @@
 	  where title = #{title}
 	</update>
 	
+	<!-- 삭제 여부 -->
+	<update id="delFlagArticle">
+	  UPDATE ARTICLE SET
+	    status = #{status},	
+	  where user_id = #{id} || category_id = #{id}
+	</update>
+	
+	<!-- 
 	<delete id="deleteArticle">
 	  DELETE FROM ARTICLE WHERE title = #{title}
 	</delete>
+	 -->
 	
 </mapper>
