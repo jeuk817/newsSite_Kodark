@@ -20,6 +20,13 @@
 	  INSERT INTO USER (email,pwd,auth)
 	  VALUES (#{email},#{pwd},#{auth}})
 	</insert>
+	<!-- 로그인 -->
+	<select id="signIn" resultType="com.kodark.news.dto.UserDto">
+		SELECT email, pwd 
+		  FROM USER
+		 WHERE EMAIL = #{email}
+		   AND PWD = #{pwd}   
+	</select>
 
 	<update id="updateUser">
 	  UPDATE USER SET
