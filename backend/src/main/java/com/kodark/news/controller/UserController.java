@@ -149,6 +149,4 @@ public class UserController {	// restful 기준 나누기
 		
 	}
 	
-
-
 }
