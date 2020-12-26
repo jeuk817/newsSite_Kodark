@@ -12,7 +12,6 @@
     ></v-text-field>
     <v-text-field
       label="Password"
-      hint="At least 8 characters"
       :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
       :type="show ? 'text' : 'password'"
       @click:append="show = !show"
@@ -25,18 +24,30 @@
       required
     ></v-text-field>
     <div class="findPwd">
-      <v-btn text depressed x-small light="true">Forgot your password?</v-btn>
+      <v-btn class="text-capitalize" text depressed x-small>
+        Forgot your password?
+      </v-btn>
     </div>
     <div class="signInBtn">
       <v-btn
+        class="white--text"
         depressed
         large
-        dark
         color="black"
         width="100%"
       >
       Sign In
       </v-btn>
+    </div>
+    <div class="createAccountBtn">
+      <div>
+        <span>
+          Dont't have a KoDark account?
+        </span>
+        <v-btn class="font-weight-black text-capitalize text-decoration-underline" text height="24px" width="100px" depressed to="/ko/auth/signUp">
+            Create one
+          </v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -47,13 +58,13 @@ export default {
   data: () => ({
     email: '',
     emailRules: [
-      v => !!v || 'Email Address is required.',
-      v => /.+@.+/.test(v) || 'Email Address must be valid.'
+      v => !!v || 'Email Address is required',
+      v => /.+@.+/.test(v) || 'Email Address must be valid'
     ],
     password: '',
     passwordRules: [
-      v => !!v || 'Password is required.',
-      v => v.length >= 8 || 'Min 8 characters.'
+      v => !!v || 'Password is required',
+      v => v.length >= 8 || 'At least 8 characters'
     ],
     show: false
   })
@@ -70,4 +81,12 @@ export default {
 .signInBtn {
   margin-top: 8px;
 }
+
+.createAccountBtn {
+  padding-top: 12px;
+  display: grid;
+  justify-items: center;
+  font-size: 14px;
+}
+
 </style>

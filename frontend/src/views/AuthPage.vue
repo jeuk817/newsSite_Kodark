@@ -3,11 +3,11 @@
     <LogoHeader />
     <div class="authBody">
       <div class="authContent">
-        <template v-if="currentPath === 'signIn'">
+        <template v-if="currentRoute === 'signIn'">
           <OauthSign auth="signIn" />
           <SignInBody />
         </template>
-        <template v-if="currentPath === 'signUp'">
+        <template v-if="currentRoute === 'signUp'">
           <OauthSign auth="signUp" />
           <SignUpBody />
         </template>
@@ -34,11 +34,12 @@ export default {
     OauthSign
     // HelloWorld
   },
-  created () {
-    console.log('---------')
-    const routeArr = this.$route.fullPath.split('/')
-    console.log(routeArr[routeArr.length - 1])
-    this.currentPath = routeArr[routeArr.length - 1]
+  computed: {
+    // 현재 라우트 반환 signIn, signUp
+    currentRoute () {
+      const routeArr = this.$route.fullPath.split('/')
+      return routeArr[routeArr.length - 1]
+    }
   }
 }
 </script>

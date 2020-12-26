@@ -4,10 +4,10 @@
       {{authGuideMsg}}
     </div>
     <div class="oauthComponent">
-      <v-btn class="oauthBtn" outlined color="black" width="100%">
+      <v-btn class="oauthBtn text-capitalize" outlined color="black" width="100%" height="45px">
         <v-icon>account_circle</v-icon>Continue with Google
       </v-btn>
-      <v-btn class="oauthBtn" outlined color="black" width="100%">
+      <v-btn class="oauthBtn text-capitalize" outlined color="black" width="100%" height="45px">
         <v-icon>account_circle</v-icon>Continue with Kakao
       </v-btn>
       <div class="authDivider">

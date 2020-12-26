@@ -9,6 +9,10 @@ export default new Vuex.Store({
   mutations: {
   },
   actions: {
+    test({}, email) {
+      console.log('test')
+      console.log(email)
+    }
   },
   modules: {
   }
