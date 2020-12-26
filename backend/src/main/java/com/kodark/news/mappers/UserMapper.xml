@@ -28,10 +28,32 @@
 	  where email = #{email}
 	</update>
 	
+	<select id="emailCheck" resultType="int">
+		SELECT COUNT(*) FROM MP_MEMBER
+		WHERE USERID = #{userId}
+	</select>
+	
 	<!-- 
 	<delete id="deleteUser">
 	  DELETE FROM USER WHERE email = #{email}
 	</delete>
 	 -->
+	 
+	 <!-- mail -->
+     <insert id="updateAuthKey">
+         insert into userAuth values(#{userEmail}, #{AuthKey})
+     </insert>
+    
+    <!-- authVerify -->
+	<select id="authChk" resultType="int">
+        SELECT confirm from Auth_String
+        WHERE email = #{email} AND auth_stirng = #{auth_string}
+    </select>
+    
+     <!--
+     <update id="userAuth">
+         SELECT * FROM MEMBER WHERE EMAIL = #{email} AND PWD = #{pwd} AND AUTHSTATUS = 'T'
+     </update>
+     -->
 	 
 </mapper>

@@ -1,4 +1,4 @@
-package com.kodark.news;
+package com.kodark.news.controller;
 
 import java.io.UnsupportedEncodingException;
 

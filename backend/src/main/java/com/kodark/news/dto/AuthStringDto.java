@@ -14,6 +14,7 @@ public class AuthStringDto {
 	private String authString;
 	private Date createdAt;
 	private String confirm;
+	
 	public String getId() {
 		return id;
 	}
