@@ -1,6 +1,7 @@
 
 const Util = function() {}
 
+// http response header에 links 헤더를 파싱하는 함수
 // ex) '</ko/users/sign-up>; rel="self", </ko/signIn>; rel="next"'
 Util.prototype.parseLinks = function(links){
   return links.split(', ').map(link => link.split('; ')).reduce((ac, cu) => {
