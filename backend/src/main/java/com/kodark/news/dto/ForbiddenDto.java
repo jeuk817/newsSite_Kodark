@@ -1,5 +1,6 @@
 package com.kodark.news.dto;
 
+
 import java.util.Date;
 
 /*
@@ -42,5 +43,5 @@ public class ForbiddenDto {
 		return "ForbiddenDto [status=" + status + ", reason=" + reason + ", endDate=" + endDate + ", createdAt="
 				+ createdAt + "]";
 	}
-	
+
 }

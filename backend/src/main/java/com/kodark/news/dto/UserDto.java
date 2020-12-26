@@ -1,5 +1,6 @@
 package com.kodark.news.dto;
 
+
 import java.util.Date;
 
 /*
@@ -90,6 +91,5 @@ public class UserDto {
 				+ ", name=" + name + ", local=" + local + ", birth=" + birth + ", gender=" + gender + ", image=" + image
 				+ "]";
 	}
-	
-	
+
 }

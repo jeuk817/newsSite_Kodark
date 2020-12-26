@@ -1,5 +1,6 @@
 package com.kodark.news.dto;
 
+
 /*
  * 작성자 hj
  * 작성일 12.23
@@ -25,5 +26,5 @@ public class EmotionDto {
 	public String toString() {
 		return "EmotionDto [id=" + id + ", status=" + status + "]";
 	}
-	
+
 }
