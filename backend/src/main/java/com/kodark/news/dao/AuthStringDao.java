@@ -1,20 +1,28 @@
 package com.kodark.news.dao;
 
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.kodark.news.dto.UserDto;
+
 public class AuthStringDao {
-	//인증 생성
-	@Override
-	public void createAuthKey(String userEmail, String authKey) throws Exception { // 인증키 DB에 넣기
-		Map<String, Object> map = new HashMap<String, Object>();
+		@Autowired
+	    private SqlSessionTemplate sql;
+		private String nameSpace = "com.kodark.news.mappers.UserMapper";
+	 
+	    //해당 email에 인증 키 업데이트
+	    public void updateAuthKey(UserDto dto) throws Exception {
+	        UserDto dto2 = new UserDto();
+	        dto2.setAuth(dto.getAuth());
+	        dto2.setEmail(dto.getEmail());
+	       
+	        sql.update(nameSpace + ".updateAuthKey", dto2);
+	    }
+	  
+	    //이메일 인증 코드 확인
+	    public UserDto authVerify(UserDto dto) throws Exception {
+	        return sql.selectOne(nameSpace + ".authCheck", dto);
+	    }
 
-		map.put("userEmail", userEmail);
-		map.put("authKey", authKey);
-
-		session.selectOne(namespace + ".createAuthKey", map);
-	}
-
-	//인증 여부 확인
-	@Override
-	public void userAuth(String userEmail) throws Exception { // 인증키 일치시 DB칼럼(인증여부) false->true 로 변경
-		session.update(namespace + ".userAuth", userEmail);
-	}
+	    
 }

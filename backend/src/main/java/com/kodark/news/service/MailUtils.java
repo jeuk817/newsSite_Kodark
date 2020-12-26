@@ -2,9 +2,9 @@ package com.kodark.news.service;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.sql.DataSource;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
