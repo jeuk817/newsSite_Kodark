@@ -3,12 +3,15 @@ package com.kodark.news.dto;
 
 import java.util.Date;
 
+import org.apache.ibatis.type.Alias;
+
 /*
  * 작성자 hj
  * 작성일 12.23
  */
 
 // Article / Category / Image / Article_Emotion
+@Alias("ArticleDto")
 public class ArticleDto {
 	// Article
 	private int articleId;
