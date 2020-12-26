@@ -8,7 +8,7 @@
   작성일: 2020-12-24
   작성자: 이종현
  -->
-<mapper namespace="com.kodark.news.mappers.UserMapper">
+<mapper namespace="mappers.UserMapper">
     <!-- 조회 -->
     <!--
 	<select id="selectPerson" parameterType="int" resultType="hashmap">
@@ -28,6 +28,15 @@
 	  where email = #{email}
 	</update>
 	
+	
+	<select id="signIn" resultType="com.kodark.news.dto.UserDto">
+        SELECT email, pwd 
+          FROM USER
+         WHERE EMAIL = #{email}
+           AND PWD = #{pwd}
+    </select>
+    
+    
 	<!-- 
 	<delete id="deleteUser">
 	  DELETE FROM USER WHERE email = #{email}
