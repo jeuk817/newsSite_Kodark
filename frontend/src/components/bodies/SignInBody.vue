@@ -1,6 +1,7 @@
 <template>
   <div class="singComponent">
     <v-text-field
+      ref="email"
       label="Email Address"
       outlined
       color="black"
@@ -11,6 +12,7 @@
       required
     ></v-text-field>
     <v-text-field
+      ref="password"
       label="Password"
       :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
       :type="show ? 'text' : 'password'"
@@ -35,6 +37,8 @@
         large
         color="black"
         width="100%"
+        @click="signIn"
+        :loading="signningIn"
       >
       Sign In
       </v-btn>
@@ -45,8 +49,8 @@
           Dont't have a KoDark account?
         </span>
         <v-btn class="font-weight-black text-capitalize text-decoration-underline" text height="24px" width="100px" depressed to="/ko/auth/signUp">
-            Create one
-          </v-btn>
+          Create one
+        </v-btn>
       </div>
     </div>
   </div>
@@ -66,8 +70,16 @@ export default {
       v => !!v || 'Password is required',
       v => v.length >= 8 || 'At least 8 characters'
     ],
-    show: false
-  })
+    show: false,
+    signningIn: false
+  }),
+  methods: {
+    signIn () {
+      if(!this.$refs.email.validate(true) && !this.$refs.password.validate(true)) return
+      console.log('signningIn')
+      this.signningIn = true
+    }
+  }
 }
 </script>
 <style scoped>

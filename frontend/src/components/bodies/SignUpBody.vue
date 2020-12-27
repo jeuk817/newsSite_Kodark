@@ -170,7 +170,7 @@ export default {
     async getVerifCode () {
       if (!this.$refs.emailAddress.validate(true)) return
       this.gettingVerifCode = true
-      const status = await this.$store.dispatch('getVerifCode', this.email)
+      const status = await this.$store.dispatch('auth/getVerifCode', this.email)
       if(status === 201) { // success
         this.didSend = true
         this.emailError = false
@@ -187,7 +187,7 @@ export default {
     async sendVerifCode () {
       if (!this.$refs.verificationCode.validate(true)) return
       this.sendingVerifCode = true
-      const status = await this.$store.dispatch('sendVerifCode', { email: this.email, authString: this.verifCode })
+      const status = await this.$store.dispatch('auth/sendVerifCode', { email: this.email, authString: this.verifCode })
       console.log(status)
       if(status === 204) {
         this.didAuth = true
@@ -218,7 +218,7 @@ export default {
       if(!this.$refs.password.validate(true) || !this.$refs.confirmPassword.validate(true)) return
 
       this.creatingAccount = true
-      const { status, links } = await this.$store.dispatch('createAccount', { email: this.sendedEmail, pwd: this.password })
+      const { status, links } = await this.$store.dispatch('users/createAccount', { email: this.sendedEmail, pwd: this.password })
 
       if(status === 409) {
         this.emailErrorMsg = 'Those email is already taken'
