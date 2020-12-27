@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import AuthPage from '../views/AuthPage'
+import IntroducePage from '../views/IntroducePage'
 
 Vue.use(VueRouter)
 
@@ -18,6 +19,10 @@ const routes = [
   {
     path: '/ko/auth/:sign',
     component: AuthPage
+  },
+  {
+    path: '/ko/introduce',
+    component: IntroducePage
   }
 ]
 

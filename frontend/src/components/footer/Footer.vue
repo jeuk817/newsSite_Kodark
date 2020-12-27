@@ -13,7 +13,7 @@
         class="text-center footers"
         cols="4"
       >
-      Introduce
+       <router-link to="/ko/introduce"><p>Introduce</p></router-link>
       </v-col>
       <v-col
         class="text-center footers"
