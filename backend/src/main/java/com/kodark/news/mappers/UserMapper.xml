@@ -40,4 +40,5 @@
 	  DELETE FROM USER WHERE email = #{email}
 	</delete>
 	 -->
+	 
 </mapper>

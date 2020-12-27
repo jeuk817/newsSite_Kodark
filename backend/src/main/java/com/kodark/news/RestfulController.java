@@ -3,13 +3,17 @@ package com.kodark.news;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.zip.DataFormatException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.kodark.news.dto.QuestionDto;
 import com.kodark.news.dto.UserDto;
@@ -17,6 +21,7 @@ import com.kodark.news.dto.UserDto;
 /**
  * Handles requests for the application home page.
  */
+
 @Controller
 public class RestfulController {
 	
@@ -106,6 +111,12 @@ public class RestfulController {
 	@RequestMapping(value = "/help/question", method = RequestMethod.POST)
 	public QuestionDto question() {
 		return null;
+	}
+	
+	@ExceptionHandler(DataFormatException.class)
+	@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "page do not found")
+	public void dataFormatException() {
+		
 	}
 
 }
