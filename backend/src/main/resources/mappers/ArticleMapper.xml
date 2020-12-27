@@ -8,20 +8,26 @@
   작성일: 2020-12-24
   작성자: 이종현
  -->
-<mapper namespace="com.kodark.news.mappers.ArticleMapper">
+<mapper namespace="mappers.ArticleMapper">
     <!-- 조회 -->
-    <!--
-	<select id="selectARTICLE" parameterType="int" resultType="hashmap">
+   
+	<select id="selectARTICLE" resultType="hashmap">
 	  SELECT * FROM ARTICLE
 	</select>
-	-->
 	
+	<!-- 기사글 목록 조회 -->
+	<select id="listArticle"  resultType="hashmap">
+		SELECT *FROM ARTICLE
+	</select>
+	
+	<!-- 기사글 입력 -->
 	<insert id="insertArticle">
 	  INSERT INTO ARTICLE (title,content,hit,status)
 	  VALUES (#{title},#{content},#{hit},#{status})
 	</insert>
 
-	<update id="updateArticle">
+	<!-- 기사글 수정 -->
+	<update id="updateArticle" >
 	  UPDATE ARTICLE SET
 	    content = #{content},
 	    hit = #{hit},
@@ -29,17 +35,11 @@
 	  where title = #{title}
 	</update>
 	
-	<!-- 삭제 여부 -->
+	<!-- 수정 -->
 	<update id="delFlagArticle">
 	  UPDATE ARTICLE SET
 	    status = #{status},	
-	  where user_id = #{id} || category_id = #{id}
+	  where user_id = #{id} AND category_id = #{id}
 	</update>
-	
-	<!-- 
-	<delete id="deleteArticle">
-	  DELETE FROM ARTICLE WHERE title = #{title}
-	</delete>
-	 -->
 	
 </mapper>

@@ -19,6 +19,7 @@ public class AuthStringDao {
 	        sql.update(nameSpace + ".updateAuthKey", dto2);
 	    }
 	  
+
 	    //이메일 인증 코드 확인
 	    public UserDto authVerify(UserDto dto) throws Exception {
 	        return sql.selectOne(nameSpace + ".authCheck", dto);
