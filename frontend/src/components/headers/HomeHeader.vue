@@ -92,6 +92,7 @@ export default {
     sections: [{ rel: 'Politics', href: '/section/politics' }, { rel: 'Economy', href: '/section/economy' }, { rel: 'Society', href: '/section/society' }, { rel: 'Tech', href: '/section/tech' }, { rel: 'World', href: '/section/world' }, { rel: 'Sports', href: '/section/sports' }, { rel: 'Weather', href: '/section/weather' }],
     isSignedIn: false
   }),
+  
   computed: {
     today () {
       const weeks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -119,7 +120,6 @@ export default {
   padding: 0;
   border-bottom: 1px solid black;
 }
-
 .homeHeaderTop {
   list-style: none;
   padding: 5px 10px;
@@ -128,7 +128,6 @@ export default {
   align-items: end;
   font-size: 12px;
 }
-
 .homeHeaderTop > li:nth-child(1) {
   display: grid;
   justify-content: start;

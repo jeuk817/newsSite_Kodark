@@ -13,6 +13,7 @@
         </template>
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 
@@ -21,6 +22,7 @@ import LogoHeader from '../components/headers/LogoHeader'
 import SignInBody from '../components/bodies/SignInBody'
 import SignUpBody from '../components/bodies/SignUpBody'
 import OauthSign from '../components/units/OauthSign'
+import Footer from '../components/footer/Footer'
 // import HelloWorld from '../components/HelloWorld'
 
 export default {
@@ -31,7 +33,8 @@ export default {
     LogoHeader,
     SignInBody,
     SignUpBody,
-    OauthSign
+    OauthSign,
+    Footer
     // HelloWorld
   },
   computed: {
