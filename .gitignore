@@ -55,3 +55,6 @@ pnpm-debug.log*
 
 # Optional npm cache directory
 .npm
+
+# Properties
+pom.properties

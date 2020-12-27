@@ -22,7 +22,28 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.kodark.news" />
-	
-	
+
+<!-- DB.properties 설정 가져오기 -->
+<context:property-placeholder location="classpath:DB.properties"/>
+
+<beans:bean id="dataSource"
+      name="dataSource"
+      class="oracle.jdbc.pool.OracleDataSource">
+      <beans:property name="driverClass" value="${db.driver}" />
+    <beans:property name="URL" value="${db.url}" />
+    <beans:property name="user" value="${db.username}" />
+    <beans:property name="password" value="${db.password}" />
+</beans:bean>
+
+<beans:bean id="sqlSessionFactory" name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <beans:property name="dataSource" ref="dataSource" />
+    <beans:property name="mappers" value="classpath:mappers/*.xml"/>
+    <beans:property name="configLocation" value="classpath:/mybatis-config.xml" />
+</beans:bean>
+
+<beans:bean id="sqlSession" name="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"
+      destroy-method="clearCache">
+    <beans:constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+</beans:bean>
 	
 </beans:beans>

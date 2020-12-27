@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+  파일명: UserMapper.xml
+  설명: 사용자 Mapper 설정
+  작성일: 2020-12-24
+  작성자: 이종현
+ -->
+<mapper namespace="com.kodark.news.mappers.UserMapper">
+    <!-- 조회 -->
+    <!--
+	<select id="selectPerson" parameterType="int" resultType="hashmap">
+	  SELECT * FROM USER
+	</select>
+	 -->
+	 
+	<insert id="insertUser">
+	  INSERT INTO USER (email,pwd,auth)
+	  VALUES (#{email},#{pwd},#{auth}})
+	</insert>
+	<!-- 로그인 -->
+	<select id="signIn" resultType="com.kodark.news.dto.UserDto">
+		SELECT email, pwd 
+		  FROM USER
+		 WHERE EMAIL = #{email}
+		   AND PWD = #{pwd}   
+	</select>
+
+	<update id="updateUser">
+	  UPDATE USER SET
+	    pwd = #{pwd},
+	    auth = #{auth},	
+	  where email = #{email}
+	</update>
+	
+	<select id="emailCheck" resultType="int">
+		SELECT COUNT(*) FROM MP_MEMBER
+		WHERE USERID = #{userId}
+	</select>
+	
+	<!-- 
+	<delete id="deleteUser">
+	  DELETE FROM USER WHERE email = #{email}
+	</delete>
+	 -->
+	 
+	 <!-- mail -->
+     <insert id="updateAuthKey">
+         insert into userAuth values(#{userEmail}, #{AuthKey})
+     </insert>
+    
+    <!-- authVerify -->
+	<select id="authChk" resultType="int">
+        SELECT confirm from Auth_String
+        WHERE email = #{email} AND auth_stirng = #{auth_string}
+    </select>
+    
+     <!--
+     <update id="userAuth">
+         SELECT * FROM MEMBER WHERE EMAIL = #{email} AND PWD = #{pwd} AND AUTHSTATUS = 'T'
+     </update>
+     -->
+	 
+</mapper>
