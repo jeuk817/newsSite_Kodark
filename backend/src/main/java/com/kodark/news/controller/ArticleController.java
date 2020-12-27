@@ -1,4 +1,4 @@
-package com.kodark.news;
+package com.kodark.news.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
