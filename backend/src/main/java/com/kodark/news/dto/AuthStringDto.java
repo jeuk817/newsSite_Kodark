@@ -3,11 +3,13 @@ package com.kodark.news.dto;
 
 import java.util.Date;
 
+import org.apache.ibatis.type.Alias;
+
 /*
  * 작성자 hj
  * 작성일 12.23
  */
-
+@Alias("AuthStringDto")
 public class AuthStringDto {
 	private String id;
 	private String email;

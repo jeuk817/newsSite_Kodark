@@ -8,7 +8,7 @@
   작성일: 2020-12-24
   작성자: 이종현
  -->
-<mapper namespace="com.kodark.news.mappers.CommentMapper">
+<mapper namespace="mappers.CommentMapper">
     <!-- 조회 -->
     <!--
 	<select id="selectPerson" parameterType="int" resultType="hashmap">
@@ -25,19 +25,19 @@
 	  UPDATE Comment SET
 	    content =#{content},
 	    del_flag = #{del_flag},	
-	  where user_id = #{id} || article_id = #{id}
+	  where user_id = #{id} AND article_id = #{id}
 	</update>
 	
 	<!-- 삭제 여부 -->
 	<update id="delFlagComment">
 	  UPDATE Comment SET
 	    del_flag = #{del_flag},	
-	  where user_id = #{id} || article_id = #{id}
+	  where user_id = #{id} AND article_id = #{id}
 	</update>
 	
 	<!-- 이거 사용하면 진짜로 삭제하니깐 일단 보류
 	<delete id="deleteComment">
-	  DELETE FROM Comment where user_id = #{id} || article_id = #{id}
+	  DELETE FROM Comment where user_id = #{id} AND article_id = #{id}
 	</delete>
 	 -->
 </mapper>

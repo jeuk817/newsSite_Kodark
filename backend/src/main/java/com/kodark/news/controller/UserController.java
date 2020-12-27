@@ -11,7 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+<<<<<<< HEAD
+=======
 import org.springframework.web.servlet.ModelAndView;
+>>>>>>> branch 'backend' of https://github.com/jeuk817/newsSite_Kodark.git
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kodark.news.dto.AuthStringDto;
