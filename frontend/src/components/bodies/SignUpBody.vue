@@ -188,7 +188,6 @@ export default {
       if (!this.$refs.verificationCode.validate(true)) return
       this.sendingVerifCode = true
       const status = await this.$store.dispatch('auth/sendVerifCode', { email: this.email, authString: this.verifCode })
-      console.log(status)
       if(status === 204) {
         this.didAuth = true
         this.didAuthFail = false

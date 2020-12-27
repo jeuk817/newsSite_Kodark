@@ -32,7 +32,7 @@
     </div>
     <div class="signInBtn">
       <v-btn
-        class="white--text"
+        class="white--text text-capitalize font-weight-black"
         depressed
         large
         color="black"
@@ -53,6 +53,25 @@
         </v-btn>
       </div>
     </div>
+    <v-snackbar
+      v-model="failMsg"
+      bottom="true"
+      color="error"
+      :timeout="failMsgTimeOut"
+    >
+      The email or password you entered is incorrect
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          class="text-capitalize"
+          dark
+          text
+          v-bind="attrs"
+          @click="failMsg = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -62,22 +81,26 @@ export default {
   data: () => ({
     email: '',
     emailRules: [
-      v => !!v || 'Email Address is required',
-      v => /.+@.+/.test(v) || 'Email Address must be valid'
+      v => !!v || 'Email Address is required'
     ],
     password: '',
     passwordRules: [
-      v => !!v || 'Password is required',
-      v => v.length >= 8 || 'At least 8 characters'
+      v => !!v || 'Password is required'
     ],
     show: false,
-    signningIn: false
+    signningIn: false,
+    failMsg: false,
+    failMsgTimeOut: 10000
   }),
   methods: {
-    signIn () {
+    async signIn () {
       if(!this.$refs.email.validate(true) && !this.$refs.password.validate(true)) return
-      console.log('signningIn')
       this.signningIn = true
+      const { status, links } = await this.$store.dispatch('auth/signIn', { email: this.email, pwd: this.password })
+
+      if(status === 401) this.failMsg = true
+      if(status === 204) this.$router.push({ path: links.next })
+      this.signningIn = false
     }
   }
 }

@@ -7,8 +7,20 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    account: null
+  },
+  getters: {
+    getAccount: (state) => {
+      return state.account
+    }
   },
   mutations: {
+    setAccount(state, account) {
+      state.account = account
+    },
+    deleteAccount(state) {
+      state.account = null
+    }
   },
   actions: {
   },

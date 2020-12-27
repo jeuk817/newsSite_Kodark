@@ -14,7 +14,12 @@
         </div>
       </li>
       <li>
-        <v-btn depressed to="/ko/auth/signIn">Sign in</v-btn>
+        <template v-if="!account">
+          <v-btn depressed to="/ko/auth/signIn">Sign in</v-btn>
+        </template>
+        <template v-else>
+          <AccountMenu v-bind="account" />
+        </template>
       </li>
     </ul>
     <ul class="homeHeaderTop">
@@ -76,30 +81,35 @@
 </template>
 
 <script>
-// import { dateUtils } from './mixins/dateUtils'
+import AccountMenu from '../units/AccountMenu'
+import { mapGetters } from 'vuex'
 
 export default {
-  // mixins: [dateUtils],
+  components: {
+    AccountMenu
+  },
   data: () => ({
-    today: '',
-    sections: [{ rel: 'Politics', href: '/section/politics' }, { rel: 'Economy', href: '/section/economy' }, { rel: 'Society', href: '/section/society' }, { rel: 'Tech', href: '/section/tech' }, { rel: 'World', href: '/section/world' }, { rel: 'Sports', href: '/section/sports' }, { rel: 'Weather', href: '/section/weather' }]
+    sections: [{ rel: 'Politics', href: '/section/politics' }, { rel: 'Economy', href: '/section/economy' }, { rel: 'Society', href: '/section/society' }, { rel: 'Tech', href: '/section/tech' }, { rel: 'World', href: '/section/world' }, { rel: 'Sports', href: '/section/sports' }, { rel: 'Weather', href: '/section/weather' }],
+    isSignedIn: false
   }),
-  // watch: {
-  //   sections: function () {
-  //     // this.headerNaviStyle.gridTemplateColumns = 'repeat(' + this.sections.length + ', 1fr)'
-  //     this.headerNaviStyle.gridTemplateColumns = 'dfsdfw'
-  //   }
-  // },
-  created () {
-    const weeks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    const date = new Date()
+  computed: {
+    today () {
+      const weeks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      const date = new Date()
 
-    const year = date.getFullYear()
-    const month = months[date.getMonth()]
-    const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-    const week = weeks[date.getDay()]
-    this.today = `${week}, ${month} ${day}, ${year}`
+      const year = date.getFullYear()
+      const month = months[date.getMonth()]
+      const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+      const week = weeks[date.getDay()]
+      return `${week}, ${month} ${day}, ${year}`
+    },
+    ...mapGetters({
+      account: 'getAccount'
+    })
+  },
+  created () {
+    this.$store.dispatch('users/getUserData')
   }
 }
 </script>
