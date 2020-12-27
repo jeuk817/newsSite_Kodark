@@ -24,6 +24,5 @@ export default {
 <style scoped>
 #LogoHeader {
   position: fixed;
-  border: 1px solid black;
 }
 </style>

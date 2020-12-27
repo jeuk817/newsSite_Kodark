@@ -20,7 +20,9 @@
         :rules="emailRules"
         required
       ></v-text-field>
-      <v-btn class="text-capitalize white--text" height="45px" depressed color="black" @click="getVerifCode">
+      <v-btn class="text-capitalize white--text" height="45px" depressed color="black"
+        @click="getVerifCode" :loading="gettingVerifCode"
+      >
         Send
       </v-btn>
     </div>
@@ -41,7 +43,7 @@
         :rules="verifCodeRules"
       ></v-text-field>
       <v-btn class="text-capitalize white--text" height="45px" depressed color="black"
-        :disabled="!didSend" @click="sendVerifCode"
+        :disabled="!didSend" @click="sendVerifCode" :loading="sendingVerifCode"
       >
         Verify
       </v-btn>
@@ -84,7 +86,7 @@
     <v-btn
       class="text-capitalize white--text font-weight-black"
       height="45px" width="100%" depressed color="black"
-      @click="createAccount"
+      @click="createAccount" :loading="creatingAccount"
     >
       Create Account
     </v-btn>
@@ -98,6 +100,28 @@
         </v-btn>
       </div>
     </div>
+    <v-dialog
+      v-model="wasCreated"
+      max-width="290"
+      @click:outside="moveRoute"
+    >
+      <v-card>
+        <v-card-title class="headline">Welcome!</v-card-title>
+        <v-card-text>
+          Account has been created
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="moveRoute"
+          >
+            Okay
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -117,9 +141,11 @@ export default {
       v => !!v || 'Verification code is required',
       v => v.length === 6 || 'Verification code must be 6-digit'
     ],
+    gettingVerifCode: false,
     didAuth: false,
     didAuthFail: false,
     authFailMsg: '',
+    sendingVerifCode: false,
     password: '',
     passwordRules: [
       v => !!v || 'Password is required',
@@ -130,15 +156,21 @@ export default {
     show2: false,
     errorMessages: '',
     sendedEmail: '',
+    creatingAccount: false,
+    wasCreated: false,
+    nextLink: ''
   }),
   methods: {
+    // password와 confirmPassword가 일치하는지 확인하는 메소드
     confirmRule () {
       this.errorMessages = this.password === this.confirmPassword ? '' : "Those passwords didn't match"
       return this.password === this.confirmPassword
     },
+    // 이메일로 인증문자를 요청하는 메소드
     async getVerifCode () {
       if (!this.$refs.emailAddress.validate(true)) return
-      const status = await this.$store.dispatch('getVerifCode', this.email)
+      this.gettingVerifCode = true
+      const status = await this.$store.dispatch('auth/getVerifCode', this.email)
       if(status === 201) { // success
         this.didSend = true
         this.emailError = false
@@ -149,12 +181,13 @@ export default {
         this.emailErrorMsg = 'Those email is already taken'
         this.emailError = true // conflict
       }
+      this.gettingVerifCode = false
     },
+    // 인증문자를 인증하는 메소드
     async sendVerifCode () {
       if (!this.$refs.verificationCode.validate(true)) return
-      console.log('method sendVerifCode')
-      const status = await this.$store.dispatch('sendVerifCode', { email: this.email, authString: this.verifCode })
-      console.log(status)
+      this.sendingVerifCode = true
+      const status = await this.$store.dispatch('auth/sendVerifCode', { email: this.email, authString: this.verifCode })
       if(status === 204) {
         this.didAuth = true
         this.didAuthFail = false
@@ -169,7 +202,9 @@ export default {
         this.didAuth = false
         this.didAuthFail = true
       }
+      this.sendingVerifCode = false
     },
+    // 계정을 만드는 메소드
     async createAccount () {
       if(!this.sendedEmail) {
         this.emailErrorMsg = 'You need to get email verification code'
@@ -180,16 +215,24 @@ export default {
         return this.didAuthFail = true
       }
       if(!this.$refs.password.validate(true) || !this.$refs.confirmPassword.validate(true)) return
-      const { status, links } = await this.$store.dispatch('createAccount', { email: this.sendedEmail, pwd: this.password })
+
+      this.creatingAccount = true
+      const { status, links } = await this.$store.dispatch('users/createAccount', { email: this.sendedEmail, pwd: this.password })
 
       if(status === 409) {
         this.emailErrorMsg = 'Those email is already taken'
-        return this.emailError = true
+        this.emailError = true
       }
       if(status === 201) {
-        alert('Account has been created')
-        return this.$router.push(links.next)
+        this.wasCreated = true
+        this.nextLink = links.next
       }
+      this.creatingAccount = false
+    },
+    // sing in 페이지로 이동하는 메소드
+    moveRoute () {
+      this.wasCreated = false
+      this.$router.push({ path: this.nextLink })
     }
   }
 }

@@ -1,18 +1,15 @@
 <template>
   <v-app>
     <router-view />
-    <!-- <Home /> -->
   </v-app>
 </template>
 
 <script>
-// import Home from './views/Home'
 
 export default {
   name: 'App',
 
   components: {
-    // Home
   },
 
   data: () => ({
@@ -22,9 +19,15 @@ export default {
 </script>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 #app {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 3%;
+  /* padding: 0 3%; */
 }
 </style>
