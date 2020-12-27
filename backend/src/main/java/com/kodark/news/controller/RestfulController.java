@@ -1,4 +1,4 @@
-package com.kodark.news;
+package com.kodark.news.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -30,9 +30,8 @@ public class RestfulController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	@RequestMapping(value = "/ko/home", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
 		
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
@@ -41,26 +40,9 @@ public class RestfulController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		return "home";
+		return "redirect:/ko/home";
 	}
-	/*
-	 * 이메일인증
-	 * 
-	 * 2020-12-23
-	 */
-	@RequestMapping(value = "/auth", method = RequestMethod.POST)
-	public String auth(String email) {
-		return null;
-	}
-	/*
-	 * 인증번호전달 
-	 * 
-	 * 2020-12-23
-	 */
-	@RequestMapping(value = "/auth/verify", method = RequestMethod.PATCH)
-	public String verify(String email, String authString) {
-		 return null;
-	 }
+
 	
 	/*
 	 * 메인네비정보

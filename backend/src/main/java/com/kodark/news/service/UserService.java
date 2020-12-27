@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import com.kodark.news.MailUtils;
+import com.kodark.news.dao.AuthStringDao;
 import com.kodark.news.dao.UserDao;
 import com.kodark.news.dto.UserDto;
 
@@ -25,19 +25,29 @@ public class UserService {
 	
 	@Autowired
 	private UserDao dao;
+	@Autowired
+	private AuthStringDao authDao;
 	
 	//signUp
 	public void signUp(UserDto dto)throws Exception{
 		dao.signUp(dto);
 	}
-	//signUp
+	
+	//signIn
 	public UserDto signIn(UserDto dto)throws Exception{
 		return dao.signIn(dto);
 	}
 	
-	//signUpConfirm
-	public static void updateAuthStatus(Map<String, String> map) {
-		// TODO Auto-generated method stub
+	//createAuthKey
+	public AuthStringDao updateAuthKey(UserDto dto) throws Exception{
+		authDao.updateAuthKey(dto);
+		
+		return authDao;
+	}
+	
+	//authVerify
+	public UserDto updateAuthStatus(UserDto dto) throws Exception {
+		return authDao.authVerify(dto);
 		
 	}
 		

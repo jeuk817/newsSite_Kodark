@@ -3,12 +3,15 @@ package com.kodark.news.dto;
 
 import java.util.Date;
 
+import org.apache.ibatis.type.Alias;
+
 /*
  * 작성자 hj
  * 작성일 12.23
  */
 
 // Comment / Comm_reputation
+@Alias("CommentDto")
 public class CommentDto {
 	// Comment
 	private int id;
