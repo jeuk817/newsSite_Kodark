@@ -40,6 +40,7 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 //		System.out.println("addViewControllers");
+		registry.addViewController("/").setViewName("index");
 		registry.addViewController("/ko/*").setViewName("index");
 		registry.addViewController("/en/*").setViewName("index");
 	}
