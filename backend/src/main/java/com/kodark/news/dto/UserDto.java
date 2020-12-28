@@ -3,7 +3,8 @@ package com.kodark.news.dto;
 
 import java.util.Date;
 
-import org.apache.ibatis.type.Alias;
+import javax.annotation.Resource;
+
 
 /*
  * 작성자 hj
@@ -11,7 +12,7 @@ import org.apache.ibatis.type.Alias;
  */
 
 // User / UserDetail
-@Alias("UserDto")
+@Resource
 public class UserDto {
 	// User
 	private int id;

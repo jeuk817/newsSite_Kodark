@@ -24,7 +24,7 @@ import com.kodark.news.service.UserService;
  * 2020-12-24
  */
 @Controller
-@RequestMapping(value = "/users/*")
+@RequestMapping(value = "/users")
 public class UserController {	// restful 기준 나누기
 	
 	@Autowired
@@ -34,10 +34,8 @@ public class UserController {	// restful 기준 나누기
 	
     //sign up
 	@RequestMapping(value = "/sign-up", method = RequestMethod.POST)
-	public String signUp(UserDto dto)throws Exception {			
+	public void signUp(UserDto dto)throws Exception {			
 		userservice.signUp(dto);
-		
-		return null;
 	}
 
 	//sign in

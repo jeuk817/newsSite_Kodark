@@ -3,7 +3,9 @@ package com.kodark.news.dao;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.kodark.news.dto.AuthStringDto;
 import com.kodark.news.dto.UserDto;
+import com.kodark.news.service.MailSendService;
 
 public class AuthStringDao {
 		@Autowired
@@ -18,7 +20,15 @@ public class AuthStringDao {
 	       
 	        sql.update(nameSpace + ".updateAuthKey", dto2);
 	    }
-	  
+	    
+	    //인증코드 DB에 저장
+	    public void saveAuthCode(UserDto dto) {
+	    	MailSendService code = new MailSendService();
+	    	AuthStringDto auth = new AuthStringDto();
+	    	auth.setEmail(dto.getEmail());
+	    	auth.setAuthString(code.InsertAuthDto().getAuthString());
+	    	sql.insert(nameSpace + ".authSaveCode",auth);
+	    }
 
 	    //이메일 인증 코드 확인
 	    public UserDto authVerify(UserDto dto) throws Exception {
