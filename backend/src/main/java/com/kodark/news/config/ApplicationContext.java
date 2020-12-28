@@ -16,10 +16,10 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.kodark.news"})
+@ComponentScan(basePackages = {"com.kodark.news.controller"})
 public class ApplicationContext implements WebMvcConfigurer {
 	private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/views/";
-	private static final String VIEW_RESOLVER_SUFFIX = ".html"; //vue에 맞게 수정	 
+	private static final String VIEW_RESOLVER_SUFFIX = ".html"; //vue�뿉 留욊쾶 �닔�젙	 
     
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -38,7 +38,7 @@ public class ApplicationContext implements WebMvcConfigurer {
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		// TODO Auto-generated method stub
-		registry.addViewController("/").setViewName("redirect:list");
+		registry.addViewController("/").setViewName("home");
 	}
 	
 	@Bean
