@@ -57,4 +57,4 @@ pnpm-debug.log*
 .npm
 
 # Properties
-pom.properties
+*.properties
