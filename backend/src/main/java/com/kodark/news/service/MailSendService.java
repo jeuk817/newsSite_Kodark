@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.kodark.news.dto.AuthStringDto;
 
-@Service("mss")
+//@Service("mss")
 public class MailSendService {
    @Autowired
    private JavaMailSenderImpl mailSender;

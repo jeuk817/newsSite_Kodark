@@ -17,18 +17,20 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"com.kodark.news.controller"})
-public class ApplicationContext implements WebMvcConfigurer {
+public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/views/";
 	private static final String VIEW_RESOLVER_SUFFIX = ".html"; //vue�뿉 留욊쾶 �닔�젙	 
     
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+//		System.out.println("configureDefaultServletHandling");
 		configurer.enable();
 		//WebMvcConfigurer.super.configureDefaultServletHandling(configurer);
 	}
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//		System.out.println("addResourceHandlers");
 		registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(31556926);
 		registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(31556926);
 		registry.addResourceHandler("/img/**").addResourceLocations("/img/").setCachePeriod(31556926);
@@ -37,23 +39,25 @@ public class ApplicationContext implements WebMvcConfigurer {
 	
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		// TODO Auto-generated method stub
-		registry.addViewController("/").setViewName("home");
+//		System.out.println("addViewControllers");
+		registry.addViewController("/ko/*").setViewName("index");
+		registry.addViewController("/en/*").setViewName("index");
 	}
 	
 	@Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setViewClass(JstlView.class);
+//        viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix(VIEW_RESOLVER_PREFIX);
         viewResolver.setSuffix(VIEW_RESOLVER_SUFFIX);
         return viewResolver;
-	    }
-	@Bean
-	public MultipartResolver multipartResolver() {
-		return null;
-		
 	}
+	
+//	@Bean
+//	public MultipartResolver multipartResolver() {
+//		return null;
+//		
+//	}
 	
 		
     

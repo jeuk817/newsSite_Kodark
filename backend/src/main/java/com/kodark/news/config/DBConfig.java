@@ -12,21 +12,21 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
-@ComponentScan(basePackages = {"com.kodark.news.config"})
-@EnableTransactionManagement
-@EnableAspectJAutoProxy
-@PropertySource("classpath:DB.properties")
+//@Configuration
+//@ComponentScan(basePackages = {"com.kodark.news.config"})
+//@EnableTransactionManagement
+//@EnableAspectJAutoProxy
+//@PropertySource("classpath:DB.properties")
 public class DBConfig {
 	 	private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
 	    private static final String PROPERTY_NAME_DATABASE_PASSWORD = "db.password";
 	    private static final String PROPERTY_NAME_DATABASE_URL = "db.url";
 	    private static final String PROPERTY_NAME_DATABASE_USERNAME = "db.username";	 
 	    //?
-	    @Resource
+//	    @Resource
 	    private Environment env;	 
 
-	   @Bean
+//	   @Bean
 	    public DataSource dataSource() {
 	        DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	        dataSource.setDriverClassName(env.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
