@@ -1,6 +1,7 @@
 package com.kodark.news.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,18 +22,18 @@ public class TestDao {
 		return testMapper.getEmps();
 	}
 	
-	public void insertUser() {
-		testMapper.insertUser();
-	}
-	public void deleteUser(int id) {
-		testMapper.deleteUser(id);
-	}
-	public void empProcedure(String name, int age) {
-		testMapper.empProcedure(name, age);
+
+	public TestDto getTest(int id) {
+		return testMapper.getEmp(id);
 	}
 	
-	
-//	public TestDto getTest(int id) {
-//		return testMapper.getEmp(id);
+	public void excuEmpProcedure(Map<String, Object> parameters) {
+		testMapper.empProcedure(parameters);
+	}
+//	public void excuEmpProcedure(TestDto testDto) {
+//		testMapper.empProcedure(testDto);
+//	}
+//	public String excuEmpProcedure(String name) {
+//		return testMapper.empProcedure(name);
 //	}
 }
