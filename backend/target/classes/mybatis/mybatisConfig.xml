@@ -5,10 +5,6 @@
 <configuration>
 
 	<typeAliases >
-		<!-- MAP 설정 -->
-		<typeAlias alias="hashMap" type="java.util.HashMap" />
-        <typeAlias alias="map" type="java.util.Map" />
-		
 		<!-- DTO 설정 -->
 		<!-- 개별 dto 설정 -->
 		<!-- 밑에 패키지 @Alies 인식 안되면 이걸로 쓰면 됨 -->
