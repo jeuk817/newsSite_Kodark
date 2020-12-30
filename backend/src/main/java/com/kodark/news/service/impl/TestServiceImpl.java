@@ -1,6 +1,7 @@
 package com.kodark.news.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,10 +24,19 @@ public class TestServiceImpl implements TestService {
 		return allTests;
 	}
 
-//	@Override
-//	public TestDto getTest(int id) {
-//		TestDto test = testDao.getTest(id);
-//		return test;
+	@Override
+	public TestDto getTest(int id) {
+		TestDto test = testDao.getTest(id);
+		return test;
+	}
+
+	@Override
+	public void excuEmpProcedure(Map<String, Object> parameters) {
+//	public void excuEmpProcedure(TestDto testDto) {
+//		testDao.excuEmpProcedure(testDto);
 //	}
+//	public String excuEmpProcedure(String name) {
+		testDao.excuEmpProcedure(parameters);
+	}
 
 }
