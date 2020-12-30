@@ -23,6 +23,23 @@ public class TestServiceImpl implements TestService {
 		return allTests;
 	}
 
+	@Override
+	public void insertUser() {
+		testDao.insertUser();		
+	}
+
+	@Override
+	public void deleteUser(int id) {
+		testDao.deleteUser(id);
+		
+	}
+
+	@Override
+	public void empProcedure(String name, int age) {
+		testDao.empProcedure(name, age);
+		
+	}
+
 //	@Override
 //	public TestDto getTest(int id) {
 //		TestDto test = testDao.getTest(id);
