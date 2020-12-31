@@ -12,4 +12,7 @@ public class UserDao {
 	public void insertUser(String email, String pwd) {
 		userMapper.insertUser(email,pwd);
 	}
+	public String emailCheck(String email) {
+		return userMapper.getEmail(email);
+	}
 }

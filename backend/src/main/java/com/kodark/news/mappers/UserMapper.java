@@ -13,15 +13,15 @@ import com.kodark.news.dto.TestDto;
 @Mapper
 public interface UserMapper {
 
-	@Select("select * from emp")
+	@Select("select * from user")
 	public List<TestDto> getEmps();
 	
-//	@Select("select * from emp where id = #{id}")
-//	public TestDto getEmp(@Param("id") int id);
+	@Select("select * from user where email = #{email}")
+	public String getEmail(@Param("email") String email);
 	
 	@Insert("insert into user(email, pwd) values(#{email},#{pwd})")
 	public void insertUser(@Param("email")String email, @Param("pwd")String pwd);
 	
-	@Delete("delete from emp where id = #{id}")
+	@Delete("delete from user where id = #{id}")
 	public void deleteUser(@Param("id")int id);
 }

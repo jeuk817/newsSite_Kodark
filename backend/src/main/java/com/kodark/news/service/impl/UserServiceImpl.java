@@ -14,10 +14,13 @@ public class UserServiceImpl implements UserService{
 	private UserDao userDao;
 	
 	@Override	
-	public int insertUser(String email, String pwd) {
-		userDao.insertUser(email, pwd);
-		return 1;
-		
+	public void insertUser(String email, String pwd) {
+		userDao.insertUser(email, pwd);				
 	}
+	
+	public String emailCheck(String email) {
+		return userDao.emailCheck(email);
+	}
+	
 
 }
