@@ -3,149 +3,131 @@ package com.kodark.news.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.kodark.news.dto.AuthStringDto;
-import com.kodark.news.dto.SubscribeDto;
-import com.kodark.news.dto.UserDto;
-import com.kodark.news.service.MailSendService;
+import com.kodark.news.service.AuthProcedureService;
+import com.kodark.news.service.MailService;
 import com.kodark.news.service.UserService;
-/**
- * 유저컨트롤러
- * @author ys
- * 2020-12-24
- */
-@Controller
-@RequestMapping(value = "/users/*")
-public class UserController {	// restful 기준 나누기
+import com.kodark.news.service.UsersProceduerService;
+
+@RestController
+@RequestMapping(path = "/users")
+public class UserController {
 	
 	@Autowired
-	private UserService userservice;
-    @Autowired
-    private UserDto dto;
+	Environment env;
 	
-    //sign up
-	@RequestMapping(value = "/sign-up", method = RequestMethod.POST)
-	public String signUp(UserDto dto)throws Exception {			
-		userservice.signUp(dto);
-		
-		return null;
+	@Autowired
+	MailService mailService;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	AuthProcedureService authProcedureService;
+	
+	@Autowired
+	UsersProceduerService usersProcedureService;
+	
+	@GetMapping(path = "/")
+	public ResponseEntity<String> userInfo(){
+		//????
+		return new ResponseEntity<>(HttpStatus.OK);//200 
 	}
+	@GetMapping(path = "/my-page")
+    public ResponseEntity<String> myPage(){
+		
+		
+	    return new ResponseEntity<>(HttpStatus.OK);//200
+    }
 
-	//sign in
-		@RequestMapping(value = "/sign-in", method = RequestMethod.POST)
-		public String login(UserDto dto, HttpServletRequest req, RedirectAttributes rttr) throws Exception{			
-			HttpSession session = req.getSession();
-			UserDto login = userservice.signIn(dto);		
-			if(login == null) {
-				session.setAttribute("user", null);
-				rttr.addFlashAttribute("msg", false);
-			}else {
-				session.setAttribute("user", login);
-			}
-			return "redirect:/";
-		}
-	
-	//sign out
-	@RequestMapping(value = "/sign-out", method = RequestMethod.GET)
-	public String logout(HttpSession session) throws Exception{		
-		session.invalidate();		
-		return "redirect:/";
+	@PostMapping(path = "/test")
+	public ResponseEntity<String> auth(@RequestBody Map<String, Object> body) {
+		String email = (String) body.get("email");
+		System.out.println(email);
+//		List<TestDto> allTests = testService.getAllTests();
+//		testService.insertUser();		
+//		int id = Integer.valueOf((String)body.get("id"));		
+//		testService.deleteUser(id);
+//		System.out.println(allTests);
+
+		
+		return new ResponseEntity<>(HttpStatus.CREATED); // 201
 	}
-	
-	/*
-	 * 회원정보
-	 * 
-	 * 2020-12-23
-	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public UserDto user(UserDto user) {
-		return user;
-	}
-	
-	/*
-	 * 회원의 모든 댓글보기
-	 */
-	@RequestMapping(value = "/commnet", method = RequestMethod.GET)
-	public void allComment() {
+	@PostMapping(path = "/sign-up")
+	public ResponseEntity<String> signUp(@RequestBody Map<String, Object>body){
+		String email = (String) body.get("email");
+		String pwd = (String)body.get("pwd");	
+		Map<String, Object> params = new HashMap<>();		
+		params.put("_switch", "sign_up");
+		params.put("_email", email);
+		params.put("_pwd", pwd);		
+		authProcedureService.execuAuthProcedure(params);
+		
+		
+		if(params.get("result_set").equals("success")) {
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		}else
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		
 		
 	}
-	
-	/*
-	 * 기자구독하기
-	 */
-	@RequestMapping(value = "/subscription", method = RequestMethod.POST)
-	public UserDto subscription() {
-		return null;
-	}
-	
-	/*
-	 * 마이페이지
-	 */
-	@RequestMapping(value = "/my-page", method = RequestMethod.GET)
-	public void mypage() {
+	@PostMapping(path = "/sign-in")
+	public ResponseEntity<String> signIn(@RequestBody Map<String, Object>body){
+		String email = (String) body.get("email");
+		String pwd = (String)body.get("pwd");	
+		Map<String, Object> params = new HashMap<>();		
+		params.put("_switch", "sign_in");
+		params.put("_email", email);
+		params.put("_pwd", pwd);		
+		authProcedureService.execuAuthProcedure(params);
 		
+		if(params.get("result_set").equals("no content")) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
+		}else 
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
 	}
-	/*
-	 * 회원정보
-	 */
-	@RequestMapping(value = "/my-page/detail", method = RequestMethod.GET)
-	public void mypageDetail() {
-		
-	}
-	/*
-	 * 구독목록
-	 */
-	@RequestMapping(value = "/my-page/subscribe-list", method = RequestMethod.GET)
-	public SubscribeDto subscribeList() {
-		return null;
-	}
+//	@DeleteMapping(path = "/sign-out")
+//	public ResponseEntity<String> signOut(){		
+//		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//205
+//	}
 	
-	/*
-	 * 회원정보수정
-	 */
-	@RequestMapping(value = "/detail", method = RequestMethod.PUT)
-	public UserDto detail() {
-		return null;
+	@PatchMapping(path = "/pwd")
+	public ResponseEntity<String> pwdUpdate(@RequestBody Map<String, Object>body){
+		String pwd = (String)body.get("pwd");
+		String email = (String) body.get("email");
+		int id = Integer.valueOf((String)body.get("id"));
+		Map<String, Object> params = new HashMap<>();		
+		params.put("_switch", "update_password");		
+		params.put("_pwd", pwd);
+		params.put("_id", id);
+		params.put("_email", email);
+		usersProcedureService.execuUsersProcedure(params);
+		if(params.get("result_set").equals("204")){
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
+		}else if(params.get("result_set").equals("401")){
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
+		}else if(params.get("result_set").equals("404")){		
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
+		}else
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 	}
-	/*
-	 * 비밀번호수정
-	 */
-	@RequestMapping(value = "/pwd", method = RequestMethod.PATCH)
-	public UserDto pwdUpdate() {
-		return null;
-	}
+//	
 	
-	/*
-	 * 회원탈퇴
-	 */
-	@RequestMapping(value = "/", method = RequestMethod.DELETE)
-	public void userDelete() {
-		
-	}
 	
-	/*
-	 * 뉴스레터토글
-	 */
-	@RequestMapping(value = "/reporters", method = RequestMethod.PATCH)
-	public SubscribeDto toggleNewsLetter() {
-		return null;
+	@PutMapping(path = "/update")
+	public ResponseEntity<String> update(@RequestBody Map<String, Object>body){
+		String msg = "update success";
+		return new ResponseEntity<>(msg, HttpStatus.OK);//200
 	}
-	
-	/*
-	 * 구독취소
-	 */
-	@RequestMapping(value = "/subscription?", method = RequestMethod.DELETE)
-	public void cancleSubscribe() {
-		
-	}
-	
 }

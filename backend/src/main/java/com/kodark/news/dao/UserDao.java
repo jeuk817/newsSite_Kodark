@@ -1,20 +1,18 @@
 package com.kodark.news.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import com.kodark.news.dto.AuthStringDto;
-import com.kodark.news.dto.UserDto;
-
-
-
-public interface UserDao {
-
-     //회원가입
-     public void signUp(UserDto dto) throws Exception;  
-    
-
-     //로그인
-     public UserDto signIn(UserDto dto) throws Exception; 
-  
-     //이메일 체크
-     public int emailCheck(UserDto dto) throws Exception;
+import com.kodark.news.mappers.UserMapper;
+@Repository("UserDao")
+public class UserDao {
+	@Autowired
+	private UserMapper userMapper;
+	
+	public void insertUser(String email, String pwd) {
+		userMapper.insertUser(email,pwd);
+	}
+	public String emailCheck(String email) {
+		return userMapper.getEmail(email);
+	}
 }
