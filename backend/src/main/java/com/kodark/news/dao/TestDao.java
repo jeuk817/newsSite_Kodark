@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.kodark.news.dto.TestDto;
+import com.kodark.news.dto.UserDto;
 import com.kodark.news.mappers.TestMapper;
 
 @Repository("TestDao")
@@ -25,9 +26,13 @@ public class TestDao {
 	}
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 //	public TestDto getTest(int id) {
 //		return testMapper.getEmp(id);
 =======
+=======
+
+>>>>>>> 7a50b4c9d0ff0a4dc2b9aace164a0d9284f5b9cc
 	public TestDto getTest(int id) {
 		return testMapper.getEmp(id);
 	}
