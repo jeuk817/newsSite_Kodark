@@ -85,11 +85,11 @@ public class UserController {
 		}else 
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
 	}
-	@DeleteMapping(path = "/sign-out")
-	public ResponseEntity<String> signOut(){		
-		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//205
-	}
-	
+//	@DeleteMapping(path = "/sign-out")
+//	public ResponseEntity<String> signOut(){		
+//		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//205
+//	}
+//	
 	
 	
 	@PutMapping(path = "update")
