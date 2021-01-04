@@ -42,7 +42,7 @@ public class AuthController {
 	@GetMapping(path = "/sign-in")
 	public ResponseEntity<Map<String, Object>> signIn(HttpServletResponse response) {
 		System.out.println("/sign-in");
-		String token = jwtService.createToken("jack", (2 * 1000 * 60));
+		String token = jwtService.createJwt("jack", (2 * 1000 * 60));
 		Map<String, Object> map = new HashMap<>();
         map.put("result", token);
         Cookie cookie = new Cookie("jwt", token);
