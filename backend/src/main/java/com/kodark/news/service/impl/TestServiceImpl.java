@@ -1,10 +1,11 @@
 package com.kodark.news.service.impl;
 
 import java.util.List;
-<<<<<<< HEAD
+/*<<<<<<< HEAD
 =======
 import java.util.Map;
->>>>>>> b100e76c591bfc4de9eb542a5ed80a8e844c8b1b
+>>>>>>> b100e76c591bfc4de9eb542a5ed80a8e844c8b1b*/
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,7 +28,19 @@ public class TestServiceImpl implements TestService {
 		return allTests;
 	}
 
-<<<<<<< HEAD
+	@Override
+	public TestDto getTest(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void excuEmpProcedure(Map<String, Object> parameters) {
+		// TODO Auto-generated method stub
+		
+	}
+
+/*<<<<<<< HEAD
 //	@Override
 //	public TestDto getTest(int id) {
 //		TestDto test = testDao.getTest(id);
@@ -49,6 +62,6 @@ public class TestServiceImpl implements TestService {
 //	public String excuEmpProcedure(String name) {
 		testDao.excuEmpProcedure(parameters);
 	}
->>>>>>> b100e76c591bfc4de9eb542a5ed80a8e844c8b1b
+>>>>>>> b100e76c591bfc4de9eb542a5ed80a8e844c8b1b*/
 
 }
