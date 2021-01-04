@@ -35,6 +35,8 @@ public class JwtInterceptor implements HandlerInterceptor {
 		if(jwtCookie != null) {
 			Claims claims =  jwtService.getClaims(jwtCookie);
 			System.out.println(claims.getSubject());
+			System.out.println(claims.get("email"));
+			System.out.println(claims.get("auth"));
 //			request.setAttribute("id", o);
 //			return true;
 		} else {

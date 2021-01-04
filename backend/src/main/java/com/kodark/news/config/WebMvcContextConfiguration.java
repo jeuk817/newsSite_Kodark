@@ -65,11 +65,11 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 //		WebMvcConfigurer.super.addInterceptors(registry);
-//		registry.addInterceptor(jwtInterceptor)
-//			.addPathPatterns("/auth/sign-in");
-//		
-//		registry.addInterceptor(new TestInterceptor())
-//			.addPathPatterns("/auth/t");
+		registry.addInterceptor(jwtInterceptor)
+			.addPathPatterns("/auth/sign-in");
+		
+		registry.addInterceptor(new TestInterceptor())
+			.addPathPatterns("/auth/t");
 	}
 	
 	

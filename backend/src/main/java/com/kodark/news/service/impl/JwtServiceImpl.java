@@ -2,6 +2,7 @@ package com.kodark.news.service.impl;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -24,20 +25,25 @@ public class JwtServiceImpl implements JwtService {
 	Environment env;
 	 
     @Override
-    public String createJwt(String subject, long ttlMillis) {
+    public String createJwt(String subject, Map<String, Object> claims, long ttlMillis) {
         if (ttlMillis <= 0) {
             throw new RuntimeException("Expiry time must be greater than Zero : ["+ttlMillis+"] ");
         }
-        // 토큰을 서명하기 위해 사용해야할 알고리즘 선택
-        SignatureAlgorithm  signatureAlgorithm= SignatureAlgorithm.HS256;
         
+        SignatureAlgorithm  signatureAlgorithm= SignatureAlgorithm.HS256;
         byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(env.getProperty("secret.jwt"));
         Key signingKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
+        long expirationMillis = System.currentTimeMillis() + ttlMillis;
+        
         JwtBuilder builder = Jwts.builder()
                 .setSubject(subject)
-                .signWith(signatureAlgorithm, signingKey);
-        long nowMillis = System.currentTimeMillis();
-        builder.setExpiration(new Date(nowMillis + ttlMillis));
+                .signWith(signatureAlgorithm, signingKey)
+                .setExpiration(new Date(expirationMillis));
+        for(Map.Entry<String, Object> entry : claims.entrySet()) {
+        	builder.claim(entry.getKey(), entry.getValue());
+        }
+        
+//        builder.setExpiration(new Date(expirationMillis));
         return builder.compact();
     }
  
