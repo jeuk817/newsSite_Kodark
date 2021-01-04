@@ -3,10 +3,15 @@ package com.kodark.news.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kodark.news.dto.Mail;
 import com.kodark.news.service.AuthProcedureService;
+import com.kodark.news.service.JwtService;
 import com.kodark.news.service.MailService;
 
 @RestController
@@ -29,6 +35,31 @@ public class AuthController {
 	
 	@Autowired
 	AuthProcedureService authProcedureService;
+	
+	@Autowired
+	JwtService jwtService;
+	
+	@GetMapping(path = "/sign-in")
+	public ResponseEntity<Map<String, Object>> signIn(HttpServletResponse response) {
+		String token = jwtService.createToken("jack", (2 * 1000 * 60));
+		Map<String, Object> map = new HashMap<>();
+        map.put("result", token);
+        Cookie cookie = new Cookie("jwt", token);
+        cookie.setMaxAge(7 * 24 * 60 * 60);
+//        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        
+        response.addCookie(cookie);
+		return new ResponseEntity<>(map, HttpStatus.CREATED); // 201
+	}
+	
+	@GetMapping(path = "/t")
+	public ResponseEntity<Map<String, Object>> test() {
+		
+		
+		return new ResponseEntity<>(HttpStatus.CREATED); 
+	}
 	
 	@PostMapping
 	public ResponseEntity<String> auth(@RequestBody Map<String, Object> body) {
@@ -59,8 +90,9 @@ public class AuthController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); //500
 		}
 	}
-	@PatchMapping(value = "verify")
+	@PatchMapping(path = "/verify")
 	public ResponseEntity<String> verify(@RequestBody Map<String, Object>body){
+		System.out.println("--------------------------------------");
 		String email = (String)body.get("email");
 		Map<String, Object>params = new HashMap<>();
 		params.put("_switch", "confirm_verify");		

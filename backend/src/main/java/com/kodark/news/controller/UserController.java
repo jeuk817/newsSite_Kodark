@@ -130,4 +130,5 @@ public class UserController {
 		String msg = "update success";
 		return new ResponseEntity<>(msg, HttpStatus.OK);//200
 	}
+	
 }
