@@ -28,7 +28,7 @@
 
 <beans:bean id="dataSource"
       name="dataSource"
-      class="oracle.jdbc.pool.OracleDataSource">
+      class="com.mysql.cj.jdbc.MysqlDataSource">
       <beans:property name="driverClass" value="${db.driver}" />
     <beans:property name="URL" value="${db.url}" />
     <beans:property name="user" value="${db.username}" />
@@ -37,7 +37,6 @@
 
 <beans:bean id="sqlSessionFactory" name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
     <beans:property name="dataSource" ref="dataSource" />
-    <beans:property name="mappers" value="classpath:mappers/*.xml"/>
     <beans:property name="configLocation" value="classpath:/mybatis-config.xml" />
 </beans:bean>
 
@@ -45,5 +44,6 @@
       destroy-method="clearCache">
     <beans:constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
 </beans:bean>
+	
 	
 </beans:beans>
