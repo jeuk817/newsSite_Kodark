@@ -1,21 +1,27 @@
 package com.kodark.news.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kodark.news.dao.AdminDao;
+import com.kodark.news.dao.AdminProcedureDao;
 import com.kodark.news.service.AdminProcedureService;
 
 @Service
-public class AdminProcedureServiceImpl implements AdminProcedureService {
+public class AdminProcedureServiceImpl implements AdminProcedureService{
+
 	@Autowired
-	private AdminDao adminDao;
+	AdminProcedureDao adminProcedureDao;
 
 	@Override
 	public void execuAdminProcedure(Map<String, Object> params) {
-		adminDao.execuReportersProcedure(params);
-		
+		adminProcedureDao.excuAdminProcedure(params);
+	}
+
+	@Override
+	public List<Map<String, Object>> getWaitArticles() {
+		return adminProcedureDao.getWaitArticles();
 	}
 }

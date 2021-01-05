@@ -16,4 +16,6 @@ public class AuthProcedureDao {
 	public void excuAuthProcedure(Map<String, Object> params) {
 		authProcedureMapper.authProcedure(params);
 	}
+
 }
+

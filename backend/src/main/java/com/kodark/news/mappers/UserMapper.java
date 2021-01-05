@@ -8,13 +8,14 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import com.kodark.news.dto.TestDto;
+import com.kodark.news.dto.UserDto;
+
 
 @Mapper
 public interface UserMapper {
 
 	@Select("select * from user")
-	public List<TestDto> getEmps();
+	public List<UserDto> getInfoUsers();
 	
 	@Select("select * from user where email = #{email}")
 	public String getEmail(@Param("email") String email);
@@ -24,4 +25,5 @@ public interface UserMapper {
 	
 	@Delete("delete from user where id = #{id}")
 	public void deleteUser(@Param("id")int id);
+	
 }
