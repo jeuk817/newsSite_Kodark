@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodark.news.dto.Mail;
-import com.kodark.news.dto.TestDto;
 
 import com.kodark.news.service.AuthProcedureService;
 import com.kodark.news.service.JwtService;
@@ -105,7 +104,6 @@ public class AuthController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); //500
 		}
 	}
-	
 
 	@PatchMapping(path="/verify")
 	public ResponseEntity<String> verify(@RequestBody Map<String, Object> body){

@@ -2,6 +2,7 @@
 package com.kodark.news.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kodark.news.dto.UserDto;
 import com.kodark.news.service.AuthProcedureService;
 import com.kodark.news.service.MailService;
 import com.kodark.news.service.UserService;
@@ -45,10 +47,12 @@ public class UserController {
 		//????
 		return new ResponseEntity<>(HttpStatus.OK);//200 
 	}
+	
+	
+	
+	//����������
 	@GetMapping(path = "/my-page")
-    public ResponseEntity<String> myPage(){
-		
-		
+    public ResponseEntity<String> myPage(){	
 	    return new ResponseEntity<>(HttpStatus.OK);//200
     }
 
@@ -114,6 +118,7 @@ public class UserController {
 		params.put("_id", id);
 		params.put("_email", email);
 		usersProcedureService.execuUsersProcedure(params);
+		
 		if(params.get("result_set").equals("204")){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 		}else if(params.get("result_set").equals("401")){
@@ -123,13 +128,19 @@ public class UserController {
 		}else
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 	}
-//	
+
 	
 	
 	@PutMapping(path = "/update")
 	public ResponseEntity<String> update(@RequestBody Map<String, Object>body){
 		String msg = "update success";
 		return new ResponseEntity<>(msg, HttpStatus.OK);//200
+	}
+	
+
+	@GetMapping(path ="/list")
+	public ResponseEntity<List<UserDto>> getInfo(){
+		return new ResponseEntity<List<UserDto>>(userService.getInfoUsers(), HttpStatus.OK);//200
 	}
 	
 }

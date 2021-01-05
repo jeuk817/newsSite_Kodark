@@ -49,7 +49,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 			else return true;
 		}
 		
-		return false;
+		return false; // wrong jwt forbbiden
 	}
 	
 	private String getControllerToUse(HttpServletRequest request) {
