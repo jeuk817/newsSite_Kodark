@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -50,7 +52,7 @@ public class UserController {
 	
 	
 	
-	//����������
+	//
 	@GetMapping(path = "/my-page")
     public ResponseEntity<String> myPage(){	
 	    return new ResponseEntity<>(HttpStatus.OK);//200
@@ -70,7 +72,7 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.CREATED); // 201
 	}
 	@PostMapping(path = "/sign-up")
-	public ResponseEntity<String> signUp(@RequestBody Map<String, Object>body){
+	public ResponseEntity<String> signUp(@RequestBody Map<String, Object>body, HttpServletResponse response){
 		String email = (String) body.get("email");
 		String pwd = (String)body.get("pwd");	
 		Map<String, Object> params = new HashMap<>();		
@@ -79,7 +81,8 @@ public class UserController {
 		params.put("_pwd", pwd);		
 		authProcedureService.execuAuthProcedure(params);
 		
-		
+		response.setHeader("Links", "</users/sign-up>; rel=\"self\","
+							+"</ko/signIn>; rel=\"next\"");
 		if(params.get("result_set").equals("success")) {
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		}else
