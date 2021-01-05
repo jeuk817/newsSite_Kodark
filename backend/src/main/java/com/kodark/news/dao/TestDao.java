@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.kodark.news.dto.TestDto;
+<<<<<<< HEAD
 import com.kodark.news.dto.UserDto;
+=======
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
 import com.kodark.news.mappers.TestMapper;
 
 @Repository("TestDao")
@@ -22,7 +25,10 @@ public class TestDao {
 		return testMapper.getEmps();
 	}
 	
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
 	public TestDto getTest(int id) {
 		return testMapper.getEmp(id);
 	}

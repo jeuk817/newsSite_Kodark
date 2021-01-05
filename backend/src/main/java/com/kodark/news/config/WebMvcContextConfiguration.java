@@ -19,7 +19,11 @@ import org.springframework.web.servlet.view.JstlView;
 @ComponentScan(basePackages = {"com.kodark.news.controller"})
 public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/views/";
+<<<<<<< HEAD
 	private static final String VIEW_RESOLVER_SUFFIX = ".html"; //vue�뿉 留욊쾶 �닔�젙	 
+=======
+	private static final String VIEW_RESOLVER_SUFFIX = ".jsp"; //vue�뿉 留욊쾶 �닔�젙	 
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
     
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {

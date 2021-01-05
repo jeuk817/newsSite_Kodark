@@ -1,56 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+<<<<<<< HEAD
                         	
     
+=======
+                    	
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
     
     
     
     
     <wb-module deploy-name="news-1.0.0-BUILD-SNAPSHOT">
+<<<<<<< HEAD
                                                         
         
+=======
+                                                
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+<<<<<<< HEAD
                                                 		
         
+=======
+                                        		
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+<<<<<<< HEAD
                                                 		
         
+=======
+                                        		
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+<<<<<<< HEAD
                                                 		
         
+=======
+                                        		
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+<<<<<<< HEAD
                                                 		
         
+=======
+                                        		
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <property name="java-output-path" value="target/classes"/>
+<<<<<<< HEAD
         <property name="context-root" value="news"/>
                                                 	
     
+=======
+        <property name="context-root" value="/"/>
+                                        	
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
     
     
     
     
     </wb-module>
+<<<<<<< HEAD
                         
 
+=======
+                    
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
 
 
 
