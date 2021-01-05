@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>newsSite_Kodark</name>
+=======
+	<name>newsSite_Kodark-backend</name>
+>>>>>>> tmp
 	<comment></comment>
 	<projects>
 	</projects>

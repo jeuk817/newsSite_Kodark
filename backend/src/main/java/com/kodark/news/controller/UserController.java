@@ -1,3 +1,4 @@
+
 package com.kodark.news.controller;
 
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class UserController {
 	
 	
 	
-	//¸¶ÀÌÆäÀÌÁö
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	@GetMapping(path = "/my-page")
     public ResponseEntity<String> myPage(){	
 	    return new ResponseEntity<>(HttpStatus.OK);//200
@@ -136,13 +137,11 @@ public class UserController {
 		return new ResponseEntity<>(msg, HttpStatus.OK);//200
 	}
 	
-	//·Î±×ÀÎ Á¤º¸
+
 	@GetMapping(path ="/list")
 	public ResponseEntity<List<UserDto>> getInfo(){
-		
 		return new ResponseEntity<List<UserDto>>(userService.getInfoUsers(), HttpStatus.OK);//200
-		 
 	}
-		
 	
 }
+
