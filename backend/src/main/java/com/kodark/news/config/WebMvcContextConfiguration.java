@@ -16,7 +16,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import com.kodark.news.interceptors.JwtInterceptor;
-import com.kodark.news.interceptors.TestInterceptor;
+
 
 
 @Configuration
@@ -62,20 +62,20 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
         return viewResolver;
 	}
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
 //		WebMvcConfigurer.super.addInterceptors(registry);
-		registry.addInterceptor(jwtInterceptor)
-			.addPathPatterns("/users/*")
-			.addPathPatterns("/reporter/*")
-			.addPathPatterns("/admin/*");
-		
+//		registry.addInterceptor(jwtInterceptor)
+//			.addPathPatterns("/users/*")
+//			.addPathPatterns("/reporter/*")
+//			.addPathPatterns("/admin/*");
+//		
 //		registry.addInterceptor(new TestInterceptor())
 //			.addPathPatterns("/reporter");
 //		
 //		registry.addInterceptor(new TestInterceptor())
 //		.addPathPatterns("/reporter");
-	}
+//	}
 	
 	
 	
