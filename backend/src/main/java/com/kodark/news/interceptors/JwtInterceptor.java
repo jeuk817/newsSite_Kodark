@@ -21,7 +21,6 @@ public class JwtInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-//		return HandlerInterceptor.super.preHandle(request, response, handler);
 		System.out.println("JwtInterceptor");
 		String jwtCookie = null;
 		Cookie[] cookies = request.getCookies();
@@ -32,19 +31,33 @@ public class JwtInterceptor implements HandlerInterceptor {
 			}
 		}
 		
-		if(jwtCookie != null) {
-			Claims claims =  jwtService.getClaims(jwtCookie);
-			System.out.println(claims.getSubject());
-			System.out.println(claims.get("id"));
-			System.out.println(claims.get("email"));
-			System.out.println(claims.get("auth"));
-			request.setAttribute("id", claims.get("id"));
-//			request.setAttribute("id", o);
-//			return true;
-		} else {
-			
+		if(jwtCookie == null) return false; // 401
+		
+		Claims claims =  jwtService.getClaims(jwtCookie);
+		request.setAttribute("id", claims.get("id"));
+		String controllerToUse = getControllerToUse(request);
+		
+		if(claims.get("auth").equals("admin")) return true; // admin
+		
+		if(claims.get("auth").equals("reporter")) { // reporter
+			if(controllerToUse.equals("admin")) return false; // forbbiden
+			else return true;
 		}
+		
+		if(claims.get("auth").equals("user")) { // user
+			if(controllerToUse.equals("admin") || controllerToUse.equals("reporter")) return false; // forbbiden
+			else return true;
+		}
+		
 		return false;
+	}
+	
+	private String getControllerToUse(HttpServletRequest request) {
+		String requestURI = request.getRequestURI();
+    	String contextPath = request.getContextPath();
+    	String urlCommand = requestURI.substring(contextPath.length());
+    	String[] urlTokens = urlCommand.split("/");
+    	return urlTokens[0];
 	}
 
 }
