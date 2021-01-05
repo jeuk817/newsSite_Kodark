@@ -34,7 +34,10 @@ public class TestServiceImpl implements TestService {
 	public void excuEmpProcedure(Map<String, Object> parameters) {
 //	public void excuEmpProcedure(TestDto testDto) {
 //		testDao.excuEmpProcedure(testDto);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
 //	}
 //	public String excuEmpProcedure(String name) {
 		testDao.excuEmpProcedure(parameters);
