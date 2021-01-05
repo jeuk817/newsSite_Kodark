@@ -39,37 +39,37 @@ public class AuthController {
 	@Autowired
 	JwtService jwtService;
 	
-	@GetMapping(path = "/sign-in")
-	public ResponseEntity<Map<String, Object>> signIn(HttpServletResponse response) {
+	@PostMapping(path = "/sign-in")
+	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body, HttpServletResponse response) {
 		System.out.println("/sign-in");
+		String email = (String)body.get("email");
+		String pwd = (String)body.get("pwd");
 		
-		int id = 1;
-		String email = "jeuk817@gmail.com";
-		String auth = "admin";
-		Map<String, Object> claims = new HashMap<>();
-		claims.put("id", id);
-		claims.put("email", email);
-		claims.put("auth", auth);
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "sign_in");
+		params.put("_email", email);
+		authProcedureService.execuAuthProcedure(params);
 		
-		String token = jwtService.createJwt("jack", claims, (10 * 1000 * 60));
-		Map<String, Object> map = new HashMap<>();
-        map.put("result", token);
-        Cookie cookie = new Cookie("jwt", token);
-        cookie.setMaxAge(7 * 24 * 60 * 60);
-//        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        
-        response.addCookie(cookie);
-        response.setHeader("Links", "</users/sign-up>; rel=\"self\", </ko/signIn>; rel=\"next\"");
-		return new ResponseEntity<>(map, HttpStatus.CREATED); // 201
-	}
-	
-	@GetMapping(path = "/t")
-	public ResponseEntity<Map<String, Object>> test() {
-		System.out.println("/t");
+		if(params.get("result_set").equals("success")) {
+			if(params.get("_pwd").equals(pwd)) {
+				Map<String, Object> claims = new HashMap<>();
+				claims.put("id", params.get("_id"));
+				claims.put("auth", params.get("_auth"));
+				String token = jwtService.createJwt("userInfo", claims, (10 * 1000 * 60));
+				
+		        Cookie cookie = new Cookie("jwt", token);
+		        cookie.setMaxAge(7 * 24 * 60 * 60);
+//		        cookie.setSecure(true);
+		        cookie.setHttpOnly(true);
+		        cookie.setPath("/");
+		        
+		        response.addCookie(cookie);
+		        response.setHeader("Links", "</auth/sign-in>; rel=\"self\", </>; rel=\"next\"");
+		        return new ResponseEntity<>(HttpStatus.CREATED); // 201
+			}
+		}
 		
-		return new ResponseEntity<>(HttpStatus.CREATED); 
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 	}
 	
 	@PostMapping

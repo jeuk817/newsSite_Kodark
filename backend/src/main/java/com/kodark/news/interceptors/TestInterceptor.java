@@ -12,7 +12,7 @@ public class TestInterceptor implements HandlerInterceptor {
 			throws Exception {
 //		return HandlerInterceptor.super.preHandle(request, response, handler);
 		System.out.println("TestInterceptor");
-		return false;
+		return true;
 	}
 	
 }

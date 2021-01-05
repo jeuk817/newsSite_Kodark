@@ -14,22 +14,23 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //		super.configure(auth);
 //		auth.inMemoryAuthentication()
 //			.withUser("admin").password(encoder().encode("admin")).roles("ADMIN")
 //	        .and()
 //	        .withUser("user").password(encoder().encode("user")).roles("USER");
-	}
+//	}
 	
 	@Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity
+        httpSecurity
 //                .csrf()
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		
-//                .httpBasic()
+        		.csrf().disable()
+                .httpBasic();
 //                .and()
 //                .authorizeRequests()
 //                .antMatchers("/db/**").hasRole("ADMIN");

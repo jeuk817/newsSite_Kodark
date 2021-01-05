@@ -43,7 +43,6 @@ public class JwtServiceImpl implements JwtService {
         	builder.claim(entry.getKey(), entry.getValue());
         }
         
-//        builder.setExpiration(new Date(expirationMillis));
         return builder.compact();
     }
  
