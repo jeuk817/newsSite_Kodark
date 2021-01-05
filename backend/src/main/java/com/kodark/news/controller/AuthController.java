@@ -59,7 +59,7 @@ public class AuthController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); //500
 		}
 	}
-	@PatchMapping(value = "verify")
+	@PatchMapping(value = "/verify")
 	public ResponseEntity<String> verify(@RequestBody Map<String, Object>body){
 		String email = (String)body.get("email");
 		Map<String, Object>params = new HashMap<>();
@@ -74,10 +74,8 @@ public class AuthController {
 		
 		
 		if(params.get("result_set").equals("success")) {
-			System.out.println("성공");
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 		}else if(params.get("result_set").equals("fail")) {
-			System.out.println("실패");
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
 		}else if(params.get("result_set").equals("expiration")){
 			return new ResponseEntity<>(HttpStatus.REQUEST_TIMEOUT);//408
