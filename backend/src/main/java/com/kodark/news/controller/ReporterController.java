@@ -41,13 +41,15 @@ public class ReporterController {
 							  + "</reporters/article?status=\"waiting\"> ;  rel=\"waitingArticleList\",");
 		
 		Map<String, Object> params = new HashMap<>();	
-
-		reportersProcedureService.execuReportersProcedure(params);
 		
-		System.out.println("파람스~~~~~~~~~~~~" + params);
+		reportersProcedureService.execuReportersProcedure(params);
 		
 		if(params.get("result_set").equals("204")){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
+		}else if(params.get("result_set").equals("401")){
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
+		}else if(params.get("result_set").equals("403")) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);//403
 		}else if(params.get("result_set").equals("404")){		
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
 		}else
