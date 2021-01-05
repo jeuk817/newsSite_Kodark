@@ -42,22 +42,10 @@ public class ReporterController {
 		
 		Map<String, Object> params = new HashMap<>();	
 		
-		/*
-		 * params.put("_switch", "navigation");p
-		 * arams.put("_id", 4);
-		 * params.put("_email", "bit@gmail.com");
-		 */
-		
 		reportersProcedureService.execuReportersProcedure(params);
-		
-		System.out.println("파람스~~~~~~~~~~~~" + params);
 		
 		if(params.get("result_set").equals("204")){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
-		}else if(params.get("result_set").equals("401")){
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
-		}else if(params.get("result_set").equals("403")) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);//403
 		}else if(params.get("result_set").equals("404")){		
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
 		}else

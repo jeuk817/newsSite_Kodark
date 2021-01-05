@@ -90,49 +90,30 @@ public class AdminController {
 	}
 	
 	//관리자 네비게이션
-	 @GetMapping(path = "/navigation")
-	   public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response) {
-	      /*
-	       * String token = jwtService.createToken("jack", (2 * 1000 * 60));
-	       * 
-	       * Map<String, Object> map = new HashMap<>(); Cookie cookie = new Cookie("jwt",
-	       * token); cookie.setMaxAge(7 * 24 * 60 * 60); cookie.setSecure(true);
-	       * cookie.setHttpOnly(true); cookie.setPath("/");
-	       * 
-	       * response.addCookie(cookie);
-	       */
+	@GetMapping(path = "/navigation")
+	public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response) {
+		/*
+		 * String token = jwtService.createToken("jack", (2 * 1000 * 60));
+		 * 
+		 * Map<String, Object> map = new HashMap<>(); Cookie cookie = new Cookie("jwt",
+		 * token); cookie.setMaxAge(7 * 24 * 60 * 60); cookie.setSecure(true);
+		 * cookie.setHttpOnly(true); cookie.setPath("/");
+		 * 
+		 * response.addCookie(cookie);
+		 */
 
-	      response.setHeader("Links",
-	            "</admin/statistics>; rel=\"statistics\","
-	                  + "</admin/users?userStartId>; rel=\"userList\","
-	                  + "</admin/question-list?questionStartId&status=\"all\">; rel=\"allQuestionList\","
-	                  + "</admin/report/comment>; rel=\"commentReportList\","
-	                  + "</admin/report/article>; rel=\"articleReportList\","
-	                  + "</admin/reporters>; rel=\"reporterList\","
-	                  + "</admin/article/waiting>; rel=\"waitingArticleList\",");
+		response.setHeader("Links",
+				"</admin/statistics>; 									rel=\"statistics\","
+						+ "</admin/users?userStartId>; 	   						rel=\"userList\","
+						+ "</admin/question-list?questionStartId&status=\"all\">; rel=\"allQuestionList\","
+						+ "</admin/report/comment>; 								rel=\"commentReportList\","
+						+ "</admin/report/article>; 								rel=\"articleReportList\","
+						+ "</admin/reporters>;  									rel=\"reporterList\","
+						+ "</admin/article/waiting>;  							rel=\"waitingArticleList\",");
 
-	      Map<String, Object> params = new HashMap<>();
-	      
-	       params.put("_switch", "navigation");
-	       params.put("_id", 34);
-	       params.put("_email", "admin@naver.com");
-	       
-	       
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 
-	      adminProcedureService.execuAdminProcedure(params);
-
-	      System.out.println("파람스~~~~~~~~~~~~" + params);
-
-	      if (params.get("result_set").equals("204")) {
-	         return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
-	      } else if (params.get("result_set").equals("401")) {
-	         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);// 401
-	      } else if (params.get("result_set").equals("403")) {
-	         return new ResponseEntity<>(HttpStatus.FORBIDDEN);// 403
-	      } else
-	         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
-
-	   }
-
-}
+	}
 	
+}
