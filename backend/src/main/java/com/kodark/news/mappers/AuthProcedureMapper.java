@@ -13,7 +13,8 @@ public interface AuthProcedureMapper {
 			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_email, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_auth_string, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_pwd, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"			
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void authProcedure(Map<String, Object> params);
