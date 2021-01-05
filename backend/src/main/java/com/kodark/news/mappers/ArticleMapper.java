@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import com.kodark.news.dto.CategoryDto;
 
 @Mapper
-public interface AdminMapper {
+public interface ArticleMapper {
 	
 	@Select("select * from category")
 	public  List<CategoryDto> getCategory();

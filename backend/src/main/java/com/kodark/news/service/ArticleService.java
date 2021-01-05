@@ -1,5 +1,14 @@
 package com.kodark.news.service;
 
-public class ArticleService {
+import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+import com.kodark.news.dto.CategoryDto;
+
+public interface ArticleService {
+
+	List<CategoryDto> CategoryInfo();
+
+	
 }
