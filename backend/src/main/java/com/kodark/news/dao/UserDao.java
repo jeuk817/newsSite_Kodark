@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kodark.news.mappers.UserMapper;
+
 @Repository("UserDao")
 public class UserDao {
 	@Autowired

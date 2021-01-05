@@ -1,3 +1,4 @@
+
 package com.kodark.news.controller;
 
 import java.util.HashMap;
@@ -130,4 +131,6 @@ public class UserController {
 		String msg = "update success";
 		return new ResponseEntity<>(msg, HttpStatus.OK);//200
 	}
+	
 }
+

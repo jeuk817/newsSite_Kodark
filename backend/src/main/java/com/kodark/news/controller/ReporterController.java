@@ -62,4 +62,5 @@ public class ReporterController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 
 	}
+
 }
