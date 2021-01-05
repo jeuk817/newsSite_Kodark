@@ -1,56 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-                        	
+<<<<<<< HEAD
+                            	
     
+=======
+<<<<<<< HEAD
+                        	
+>>>>>>> tmp
+    
+=======
+                    	
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
     
     
     
     
     <wb-module deploy-name="news-1.0.0-BUILD-SNAPSHOT">
-                                                        
+<<<<<<< HEAD
+                                                                
         
+=======
+<<<<<<< HEAD
+                                                        
+>>>>>>> tmp
+        
+=======
+                                                
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
-                                                		
+<<<<<<< HEAD
+                                                        		
         
+=======
+<<<<<<< HEAD
+                                                		
+>>>>>>> tmp
+        
+=======
+                                        		
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-                                                		
+<<<<<<< HEAD
+                                                        		
         
+=======
+<<<<<<< HEAD
+                                                		
+>>>>>>> tmp
+        
+=======
+                                        		
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-                                                		
+<<<<<<< HEAD
+                                                        		
         
+=======
+<<<<<<< HEAD
+                                                		
+>>>>>>> tmp
+        
+=======
+                                        		
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-                                                		
+<<<<<<< HEAD
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-test-sources/test-annotations"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
+                                                        		
         
+=======
+<<<<<<< HEAD
+                                                		
+>>>>>>> tmp
+        
+=======
+                                        		
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
         
         
         
         
         <property name="java-output-path" value="target/classes"/>
+<<<<<<< HEAD
+                
+=======
+<<<<<<< HEAD
+>>>>>>> tmp
         <property name="context-root" value="news"/>
-                                                	
+                                                        	
     
+    
+=======
+        <property name="context-root" value="/"/>
+                                        	
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
     
     
     
     
     </wb-module>
-                        
+<<<<<<< HEAD
+                            
 
+=======
+<<<<<<< HEAD
+                        
+>>>>>>> tmp
+
+=======
+                    
+>>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
 
 
 
