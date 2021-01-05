@@ -10,7 +10,7 @@ import com.kodark.news.dao.ReporterDao;
 import com.kodark.news.service.ReporterService;
 
 @Service
-public class ReporterServiceImpl implements ReporterService {
+public class ReportersProcedureService implements ReporterService {
 	
 	@Autowired
 	private ReporterDao reporterdao;

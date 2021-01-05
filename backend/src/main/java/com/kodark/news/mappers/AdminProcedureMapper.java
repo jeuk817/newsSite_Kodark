@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.mapping.StatementType;
 
 @Mapper
-public interface AdminMapper {
+public interface AdminProcedureMapper {
 	
 	//기자목록
 	@Select(value = "{CALL admin_repoters_procedure}")

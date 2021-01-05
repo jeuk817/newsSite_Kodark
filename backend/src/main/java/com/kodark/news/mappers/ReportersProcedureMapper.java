@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.mapping.StatementType;
 
 @Mapper
-public interface ReporterMapper {
+public interface ReportersProcedureMapper {
 	
 	@Select(value = "{CALL reporter_procedure("
 			+ "#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
