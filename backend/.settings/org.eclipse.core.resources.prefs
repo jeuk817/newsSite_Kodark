@@ -1,3 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/main/java/com/kodark/news/controller/AdminController.java=UTF-8
 encoding//src/main/java/com/kodark/news/controller/AuthController.java=UTF-8
+encoding//src/main/java/com/kodark/news/controller/ReporterController.java=UTF-8
 encoding//src/main/java/com/kodark/news/dto/UserDto.java=UTF-8

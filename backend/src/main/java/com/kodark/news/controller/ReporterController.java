@@ -23,6 +23,14 @@ public class ReporterController {
 	@Autowired
 	ReportersProcedureService reportersProcedureService;
 	
+	//기자프로필
+	@GetMapping
+	public ResponseEntity<Map<String, String>> getInfoProfile(@RequestParam("id") int id){
+		return new ResponseEntity<Map<String, String>>(reportersProcedureService.getReporterInfo(id), HttpStatus.OK);
+	}
+	
+	
+	
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response){
 		/*
@@ -50,7 +58,7 @@ public class ReporterController {
 		
 		reportersProcedureService.execuReportersProcedure(params);
 		
-		System.out.println("파람스~~~~~~~~~~~~" + params);
+		System.out.println("�뙆�엺�뒪~~~~~~~~~~~~" + params);
 		
 		if(params.get("result_set").equals("204")){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204

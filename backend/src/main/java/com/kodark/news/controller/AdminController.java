@@ -36,15 +36,19 @@ public class AdminController {
 	@Autowired 
 	AdminProcedureService adminProcedureService;
 	 
+	//기자목록(이종현 restAPI 57_line)
+	@GetMapping(path ="/reporters")
+	public ResponseEntity <List<Map<String, Object>>> getReportersList(){
+		return new ResponseEntity<List<Map<String,Object>>>(adminProcedureService.getReporterList(),HttpStatus.OK);
+	}
 	
-	//발행대기중 기사
+	//기사작성대기
 	@GetMapping(path="/article")
 	public ResponseEntity <List<Map<String, Object>>> waitingArticle() {
-		
 		return new ResponseEntity<List<Map<String, Object>>> (adminProcedureService.getWaitArticles(), HttpStatus.CREATED); // 201;
 	}
 	
-	//기자아이디 생성
+	//
 	@PostMapping(path="/reporters")
 	public ResponseEntity<UserDto> createReporter(@RequestBody Map<String, Object> body) throws ParseException {
 		String email = (String) body.get("email");
@@ -78,7 +82,7 @@ public class AdminController {
 		
 	}
 	
-	//관리자 네비게이션
+	//愿�由ъ옄 �꽕鍮꾧쾶�씠�뀡
 	 @GetMapping(path = "/navigation")
 	   public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response) {
 	      /*
@@ -110,7 +114,7 @@ public class AdminController {
 
 	      adminProcedureService.execuAdminProcedure(params);
 
-	      System.out.println("파람스~~~~~~~~~~~~" + params);
+	      System.out.println("�뙆�엺�뒪~~~~~~~~~~~~" + params);
 
 	      if (params.get("result_set").equals("204")) {
 	         return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204

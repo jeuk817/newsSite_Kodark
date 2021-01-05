@@ -20,4 +20,11 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
 		
 	}
 	
+	//기자프로필(이종현 restAPI 61_line)
+	@Override
+	public Map<String, String> getReporterInfo(int id) {
+		return reporterDao.getReporterInfo(id);
+	}
+	
+	
 }
