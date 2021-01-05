@@ -42,27 +42,8 @@ public class AdminController {
 						+ "</admin/reporters>;  									rel=\"reporterList\","
 						+ "</admin/article/waiting>;  							rel=\"waitingArticleList\",");
 
-		Map<String, Object> params = new HashMap<>();
-
 		
-		/*
-		 * params.put("_switch", "navigation"); params.put("_id", 5);
-		 * params.put("_email", "admin@gmail.com");
-		 */
-		 
-
-		adminProcedureService.execuAdminProcedure(params);
-
-		System.out.println("파람스~~~~~~~~~~~~" + params);
-
-		if (params.get("result_set").equals("204")) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
-		} else if (params.get("result_set").equals("401")) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);// 401
-		} else if (params.get("result_set").equals("403")) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);// 403
-		} else
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
-
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
+		
 	}
 }
