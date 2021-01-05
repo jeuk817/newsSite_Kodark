@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodark.news.dto.ArticleDto;
-import com.kodark.news.dto.ArticleWaitDto;
 import com.kodark.news.dto.UserDto;
 import com.kodark.news.mappers.AdminMapper;
 import com.kodark.news.service.AdminProcedureService;

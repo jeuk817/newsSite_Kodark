@@ -8,8 +8,6 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.mapping.StatementType;
 
-import com.kodark.news.dto.UserDto;
-
 @Mapper
 public interface AdminProcedureMapper {
 	@Select(value = "{CALL admin_procedure("

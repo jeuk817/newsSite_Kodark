@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import com.kodark.news.dto.ArticleWaitDto;
+//import com.kodark.news.dto.ArticleWaitDto;
 import com.kodark.news.dto.UserDto;
 
 public interface AdminMapper {
@@ -23,8 +23,8 @@ public interface AdminMapper {
 	public UserDto getReporterId(@Param("email") String email);
 	
 	
-	@Select ("select user_detail.name, user.email, article.id, article.title from user left join article\r\n"
-			+ " on 	user.id = article.reporter_id right join user_detail on user.id = user_detail.user_id;")
-	public List<ArticleWaitDto> getWaitArticles() ;
+//	@Select ("select user_detail.name, user.email, article.id, article.title from user left join article\r\n"
+//			+ " on 	user.id = article.reporter_id right join user_detail on user.id = user_detail.user_id;")
+//	public List<ArticleWaitDto> getWaitArticles() ;
 	
 }

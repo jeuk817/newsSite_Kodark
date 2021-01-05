@@ -22,9 +22,6 @@ public class ArticleDto {
 	private int hit;
 	private String status;
 	
-	// Catetory
-	private int categoryId;
-	private String categoryName;
 	
 	// Image
 	private String image;
@@ -90,22 +87,6 @@ public class ArticleDto {
 		this.status = status;
 	}
 
-	public int getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public String getCategoryName() {
-		return categoryName;
-	}
-
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
-
 	public String getImage() {
 		return image;
 	}
@@ -141,10 +122,9 @@ public class ArticleDto {
 	@Override
 	public String toString() {
 		return "ArticleDto [articleId=" + articleId + ", title=" + title + ", content=" + content + ", createdAt="
-				+ createdAt + ", editedAt=" + editedAt + ", hit=" + hit + ", status=" + status + ", categoryId="
-				+ categoryId + ", categoryName=" + categoryName + ", image=" + image + ", sourceUrl=" + sourceUrl
-				+ ", description=" + description + ", reputation=" + reputation + "]";
+				+ createdAt + ", editedAt=" + editedAt + ", hit=" + hit + ", status=" + status + ", image=" + image
+				+ ", sourceUrl=" + sourceUrl + ", description=" + description + ", reputation=" + reputation + "]";
 	}
-	
 
+	
 }
