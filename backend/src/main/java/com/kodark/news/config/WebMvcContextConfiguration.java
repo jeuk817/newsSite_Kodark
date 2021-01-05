@@ -1,5 +1,6 @@
 package com.kodark.news.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -7,23 +8,26 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.kodark.news.interceptors.JwtInterceptor;
+import com.kodark.news.interceptors.TestInterceptor;
+
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.kodark.news.controller"})
+@ComponentScan(basePackages = { "com.kodark.news.controller", "com.kodark.news.interceptors" })
 public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/views/";
-<<<<<<< HEAD
-	private static final String VIEW_RESOLVER_SUFFIX = ".html"; //vue�뿉 留욊쾶 �닔�젙	 
-=======
-	private static final String VIEW_RESOLVER_SUFFIX = ".jsp"; //vue�뿉 留욊쾶 �닔�젙	 
->>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
+	private static final String VIEW_RESOLVER_SUFFIX = ".html";
+	
+	@Autowired
+	private JwtInterceptor jwtInterceptor;
     
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -57,6 +61,23 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
         viewResolver.setSuffix(VIEW_RESOLVER_SUFFIX);
         return viewResolver;
 	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+//		WebMvcConfigurer.super.addInterceptors(registry);
+		registry.addInterceptor(jwtInterceptor)
+			.addPathPatterns("/users/*")
+			.addPathPatterns("/reporter/*")
+			.addPathPatterns("/admin/*");
+		
+//		registry.addInterceptor(new TestInterceptor())
+//			.addPathPatterns("/reporter");
+//		
+//		registry.addInterceptor(new TestInterceptor())
+//		.addPathPatterns("/reporter");
+	}
+	
+	
 	
 //	@Bean
 //	public MultipartResolver multipartResolver() {

@@ -1,9 +1,5 @@
 Manifest-Version: 1.0
-<<<<<<< HEAD
 Built-By: user
-=======
-Built-By: vnfma
->>>>>>> 3e76de9... admin 기자생성, 네비게이션, 발행대기중 기사
 Build-Jdk: 15
 Created-By: Maven Integration for Eclipse
 
