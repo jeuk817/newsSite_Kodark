@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kodark.news.service.StatisticsService;
 import com.kodark.news.dto.UserDto;
 
 import java.text.ParseException;
@@ -28,15 +29,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kodark.news.dto.ArticleDto;
 import com.kodark.news.service.AdminProcedureService;
 
-
 @RestController
 @RequestMapping(path = "/admin")
 public class AdminController {
 	
+
+	@Autowired
+	StatisticsService statisticsService;
+	
 	@Autowired 
 	AdminProcedureService adminProcedureService;
-	 
 	
+	@GetMapping(path = "/statistics")
+	public ResponseEntity<List<Map<String, Object>>> mainPage(){
+		System.out.println("ck");			
+		int _id = 1;		
+		System.out.println(statisticsService.execuStatisticsProcedure(_id));
+		return new ResponseEntity<List<Map<String, Object>>>(statisticsService.execuStatisticsProcedure(_id),HttpStatus.OK);//200
+	}
+
 	//발행대기중 기사
 	@GetMapping(path="/article")
 	public ResponseEntity <List<Map<String, Object>>> waitingArticle() {
@@ -125,4 +136,3 @@ public class AdminController {
 
 }
 	
-
