@@ -24,7 +24,6 @@ import com.kodark.news.dto.Mail;
 import com.kodark.news.service.AuthProcedureService;
 import com.kodark.news.service.JwtService;
 import com.kodark.news.service.MailService;
-import com.kodark.news.service.TestService;
 
 @RestController
 @RequestMapping(path = "/auth")
