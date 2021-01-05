@@ -5,16 +5,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.kodark.news.mappers.ReportersProcedureMapper;
+import com.kodark.news.mappers.AdminProcedureMapper;
 
 @Repository
-public class ReporterDao {
+public class AdminDao {
 	
 	@Autowired
-	ReportersProcedureMapper reportersProcedureMapper;
+	AdminProcedureMapper adminProcedureMapper;
 	 
 	public void execuReportersProcedure(Map<String, Object> params) {
-		reportersProcedureMapper.reportersProcedure(params);
+		adminProcedureMapper.adminProcedure(params);
 	}
-
 }

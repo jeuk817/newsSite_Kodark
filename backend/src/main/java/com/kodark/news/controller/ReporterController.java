@@ -40,9 +40,11 @@ public class ReporterController {
 		
 		Map<String, Object> params = new HashMap<>();	
 		
-		params.put("_switch", "navigation");
-		params.put("_id", 4);
-		params.put("_email", "bit@gmail.com"); 
+		/*
+		 * params.put("_switch", "navigation");p
+		 * arams.put("_id", 4);
+		 * params.put("_email", "bit@gmail.com");
+		 */
 		
 		reportersProcedureService.execuReportersProcedure(params);
 		
