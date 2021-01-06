@@ -1,33 +1,26 @@
 package com.kodark.news.controller;
 
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kodark.news.service.StatisticsService;
 import com.kodark.news.dto.UserDto;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.kodark.news.dto.ArticleDto;
 import com.kodark.news.service.AdminProcedureService;
+import com.kodark.news.service.StatisticsService;
 
 @RestController
 @RequestMapping(path = "/admin")
@@ -39,13 +32,21 @@ public class AdminController {
 	
 	@Autowired 
 	AdminProcedureService adminProcedureService;
-	
+	/**
+	 * 관리자메인
+	 * 작성자 : 최윤수 
+	 * 작성일 : 2021-01-06
+	 */
 	@GetMapping(path = "/statistics")
 	public ResponseEntity<List<Map<String, Object>>> mainPage(){
-		System.out.println("ck");			
-		int _id = 1;		
-		System.out.println(statisticsService.execuStatisticsProcedure(_id));
-		return new ResponseEntity<List<Map<String, Object>>>(statisticsService.execuStatisticsProcedure(_id),HttpStatus.OK);//200
+		List<Map<String, Object>>list = new ArrayList<Map<String,Object>>();	
+		Map<String, Object> params = new HashMap<>();
+		params.put("_id", 1);
+		statisticsService.execuStatisticsProcedure(params);			
+		list = statisticsService.execuTodayPopularProcedure();
+		list.add(params);
+		System.out.println("result");
+		return new ResponseEntity<List<Map<String, Object>>>(list,HttpStatus.OK);//200
 	}
 
 	//발행대기중 기사
