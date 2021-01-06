@@ -18,14 +18,16 @@ public class ExceptionHandler {
 
 	@org.springframework.web.bind.annotation.ExceptionHandler(UnauthorizedException.class)
 	protected ResponseEntity<Map<String, Object>> handleUnauthorizedException(UnauthorizedException e) {
-		logger.warn(e.getMessage());
+		if(logger.isWarnEnabled())
+			logger.warn(e.getMessage());
 		
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 	}
 	
 	@org.springframework.web.bind.annotation.ExceptionHandler(ForbiddenException.class)
 	protected ResponseEntity<Map<String, Object>> handleForbiddenException(ForbiddenException e) {
-		logger.warn(e.getMessage());
+		if(logger.isWarnEnabled())
+			logger.warn(e.getMessage());
 		
 		return new ResponseEntity<>(HttpStatus.FORBIDDEN); // 403
 	}

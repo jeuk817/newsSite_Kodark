@@ -43,7 +43,6 @@ public class AuthController {
 	
 	@PostMapping(path = "/sign-in")
 	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body, HttpServletResponse response) {
-		System.out.println("/sign-in");
 		String email = (String)body.get("email");
 		String pwd = (String)body.get("pwd");
 		
@@ -106,18 +105,13 @@ public class AuthController {
 
 	@PatchMapping(path="/verify")
 	public ResponseEntity<String> verify(@RequestBody Map<String, Object> body){
-		System.out.println("======================================");
-		System.out.println("@PatchMapping");
-		System.out.println("======================================");
 		String authString = (String) body.get("authString");
 		String email = (String)body.get("email");
 		Map<String, Object>params = new HashMap<>();
 		params.put("_switch", "confirm_verify");
 		params.put("_email", email);
 		params.put("_auth_string", authString);
-		System.out.println(params.toString());
 		authProcedureService.execuAuthProcedure(params);
-		System.out.println("check:"+params.get("result_set"));
 		
 		
 		if(params.get("result_set").equals("success")) {
@@ -127,7 +121,6 @@ public class AuthController {
 		}else if(params.get("result_set").equals("expiration")){
 			return new ResponseEntity<>(HttpStatus.REQUEST_TIMEOUT);//408
 		}else {
-			System.out.println("errorrrrrrrrrrrrrrrrrrrrrrr");
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
 	

@@ -13,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import com.kodark.news.interceptors.JwtInterceptor;
 import com.kodark.news.interceptors.LogInterceptor;
@@ -34,14 +33,11 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
     
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-//		System.out.println("configureDefaultServletHandling");
 		configurer.enable();
-		//WebMvcConfigurer.super.configureDefaultServletHandling(configurer);
 	}
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//		System.out.println("addResourceHandlers");
 		registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(31556926);
 		registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(31556926);
 		registry.addResourceHandler("/img/**").addResourceLocations("/img/").setCachePeriod(31556926);
@@ -50,7 +46,6 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-//		System.out.println("addViewControllers");
 		registry.addViewController("/").setViewName("index");
 		registry.addViewController("/ko/*").setViewName("index");
 		registry.addViewController("/en/*").setViewName("index");
@@ -59,7 +54,6 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	@Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//        viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix(VIEW_RESOLVER_PREFIX);
         viewResolver.setSuffix(VIEW_RESOLVER_SUFFIX);
         return viewResolver;
@@ -67,7 +61,6 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-//		WebMvcConfigurer.super.addInterceptors(registry);
 		registry.addInterceptor(logInterceptor);
 		
 		registry.addInterceptor(jwtInterceptor)
@@ -76,11 +69,6 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 			.addPathPatterns("/admin/*")
 			.excludePathPatterns("/users/sign-up");
 		
-//		registry.addInterceptor(new TestInterceptor())
-//			.addPathPatterns("/reporter");
-//		
-//		registry.addInterceptor(new TestInterceptor())
-//		.addPathPatterns("/reporter");
 	}
 	
 	

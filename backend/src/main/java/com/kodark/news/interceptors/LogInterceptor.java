@@ -16,21 +16,21 @@ public class LogInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		logger.info("Request : '{}' From : '{}'", request.getRequestURI(), request.getRemoteAddr());
+		if(logger.isInfoEnabled()) 
+			logger.info("Request : '{}' From : '{}'", request.getRequestURI(), request.getRemoteAddr());
 		return true;
 	}
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		
-		if(modelAndView != null) {
-			logger.info("Processed Request : '{}' From : '{}'. Called view : {}"
-					, handler.toString(), request.getRemoteAddr(), modelAndView.getViewName());			
-		} else {
-			logger.info("Processed Request : '{}' From : '{}'. There is nothing to call."
-					, handler.toString(), request.getRemoteAddr());
-		}
+		if(logger.isInfoEnabled()) 
+			if(modelAndView != null)
+				logger.info("Processed Request : '{}' From : '{}'. Called view : {}"
+						, handler.toString(), request.getRemoteAddr(), modelAndView.getViewName());			
+			else
+				logger.info("Processed Request : '{}' From : '{}'. There is nothing to call."
+						, handler.toString(), request.getRemoteAddr());
 	}
 	
 }
