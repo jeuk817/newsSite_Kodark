@@ -91,26 +91,16 @@ public class AdminController {
 	
 	//관리자 네비게이션
 	@GetMapping(path = "/navigation")
-	public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response) {
-		/*
-		 * String token = jwtService.createToken("jack", (2 * 1000 * 60));
-		 * 
-		 * Map<String, Object> map = new HashMap<>(); Cookie cookie = new Cookie("jwt",
-		 * token); cookie.setMaxAge(7 * 24 * 60 * 60); cookie.setSecure(true);
-		 * cookie.setHttpOnly(true); cookie.setPath("/");
-		 * 
-		 * response.addCookie(cookie);
-		 */
-
+	public ResponseEntity<Map<String, Object>> adminNavi(HttpServletResponse response) {
+		
 		response.setHeader("Links",
-				"</admin/statistics>; 									rel=\"statistics\","
-						+ "</admin/users?userStartId>; 	   						rel=\"userList\","
-						+ "</admin/question-list?questionStartId&status=\"all\">; rel=\"allQuestionList\","
+						  "</admin/statistics>; 									rel=\"statistics\","
+						+ "</admin/users?userStartId>; 	   							rel=\"userList\","
+						+ "</admin/question-list?questionStartId&status=\"all\">;	rel=\"allQuestionList\","
 						+ "</admin/report/comment>; 								rel=\"commentReportList\","
 						+ "</admin/report/article>; 								rel=\"articleReportList\","
 						+ "</admin/reporters>;  									rel=\"reporterList\","
-						+ "</admin/article/waiting>;  							rel=\"waitingArticleList\",");
-
+						+ "</admin/article/waiting>;  								rel=\"waitingArticleList\",");
 		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 
