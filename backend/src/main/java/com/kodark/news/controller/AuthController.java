@@ -24,22 +24,28 @@ import com.kodark.news.dto.Mail;
 import com.kodark.news.service.AuthProcedureService;
 import com.kodark.news.service.MailService;
 import com.kodark.news.utils.JwtManager;
+import com.kodark.news.utils.PasswordEncoderImpl;
 
 @RestController
 @RequestMapping(path = "/auth")
 public class AuthController {
 	
-	@Autowired
 	Environment env;
-	
-	@Autowired
 	MailService mailService;
-	
-	@Autowired
 	AuthProcedureService authProcedureService;
+	JwtManager jwtManager;
+	PasswordEncoderImpl passwordEncoder;
 	
 	@Autowired
-	JwtManager jwtManager;
+	public AuthController(Environment env, MailService mailService
+			, AuthProcedureService authProcedureService, JwtManager jwtManager
+			, PasswordEncoderImpl passwordEncoder) {
+		this.env = env;
+		this.mailService = mailService;
+		this.authProcedureService = authProcedureService;
+		this.jwtManager = jwtManager;
+		this.passwordEncoder = passwordEncoder;
+	}
 	
 	@PostMapping(path = "/sign-in")
 	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body, HttpServletResponse response) {
@@ -52,7 +58,8 @@ public class AuthController {
 		authProcedureService.execuAuthProcedure(params);
 		
 		if(params.get("result_set").equals("success")) {
-			if(params.get("_pwd").equals(pwd)) {
+			String encodedPwd = (String)params.get("_pwd");
+			if(passwordEncoder.matches(pwd, encodedPwd)) {
 				Map<String, Object> claims = new HashMap<>();
 				claims.put("id", params.get("_id"));
 				claims.put("auth", params.get("_auth"));

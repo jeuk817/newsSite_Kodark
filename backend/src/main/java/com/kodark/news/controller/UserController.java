@@ -22,33 +22,36 @@ import com.kodark.news.service.AuthProcedureService;
 import com.kodark.news.service.MailService;
 import com.kodark.news.service.UserService;
 import com.kodark.news.service.UsersProceduerService;
+import com.kodark.news.utils.PasswordEncoderImpl;
 
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
 	
-	@Autowired
 	Environment env;
-	
-	@Autowired
 	MailService mailService;
-	
-	@Autowired
 	UserService userService;
-	
-	@Autowired
 	AuthProcedureService authProcedureService;
+	UsersProceduerService usersProcedureService;
+	PasswordEncoderImpl passwordEncoder;
 	
 	@Autowired
-	UsersProceduerService usersProcedureService;
-	
+	public UserController(Environment env, MailService mailService, UserService userService,
+			AuthProcedureService authProcedureService, UsersProceduerService usersProcedureService
+			, PasswordEncoderImpl passwordEncoder) {
+		this.env = env;
+		this.mailService = mailService;
+		this.userService = userService;
+		this.authProcedureService = authProcedureService;
+		this.usersProcedureService = usersProcedureService;
+		this.passwordEncoder = passwordEncoder;
+	}
+
 	@GetMapping(path = "/")
 	public ResponseEntity<String> userInfo(){
 		//????
 		return new ResponseEntity<>(HttpStatus.OK);//200 
 	}
-	
-	
 	
 	//����������
 	@GetMapping(path = "/my-page")
@@ -56,56 +59,23 @@ public class UserController {
 	    return new ResponseEntity<>(HttpStatus.OK);//200
     }
 
-	@PostMapping(path = "/test")
-	public ResponseEntity<String> auth(@RequestBody Map<String, Object> body) {
-		String email = (String) body.get("email");
-		System.out.println(email);
-//		List<TestDto> allTests = testService.getAllTests();
-//		testService.insertUser();		
-//		int id = Integer.valueOf((String)body.get("id"));		
-//		testService.deleteUser(id);
-//		System.out.println(allTests);
-
-		
-		return new ResponseEntity<>(HttpStatus.CREATED); // 201
-	}
 	@PostMapping(path = "/sign-up")
 	public ResponseEntity<String> signUp(@RequestBody Map<String, Object>body){
 		String email = (String) body.get("email");
-		String pwd = (String)body.get("pwd");	
+		String pwd = (String)body.get("pwd");
+		String encodedPwd = passwordEncoder.encode(pwd);
 		Map<String, Object> params = new HashMap<>();		
 		params.put("_switch", "sign_up");
 		params.put("_email", email);
-		params.put("_pwd", pwd);		
+		params.put("_pwd", encodedPwd);		
 		authProcedureService.execuAuthProcedure(params);
 		
-		
-		if(params.get("result_set").equals("success")) {
+		if(params.get("result_set").equals("success"))
 			return new ResponseEntity<>(HttpStatus.CREATED);
-		}else
+		else
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		
-		
 	}
-	@PostMapping(path = "/sign-in")
-	public ResponseEntity<String> signIn(@RequestBody Map<String, Object>body){
-		String email = (String) body.get("email");
-		String pwd = (String)body.get("pwd");	
-		Map<String, Object> params = new HashMap<>();		
-		params.put("_switch", "sign_in");
-		params.put("_email", email);
-		params.put("_pwd", pwd);		
-		authProcedureService.execuAuthProcedure(params);
-		
-		if(params.get("result_set").equals("no content")) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
-		}else 
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
-	}
-//	@DeleteMapping(path = "/sign-out")
-//	public ResponseEntity<String> signOut(){		
-//		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//205
-//	}
 	
 	@PatchMapping(path = "/pwd")
 	public ResponseEntity<String> pwdUpdate(@RequestBody Map<String, Object>body){
@@ -129,14 +99,11 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 	}
 
-	
-	
 	@PutMapping(path = "/update")
 	public ResponseEntity<String> update(@RequestBody Map<String, Object>body){
 		String msg = "update success";
 		return new ResponseEntity<>(msg, HttpStatus.OK);//200
 	}
-	
 
 	@GetMapping(path ="/list")
 	public ResponseEntity<List<UserDto>> getInfo(){
