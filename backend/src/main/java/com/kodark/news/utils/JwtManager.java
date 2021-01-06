@@ -1,4 +1,4 @@
-package com.kodark.news.service.impl;
+package com.kodark.news.utils;
 
 import java.security.Key;
 import java.util.Date;
@@ -9,25 +9,22 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.kodark.news.controller.advice.exceptions.UnauthorizedException;
-import com.kodark.news.service.JwtService;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-@Service
-public class JwtServiceImpl implements JwtService {
-	
+@Component
+public class JwtManager {
+
 	@Autowired
 	Environment env;
 	 
-    @Override
     public String createJwt(String subject, Map<String, Object> claims, long ttlMillis) {
         if (ttlMillis <= 0) {
             throw new RuntimeException("Expiry time must be greater than Zero : ["+ttlMillis+"] ");
@@ -49,7 +46,6 @@ public class JwtServiceImpl implements JwtService {
         return builder.compact();
     }
  
-    @Override
     public Claims getClaims(String token) {
     	try {
     		Claims claims = Jwts.parser()

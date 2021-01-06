@@ -10,7 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.kodark.news.controller.advice.exceptions.ForbiddenException;
 import com.kodark.news.controller.advice.exceptions.UnauthorizedException;
-import com.kodark.news.service.JwtService;
+import com.kodark.news.utils.JwtManager;
 
 import io.jsonwebtoken.Claims;
 
@@ -18,7 +18,7 @@ import io.jsonwebtoken.Claims;
 public class JwtInterceptor implements HandlerInterceptor {
 
 	@Autowired
-	JwtService jwtService;
+	JwtManager jwtManager;
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -37,7 +37,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 		
 		if(jwtCookie == null) throw new UnauthorizedException(request); // 401
 		
-		Claims claims =  jwtService.getClaims(jwtCookie);
+		Claims claims =  jwtManager.getClaims(jwtCookie);
 		request.setAttribute("id", claims.get("id"));
 		String controllerToUse = getControllerToUse(request);
 		

@@ -27,10 +27,10 @@ public class LogInterceptor implements HandlerInterceptor {
 		if(logger.isInfoEnabled()) 
 			if(modelAndView != null)
 				logger.info("Processed Request : '{}' From : '{}'. Called view : {}"
-						, handler.toString(), request.getRemoteAddr(), modelAndView.getViewName());			
+						, request.getRequestURI(), request.getRemoteAddr(), modelAndView.getViewName());			
 			else
 				logger.info("Processed Request : '{}' From : '{}'. There is nothing to call."
-						, handler.toString(), request.getRemoteAddr());
+						, request.getRequestURI(), request.getRemoteAddr());
 	}
 	
 }

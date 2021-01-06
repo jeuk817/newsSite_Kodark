@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kodark.news.dto.Mail;
 
 import com.kodark.news.service.AuthProcedureService;
-import com.kodark.news.service.JwtService;
 import com.kodark.news.service.MailService;
+import com.kodark.news.utils.JwtManager;
 
 @RestController
 @RequestMapping(path = "/auth")
@@ -39,7 +39,7 @@ public class AuthController {
 	AuthProcedureService authProcedureService;
 	
 	@Autowired
-	JwtService jwtService;
+	JwtManager jwtManager;
 	
 	@PostMapping(path = "/sign-in")
 	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body, HttpServletResponse response) {
@@ -56,7 +56,7 @@ public class AuthController {
 				Map<String, Object> claims = new HashMap<>();
 				claims.put("id", params.get("_id"));
 				claims.put("auth", params.get("_auth"));
-				String token = jwtService.createJwt("userInfo", claims, (10 * 1000 * 60));
+				String token = jwtManager.createJwt("userInfo", claims, (10 * 1000 * 60));
 				
 		        Cookie cookie = new Cookie("jwt", token);
 		        cookie.setMaxAge(7 * 24 * 60 * 60);
