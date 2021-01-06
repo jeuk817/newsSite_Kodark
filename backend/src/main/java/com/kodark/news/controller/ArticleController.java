@@ -1,7 +1,12 @@
 package com.kodark.news.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,18 +22,69 @@ import com.kodark.news.service.ArticleProcedureService;
 @RequestMapping(path = "/article")
 public class ArticleController {
 	
-	@Autowired
-	ArticleProcedureService articleProcedureServie;
 	
+	
+	private ArticleProcedureService articleProcedureService;
+	
+	@Autowired
+	public ArticleController(ArticleProcedureService articleProcedureService) {		
+		this.articleProcedureService = articleProcedureService;
+	}
+	/**
+	 * 섹션별 최신기사(10개)
+	 * 작성자 : 최윤수
+	 * 작성일 : 2021-01-06
+	 */
 	@GetMapping(path = "/latest")
-	public ResponseEntity<Map<String,Object>> latest(@RequestParam(value="section",required=false, defaultValue="politics")String section){
+	public ResponseEntity<Map<String,Object>> latest(@RequestParam(value = "section", required = false, defaultValue = "politics")String category, HttpServletResponse response){
 		Map<String, Object> params = new HashMap<>();
-		section = "politics";
-		params.put("section", section);
-		articleProcedureServie.execulatestProcedure(params);
-		if(params.get("result_set").equals("404")) {
-			return new ResponseEntity<Map<String,Object>>(params,HttpStatus.NOT_FOUND);//404
-		}else
+		Map<String, Object> temp = new HashMap<>();
+		List<Map<String,Object>>list = new ArrayList<>();
+		
+		StringBuffer sb = new StringBuffer();	
+		params.put("category", category);
+		try {
+			list=articleProcedureService.execuLatestProcedure(params);
+			params.put("type", "latest");				
+			for(int i=0;i<list.size();i++) {				
+				sb.append("rel :\"article\", href : \"article?articleId="+list.get(i).get("id")+"\",method : \"get\"");
+				temp.put("id",list.get(i).get("id"));
+				temp.put("title", list.get(i).get("title"));
+				temp.put("content", list.get(i).get("content"));
+				temp.put("image", list.get(i).get("image"));
+				temp.put("imgDec", list.get(i).get("imgDec"));
+				temp.put("_link", sb.toString());		
+				list.set(i, temp);				
+				sb.delete(0, sb.length());				
+			}
+			params.put("data", list);	
+			response.setHeader("Links","rel : \"article\","
+									 + "href : \"/article?articleId\","
+									 + "method : \"get\"");
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.NOT_FOUND);//404
+		}	
 		return new ResponseEntity<Map<String,Object>>(params,HttpStatus.OK);//200
+	}
+	/**
+	 * 기사댓글 데이터
+	 * 작성자 : 최윤수 
+	 * 작성일 : 2021-01-07
+	 */
+	@GetMapping(path = "/comment")
+	public ResponseEntity<List<Map<String, Object>>> comment(@RequestParam(value = "articleId", required = false, defaultValue = "1")int articleId,
+															@RequestParam(value = "commentStartId", required = false, defaultValue = "1")int commentStartId
+			){
+		Map<String, Object> params = new HashMap<>();
+		List<Map<String,Object>>list = new ArrayList<>();
+		articleId = 1;
+			
+		try {
+		list=articleProcedureService.execuCommentProcedure();
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
+		}
+		params.put("data", list);
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
 	}
 }

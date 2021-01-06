@@ -38,15 +38,15 @@ public class AdminController {
 	 * 작성일 : 2021-01-06
 	 */
 	@GetMapping(path = "/statistics")
-	public ResponseEntity<List<Map<String, Object>>> mainPage(){
-		List<Map<String, Object>>list = new ArrayList<Map<String,Object>>();	
+	public ResponseEntity<Map<String, Object>> mainPage(){
+		List<Map<String,Object>>list = new ArrayList<>();	
 		Map<String, Object> params = new HashMap<>();
 		params.put("_id", 1);
 		statisticsService.execuStatisticsProcedure(params);			
-		list = statisticsService.execuTodayPopularProcedure();
-		list.add(params);
+		list = statisticsService.execuTodayPopularProcedure();	
+		params.put("todayPopular", list);
 		System.out.println("result");
-		return new ResponseEntity<List<Map<String, Object>>>(list,HttpStatus.OK);//200
+		return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);//200
 	}
 
 	//발행대기중 기사

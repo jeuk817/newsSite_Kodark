@@ -1,5 +1,6 @@
 package com.kodark.news.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,15 @@ public class ArticleProcedureServiceImpl implements ArticleProcedureService{
 	@Autowired
 	ArticleProcedureDao articleProcedureDao;
 	@Override
-	public Map<String,Object> execulatestProcedure(Map<String, Object> params) {
+	public List<Map<String,Object>> execuLatestProcedure(Map<String, Object> params) {
 		return articleProcedureDao.latestProcedure(params);
+	}
+	
+	
+	@Override
+	public List<Map<String, Object>> execuCommentProcedure() {
+		
+		return articleProcedureDao.commentProcedure();
 	}
 
 }
