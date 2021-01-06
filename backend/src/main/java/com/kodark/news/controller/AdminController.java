@@ -100,7 +100,7 @@ public class AdminController {
 						+ "</admin/report/comment>; 								rel=\"commentReportList\","
 						+ "</admin/report/article>; 								rel=\"articleReportList\","
 						+ "</admin/reporters>;  									rel=\"reporterList\","
-						+ "</admin/article/waiting>;  								rel=\"waitingArticleList\",");
+						+ "</admin/article/waiting>;  								rel=\"waitingArticleList\"");
 		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 

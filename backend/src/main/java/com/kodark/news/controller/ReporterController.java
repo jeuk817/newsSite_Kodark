@@ -28,7 +28,7 @@ public class ReporterController {
 								"</repoters?reporterId>; 					rel=\"reporterList\","
 						  	  + "</reporters/new-post>; 	   				rel=\"articlePostForm\","
 							  + "</reporters/article?status=\"published\">; rel=\"publishedArticleList\","
-							  + "</reporters/article?status=\"waiting\"> ;  rel=\"waitingArticleList\",");
+							  + "</reporters/article?status=\"waiting\"> ;  rel=\"waitingArticleList\"");
 	
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 		
