@@ -12,6 +12,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kodark.news.controller.advice.exceptions.UnauthorizedException;
 import com.kodark.news.dto.Mail;
 
 import com.kodark.news.service.AuthProcedureService;
@@ -45,39 +47,6 @@ public class AuthController {
 		this.authProcedureService = authProcedureService;
 		this.jwtManager = jwtManager;
 		this.passwordEncoder = passwordEncoder;
-	}
-	
-	@PostMapping(path = "/sign-in")
-	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body, HttpServletResponse response) {
-		String email = (String)body.get("email");
-		String pwd = (String)body.get("pwd");
-		
-		Map<String, Object> params = new HashMap<>();
-		params.put("_switch", "sign_in");
-		params.put("_email", email);
-		authProcedureService.execuAuthProcedure(params);
-		
-		if(params.get("result_set").equals("success")) {
-			String encodedPwd = (String)params.get("_pwd");
-			if(passwordEncoder.matches(pwd, encodedPwd)) {
-				Map<String, Object> claims = new HashMap<>();
-				claims.put("id", params.get("_id"));
-				claims.put("auth", params.get("_auth"));
-				String token = jwtManager.createJwt("userInfo", claims, (10 * 1000 * 60));
-				
-		        Cookie cookie = new Cookie("jwt", token);
-		        cookie.setMaxAge(7 * 24 * 60 * 60);
-//		        cookie.setSecure(true);
-		        cookie.setHttpOnly(true);
-		        cookie.setPath("/");
-		        
-		        response.addCookie(cookie);
-		        response.setHeader("Links", "</auth/sign-in>; rel=\"self\", </>; rel=\"next\"");
-		        return new ResponseEntity<>(HttpStatus.CREATED); // 201
-			}
-		}
-		
-		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 	}
 	
 	@PostMapping
@@ -132,5 +101,52 @@ public class AuthController {
 		}
 	
 	}
+	
+	@PostMapping(path = "/sign-in")
+	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body
+			, HttpServletResponse response) {
+		String email = (String)body.get("email");
+		String pwd = (String)body.get("pwd");
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "sign_in");
+		params.put("_email", email);
+		authProcedureService.execuAuthProcedure(params);
+		
+		if(params.get("result_set").equals("success")) {
+			String encodedPwd = (String)params.get("_pwd");
+			
+			if(passwordEncoder.matches(pwd, encodedPwd)) {
+				Map<String, Object> claims = new HashMap<>();
+				claims.put("id", params.get("_id"));
+				claims.put("auth", params.get("_auth"));
+				String token = jwtManager.createJwt("userInfo", claims, (10 * 1000 * 60));
+				
+		        Cookie cookie = new Cookie("jwt", token);
+		        cookie.setMaxAge(7 * 24 * 60 * 60);
+//		        cookie.setSecure(true);
+		        cookie.setHttpOnly(true);
+		        cookie.setPath("/");
+		        
+		        response.addCookie(cookie);
+		        response.setHeader("Links", "</auth/sign-in>; rel=\"self\", </>; rel=\"next\"");
+		        return new ResponseEntity<>(HttpStatus.CREATED); // 201
+			}
+		}
+		
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+	}
+	
+	@DeleteMapping(path = "/sign-out")
+	public ResponseEntity<Map<String, Object>> signOut(HttpServletResponse response) {
+		Cookie cookie = new Cookie("jwt", "");
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        
+        response.addCookie(cookie);
+		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
+	}
+	
 }
 

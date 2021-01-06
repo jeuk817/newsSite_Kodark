@@ -26,12 +26,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-//                .csrf()
-//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-		
-        		.csrf().disable()
         		.formLogin().disable()
-                .httpBasic();
+                .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+		
+//        		.csrf().disable()
+//        		.formLogin().disable()
+//                .httpBasic();
 //                .and()
 //                .authorizeRequests()
 //                .antMatchers("/db/**").hasRole("ADMIN");
