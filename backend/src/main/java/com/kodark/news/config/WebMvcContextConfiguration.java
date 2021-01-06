@@ -69,6 +69,7 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 			.addPathPatterns("/users/*")
 			.addPathPatterns("/reporter/*")
 			.addPathPatterns("/admin/*");
+//			.excludePathPatterns("/users/sign-up");
 		
 //		registry.addInterceptor(new TestInterceptor())
 //			.addPathPatterns("/reporter");

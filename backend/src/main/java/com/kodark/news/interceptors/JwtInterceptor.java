@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.kodark.news.controller.advice.exceptions.ForbiddenException;
 import com.kodark.news.controller.advice.exceptions.UnauthorizedException;
 import com.kodark.news.service.JwtService;
 
@@ -22,16 +23,15 @@ public class JwtInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		System.out.println("JwtInterceptor");
 		String jwtCookie = null;
 		Cookie[] cookies = request.getCookies();
 		
-		if(cookies == null) throw new UnauthorizedException(request); // 401
-		
-		for(int i = 0; i < cookies.length; i++) {
-			if(cookies[i].getName().equals("jwt")) {
-				jwtCookie = cookies[i].getValue();
-				break;
+		if(cookies != null) {
+			for(int i = 0; i < cookies.length; i++) {
+				if(cookies[i].getName().equals("jwt")) {
+					jwtCookie = cookies[i].getValue();
+					break;
+				}
 			}
 		}
 		
@@ -41,19 +41,24 @@ public class JwtInterceptor implements HandlerInterceptor {
 		request.setAttribute("id", claims.get("id"));
 		String controllerToUse = getControllerToUse(request);
 		
-		if(claims.get("auth").equals("admin")) return true; // admin
+		// admin
+		if(claims.get("auth").equals("admin")) return true;
 		
-		if(claims.get("auth").equals("reporter")) { // reporter
-			if(controllerToUse.equals("admin")) return false; // forbbiden
+		// reporter
+		if(claims.get("auth").equals("reporter")) {
+			if(controllerToUse.equals("admin"))
+				throw new ForbiddenException(request); // 403
 			else return true;
 		}
 		
-		if(claims.get("auth").equals("user")) { // user
-			if(controllerToUse.equals("admin") || controllerToUse.equals("reporter")) return false; // forbbiden
+		// user
+		if(claims.get("auth").equals("user")) {
+			if(controllerToUse.equals("admin") || controllerToUse.equals("reporter"))
+				throw new ForbiddenException(request); // 403
 			else return true;
 		}
 		
-		return false; // wrong jwt forbbiden
+		throw new ForbiddenException(request); // wrong jwt forbbiden
 	}
 	
 	private String getControllerToUse(HttpServletRequest request) {
