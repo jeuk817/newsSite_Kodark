@@ -18,11 +18,10 @@
 	  	</div>
 	</div>
 
-
-
 </body>
 </html>
 <script type="text/javascript">
+console.log("h3");
 var oEditors = [];
 	nhn.husky.EZCreator.createInIFrame({
 		 oAppRef : oEditors,

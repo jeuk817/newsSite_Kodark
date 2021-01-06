@@ -16,5 +16,9 @@ public class ReporterDao {
 	public void execuReportersProcedure(Map<String, Object> params) {
 		reportersProcedureMapper.reportersProcedure(params);
 	}
+	
+    public Map<String, Object> getReporterInfo(Map<String, Object> params) {
+      return reportersProcedureMapper.getReporterInfo(params);
+    }
 
 }

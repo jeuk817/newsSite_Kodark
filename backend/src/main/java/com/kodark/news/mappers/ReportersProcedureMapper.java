@@ -18,4 +18,12 @@ public interface ReportersProcedureMapper {
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void reportersProcedure(Map<String, Object> params);
+
+	
+	@Select(value = "{CALL reporter_procedure("
+			         + "#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
+			         + ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			         + ")}")
+    @Options(statementType = StatementType.CALLABLE)
+    public Map<String, Object> getReporterInfo(Map<String, Object> params);
 }

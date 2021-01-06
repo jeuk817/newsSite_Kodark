@@ -19,5 +19,11 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
 		reporterDao.execuReportersProcedure(params);
 		
 	}
+
+   @Override
+   public Map<String, Object> getReporterInfo(Map<String, Object> params) {      
+      return reporterDao.getReporterInfo(params);
+      
+   }
 	
 }

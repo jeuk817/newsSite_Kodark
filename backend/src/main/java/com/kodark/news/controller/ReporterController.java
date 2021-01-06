@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,5 +65,18 @@ public class ReporterController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 
 	}
-
+	
+	  @GetMapping
+	   public ResponseEntity<Map<String, Object>> getInfoProfile(@RequestParam Map<String, Object> body){
+	      Map<String, Object> params = new HashMap<String, Object>();
+	      params = reportersProcedureService.getReporterInfo(body);
+	      
+	      if(body.get("result_set").equals("200")) {
+	         return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);   
+	      }else if(body.get("result_set").equals("404")) {
+	         return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);   
+	      }else {
+	         return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);   
+	      }
+	   }
 }
