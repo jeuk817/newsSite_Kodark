@@ -19,12 +19,19 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+/*
+ * title : jwt를 처리하는 클래스
+ * dec : jwt를 만들고, 파싱한다.
+ * 작성자 : 류제욱
+ * 작성일 : 2020-01-06
+ */
 @Component
 public class JwtManager {
 
 	@Autowired
 	Environment env;
-	 
+	
+	// jwt를 만든다.
     public String createJwt(String subject, Map<String, Object> claims, long ttlMillis) {
         if (ttlMillis <= 0) {
             throw new RuntimeException("Expiry time must be greater than Zero : ["+ttlMillis+"] ");
@@ -45,7 +52,8 @@ public class JwtManager {
         
         return builder.compact();
     }
- 
+    
+    // jwt를 파싱한다.
     public Claims getClaims(String token) {
     	try {
     		Claims claims = Jwts.parser()

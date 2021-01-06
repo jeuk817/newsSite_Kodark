@@ -14,14 +14,18 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+/*
+ * title : Mybatis 환경
+ * dec : datasource를 가져와 sqlsession을 만든다.
+ * 작성자 : 류제욱
+ * 작성일 : 2020-01-06
+ */
 @Configuration
 @MapperScan(
 		basePackages = "com.kodark.news.mappers")
-//		sqlSessionFactoryRef = "mysqlSessionFactory",
-//		sqlSessionTemplateRef = "mysqlSessionTemplate")
 public class MyBatisConfig {
 	
-	@Bean//(name = "mysqlSessionFactory")
+	@Bean
 	@Primary
 	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
@@ -30,7 +34,7 @@ public class MyBatisConfig {
 		return sqlSessionFactoryBean.getObject();
 	}
 	
-	@Bean//(name = "mysqlSessionTemplate")
+	@Bean
 	@Primary
 	public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
 		return new SqlSessionTemplate(sqlSessionFactory);

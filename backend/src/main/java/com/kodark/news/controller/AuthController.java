@@ -49,6 +49,12 @@ public class AuthController {
 		this.passwordEncoder = passwordEncoder;
 	}
 	
+	/*
+	 * title : 인증번호 요청
+	 * dec : 요청한 이메일이 가입된 이메일인지 확인하고, 그렇지 않다면 인증번호를 보낸다.
+	 * 작성자 : 류제욱
+	 * 작성일 : 2020-01-06
+	 */
 	@PostMapping
 	public ResponseEntity<String> auth(@RequestBody Map<String, Object> body) {
 
@@ -102,6 +108,12 @@ public class AuthController {
 	
 	}
 	
+	/*
+	 * title : 로그인
+	 * dec : 가입된 이메일인지 확인하고, 비밀번호를 비교한 후 jwt를 발급한다.
+	 * 작성자 : 류제욱
+	 * 작성일 : 2020-01-06
+	 */
 	@PostMapping(path = "/sign-in")
 	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body
 			, HttpServletResponse response) {
@@ -124,7 +136,7 @@ public class AuthController {
 				
 		        Cookie cookie = new Cookie("jwt", token);
 		        cookie.setMaxAge(7 * 24 * 60 * 60);
-//		        cookie.setSecure(true);
+		        //cookie.setSecure(true);
 		        cookie.setHttpOnly(true);
 		        cookie.setPath("/");
 		        
@@ -137,6 +149,12 @@ public class AuthController {
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 	}
 	
+	/*
+	 * title : 로그아웃
+	 * dec : jwt 쿠키를 제거한다.
+	 * 작성자 : 류제욱
+	 * 작성일 : 2020-01-06
+	 */
 	@DeleteMapping(path = "/sign-out")
 	public ResponseEntity<Map<String, Object>> signOut(HttpServletResponse response) {
 		Cookie cookie = new Cookie("jwt", "");
