@@ -6,6 +6,6 @@ public interface ReportersProcedureService {
 	
 	public void execuReportersProcedure(Map<String, Object> params);
 	
-	//±âÀÚÇÁ·ÎÇÊ(ÀÌÁ¾Çö restAPI 61_line)
-	public Map<String, String> getReporterInfo(int id);
+	//ê¸°ìí”„ë¡œí•„
+	public Map<String, Object> getReporterInfo(Map<String, Object> params);
 }

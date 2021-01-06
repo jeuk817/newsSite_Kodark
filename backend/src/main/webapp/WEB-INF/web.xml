@@ -3,11 +3,6 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
     version="3.1">
-	<welcome-file-list>
-        <welcome-file>index.html</welcome-file>
-        <welcome-file>index.htm</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
     
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
@@ -55,7 +50,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+	<!-- 
 	<filter>
 	    <filter-name>springSecurityFilterChain</filter-name>
 	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -64,7 +59,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+	 -->
 	<error-page>
 		<error-code>404</error-code>
 		<location>/WEB-INF/views/index.html</location>

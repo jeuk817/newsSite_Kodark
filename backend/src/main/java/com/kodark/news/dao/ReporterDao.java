@@ -14,9 +14,9 @@ public class ReporterDao {
 
 	private ReportersProcedureMapper reportersProcedureMapper;
 	
-	//±âÀÚÇÁ·ÎÇÊ(ÀÌÁ¾Çö restAPI 61_line)
-	public Map<String, String> getReporterInfo(int _id) {
-		return reportersProcedureMapper.getReporterInfo(_id);
+	//ê¸°ìí”„ë¡œí•„(ì´ì¢…í˜„)
+	public Map<String, Object> getReporterInfo(Map<String, Object> params) {
+		return reportersProcedureMapper.getReporterInfo(params);
 	}
 	 
 	public void execuReportersProcedure(Map<String, Object> params) {

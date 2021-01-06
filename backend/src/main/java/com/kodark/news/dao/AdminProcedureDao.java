@@ -22,7 +22,7 @@ public class AdminProcedureDao {
 		return adminProcedureMapper.getWaitArticle();
 	}
 	
-	//±âÀÚ¸ñ·Ï(ÀÌÁ¾Çö restAPI 57_line)
+	//ê¸°ìëª©ë¡(rest_API 57_line)
 	public List<Map<String, Object>> getReporterList() {
 		return adminProcedureMapper.getReporterList();
 	}

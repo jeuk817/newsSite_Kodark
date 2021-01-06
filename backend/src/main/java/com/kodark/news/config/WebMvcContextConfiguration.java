@@ -16,7 +16,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import com.kodark.news.interceptors.JwtInterceptor;
-import com.kodark.news.interceptors.TestInterceptor;
 
 
 @Configuration

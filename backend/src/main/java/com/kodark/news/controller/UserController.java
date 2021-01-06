@@ -50,7 +50,7 @@ public class UserController {
 	
 	
 	
-	//����������
+	//
 	@GetMapping(path = "/my-page")
     public ResponseEntity<String> myPage(){	
 	    return new ResponseEntity<>(HttpStatus.OK);//200

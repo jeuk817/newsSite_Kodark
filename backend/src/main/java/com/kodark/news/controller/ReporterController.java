@@ -1,5 +1,7 @@
 package com.kodark.news.controller;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +26,21 @@ public class ReporterController {
 	@Autowired
 	ReportersProcedureService reportersProcedureService;
 	
-	//기자프로필
+	//기자프로필(이종현)
 	@GetMapping
-	public ResponseEntity<Map<String, String>> getInfoProfile(@RequestParam("id") int id){
-		return new ResponseEntity<Map<String, String>>(reportersProcedureService.getReporterInfo(id), HttpStatus.OK);
+	public ResponseEntity<Map<String, Object>> getInfoProfile(@RequestBody Map<String, Object> body){
+		Map<String, Object> params = new HashMap<String, Object>();
+		params = reportersProcedureService.getReporterInfo(body);
+		
+		if(body.get("result_set").equals("200")) {
+			return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);	
+		}else if(body.get("result_set").equals("404")) {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);	
+		}else {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);	
+		}
+		
+		
 	}
 	
 	

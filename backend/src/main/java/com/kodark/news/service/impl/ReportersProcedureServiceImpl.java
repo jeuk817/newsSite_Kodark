@@ -1,5 +1,9 @@
 package com.kodark.news.service.impl;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +24,10 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
 		
 	}
 	
-	//±âÀÚÇÁ·ÎÇÊ(ÀÌÁ¾Çö restAPI 61_line)
+	//ê¸°ìí”„ë¡œí•„
 	@Override
-	public Map<String, String> getReporterInfo(int id) {
-		return reporterDao.getReporterInfo(id);
+	public Map<String, Object> getReporterInfo(Map<String, Object> params) {		
+		return reporterDao.getReporterInfo(params);
 	}
 	
 	
