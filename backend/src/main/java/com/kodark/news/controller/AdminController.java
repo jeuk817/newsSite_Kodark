@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodark.news.service.StatisticsService;
@@ -48,14 +49,38 @@ public class AdminController {
 		return new ResponseEntity<List<Map<String, Object>>>(statisticsService.execuStatisticsProcedure(_id),HttpStatus.OK);//200
 	}
 
-	//발행대기중 기사
+	/**
+	    * 발행 대기중 기사
+	    * 작성자 : 이푸름 
+	    * 작성일 : 2021-01-05
+	  */
 	@GetMapping(path="/article")
-	public ResponseEntity <List<Map<String, Object>>> waitingArticle() {
-		
-		return new ResponseEntity<List<Map<String, Object>>> (adminProcedureService.getWaitArticles(), HttpStatus.CREATED); // 201;
+	public ResponseEntity <List<Map<String, Object>>> waitingArticle(@RequestParam("status") String status, HttpServletResponse response) {
+		  response.setHeader("Links",
+			  "</admin/article?articleId&status=\"waiting\">; rel=\"waitingArticleDetail\"");
+		  
+		  response.setHeader("_links",
+				  	"{"
+				  	+ "rel: \"waitingArticleDetail\","
+				  	+ "href : \"/admin/article?articleId&status=waiting\","
+				  	+"method: \"get\"}"
+				  	);
+		String _status = status;
+		if(adminProcedureService.getWaitArticles(_status).get(1) == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
+		}else if(adminProcedureService.getWaitArticles(_status).get(1) != null){
+			return new ResponseEntity<List<Map<String, Object>>> (adminProcedureService.getWaitArticles(_status), HttpStatus.OK); // 201;
+		}else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//5000
+		}
 	}
 	
-	//기자아이디 생성
+	
+	  /**
+	    * 기자 아이디 생성
+	    * 작성자 : 이푸름 
+	    * 작성일 : 2021-01-05
+	  */
 	@PostMapping(path="/reporters")
 	public ResponseEntity<UserDto> createReporter(@RequestBody Map<String, Object> body) throws ParseException {
 		String email = (String) body.get("email");
@@ -84,6 +109,9 @@ public class AdminController {
 		params.put("_image", image);
 	
 		adminProcedureService.execuAdminProcedure(params);
+		if(params.get("result_set").equals("conflict")) {
+			return new ResponseEntity<> (HttpStatus.CONFLICT); // 409
+		}
 		
 		return new ResponseEntity<> (HttpStatus.CREATED); // 201
 		

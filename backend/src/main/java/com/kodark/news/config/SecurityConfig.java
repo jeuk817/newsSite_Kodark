@@ -25,9 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity
-//                .csrf()
-//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        httpSecurity
+                .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		
 //        		.csrf().disable()
 //                .httpBasic();
@@ -36,8 +36,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/db/**").hasRole("ADMIN");
     }
 	
+	
 //	@Bean
 //    public PasswordEncoder encoder() {
 //        return new BCryptPasswordEncoder();
 //    }
+	
+	 
+	
+	
+	
 }

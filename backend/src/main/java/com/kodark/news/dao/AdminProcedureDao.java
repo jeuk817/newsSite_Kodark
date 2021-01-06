@@ -18,7 +18,7 @@ public class AdminProcedureDao {
 		adminProcedureMapper.adminProcedure(params);
 	}
 	
-	public List<Map<String, Object>> getWaitArticles() {
-		return adminProcedureMapper.getWaitArticle();
+	public List<Map<String, Object>> getWaitArticles(String _status) {
+		return adminProcedureMapper.getWaitArticle(_status);
 	}
 }

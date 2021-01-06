@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.mapping.StatementType;
 
@@ -28,8 +29,8 @@ public interface AdminProcedureMapper {
 	public void adminProcedure(Map<String, Object> params);
 	
 	
-	@Select(value = "{CALL admin_getWaitArticle()}")
+	@Select(value = "{CALL admin_getWaitArticle(#{_status})}")
 	@Options(statementType = StatementType.CALLABLE)
-	public List<Map<String, Object>> getWaitArticle();
+	public List<Map<String, Object>> getWaitArticle(@Param("_status") String _status);
 	
 }

@@ -1,5 +1,6 @@
 package com.kodark.news.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,11 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
       return reporterDao.getReporterInfo(params);
       
    }
+
+	@Override
+	public List<Map<String, Object>> getPubAndWaitArtlcles(String status) {
+		// TODO Auto-generated method stub
+		return reporterDao.getPubAndWaitArtlcles(status);
+	}
 	
 }

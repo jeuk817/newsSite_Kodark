@@ -21,7 +21,7 @@ public class AdminProcedureServiceImpl implements AdminProcedureService{
 	}
 
 	@Override
-	public List<Map<String, Object>> getWaitArticles() {
-		return adminProcedureDao.getWaitArticles();
+	public List<Map<String, Object>> getWaitArticles(String _status) {
+		return adminProcedureDao.getWaitArticles(_status);
 	}
 }

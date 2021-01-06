@@ -1,9 +1,11 @@
 package com.kodark.news.mappers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.mapping.StatementType;
 
@@ -26,4 +28,7 @@ public interface ReportersProcedureMapper {
 			         + ")}")
     @Options(statementType = StatementType.CALLABLE)
     public Map<String, Object> getReporterInfo(Map<String, Object> params);
+
+	@Select(value = "{CALL reporter_getPubAndWaitArtlcles(#{_status})}")
+	public List<Map<String, Object>> getPubAndWaitArtlcles(@Param("_status") String status);
 }
