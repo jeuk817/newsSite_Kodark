@@ -20,37 +20,18 @@ import com.kodark.news.service.ReportersProcedureService;
 @RequestMapping(path = "/reporters")
 public class ReporterController {
 	
-	@Autowired
-	ReportersProcedureService reportersProcedureService;
-	
+	//기자 네비게이션
 	@GetMapping(path = "/navigation")
-	public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response){
-		/*
-		 * String token = jwtService.createToken("jack", (2 * 1000 * 60));
-		 * 
-		 * Map<String, Object> map = new HashMap<>(); Cookie cookie = new Cookie("jwt",
-		 * token); cookie.setMaxAge(7 * 24 * 60 * 60); cookie.setSecure(true);
-		 * cookie.setHttpOnly(true); cookie.setPath("/");
-		 * 
-		 * response.addCookie(cookie);
-		 */
+	public ResponseEntity<Map<String, Object>> reporterNavi(HttpServletResponse response){
+		
 		response.setHeader("Links",
 								"</repoters?reporterId>; 					rel=\"reporterList\","
 						  	  + "</reporters/new-post>; 	   				rel=\"articlePostForm\","
 							  + "</reporters/article?status=\"published\">; rel=\"publishedArticleList\","
 							  + "</reporters/article?status=\"waiting\"> ;  rel=\"waitingArticleList\",");
+	
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 		
-		Map<String, Object> params = new HashMap<>();	
-		
-		reportersProcedureService.execuReportersProcedure(params);
-		
-		if(params.get("result_set").equals("204")){
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
-		}else if(params.get("result_set").equals("404")){		
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
-		}else
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
-
 	}
 
 }
