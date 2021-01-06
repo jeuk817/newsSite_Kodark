@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.kodark.news.controller.advice.exceptions.UnauthorizedException;
 import com.kodark.news.service.JwtService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -48,9 +51,13 @@ public class JwtServiceImpl implements JwtService {
  
     @Override
     public Claims getClaims(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(env.getProperty("secret.jwt")))
-                .parseClaimsJws(token).getBody();
-        return claims;
+    	try {
+    		Claims claims = Jwts.parser()
+    				.setSigningKey(DatatypeConverter.parseBase64Binary(env.getProperty("secret.jwt")))
+    				.parseClaimsJws(token).getBody();
+    		return claims;    		
+    	} catch(JwtException e) {
+    		throw new UnauthorizedException(e);
+    	}
     }
 }
