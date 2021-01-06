@@ -61,21 +61,20 @@ public class AdminController {
 		String email = (String) body.get("email");
 		String pwd = (String)body.get("pwd");
 		String auth = "reporter";
+		String nickName = (String)body.get("nickName");
+		String name = (String)body.get("name");
+		String local = (String)body.get("local");
+		String Stringbirth = (String) body.get("birth");
+		SimpleDateFormat afterFormat = new SimpleDateFormat("yyyy-mm-dd");
+		java.sql.Date birth =  java.sql.Date.valueOf(Stringbirth);
+		String gender = (String)body.get("gender");
+		String image = (String)body.get("image");
+		
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "create_reporter");
 		params.put("_email", email);
 		params.put("_pwd", pwd);
 		params.put("_auth", auth);
-		String nickName = (String)body.get("nickname");
-		String name = (String)body.get("name");
-		String local = (String)body.get("local");
-		
-		String Stringbirth = (String) body.get("birth");
-		SimpleDateFormat afterFormat = new SimpleDateFormat("yyyy-mm-dd");
-		java.sql.Date birth =  java.sql.Date.valueOf(Stringbirth);
-		
-		String gender = (String)body.get("gender");
-		String image = (String)body.get("image");
 		params.put("_nickName", nickName);
 		params.put("_name", name);
 		params.put("_local", local);

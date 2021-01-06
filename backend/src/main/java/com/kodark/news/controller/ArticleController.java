@@ -18,17 +18,17 @@ import com.kodark.news.service.ArticleService;
 @RequestMapping(path = "/article")
 public class ArticleController {
 
-	@Autowired
-	private ArticleService articleService;
-	
-	@GetMapping(path = "/category")
-	public ResponseEntity<List<CategoryDto>> categoryInfo(){
-		Map<String, Object> params = new HashMap<>();
-		
-		if (params.get("result_set").equals("200")) {
-			return new ResponseEntity<List<CategoryDto>>(articleService.CategoryInfo(), HttpStatus.OK); //200
-		} else
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
-	}
+//	@Autowired
+//	private ArticleService articleService;
+//	
+//	@GetMapping(path = "/category")
+//	public ResponseEntity<List<CategoryDto>> categoryInfo(){
+//		Map<String, Object> params = new HashMap<>();
+//		
+//		if (params.get("result_set").equals("200")) {
+//			return new ResponseEntity<List<CategoryDto>>(articleService.CategoryInfo(), HttpStatus.OK); //200
+//		} else
+//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
+//	}
 	
 }

@@ -109,12 +109,12 @@ public class AuthController {
 		System.out.println("======================================");
 		System.out.println("@PatchMapping");
 		System.out.println("======================================");
-		String _auth_string = (String) body.get("_auth_string");
+		String authString = (String) body.get("authString");
 		String email = (String)body.get("email");
 		Map<String, Object>params = new HashMap<>();
 		params.put("_switch", "confirm_verify");
 		params.put("_email", email);
-		params.put("_auth_string", _auth_string);
+		params.put("_auth_string", authString);
 		System.out.println(params.toString());
 		authProcedureService.execuAuthProcedure(params);
 		System.out.println("check:"+params.get("result_set"));
@@ -124,8 +124,8 @@ public class AuthController {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 		}else if(params.get("result_set").equals("fail")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
-//		}else if(params.get("result_set").equals("Request timeout")){
-//			return new ResponseEntity<>(HttpStatus.REQUEST_TIMEOUT);//408
+		}else if(params.get("result_set").equals("expiration")){
+			return new ResponseEntity<>(HttpStatus.REQUEST_TIMEOUT);//408
 		}else {
 			System.out.println("errorrrrrrrrrrrrrrrrrrrrrrr");
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500

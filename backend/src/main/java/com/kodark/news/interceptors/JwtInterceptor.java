@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.kodark.news.controller.advice.exceptions.UnauthorizedException;
 import com.kodark.news.service.JwtService;
 
 import io.jsonwebtoken.Claims;
@@ -24,6 +25,9 @@ public class JwtInterceptor implements HandlerInterceptor {
 		System.out.println("JwtInterceptor");
 		String jwtCookie = null;
 		Cookie[] cookies = request.getCookies();
+		
+		if(cookies == null) throw new UnauthorizedException(request); // 401
+		
 		for(int i = 0; i < cookies.length; i++) {
 			if(cookies[i].getName().equals("jwt")) {
 				jwtCookie = cookies[i].getValue();
@@ -31,7 +35,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 			}
 		}
 		
-		if(jwtCookie == null) return false; // 401
+		if(jwtCookie == null) throw new UnauthorizedException(request); // 401
 		
 		Claims claims =  jwtService.getClaims(jwtCookie);
 		request.setAttribute("id", claims.get("id"));
@@ -57,7 +61,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     	String contextPath = request.getContextPath();
     	String urlCommand = requestURI.substring(contextPath.length());
     	String[] urlTokens = urlCommand.split("/");
-    	return urlTokens[0];
+    	return urlTokens[0]; // admin, reporter, users
 	}
 
 }

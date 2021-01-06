@@ -6,6 +6,7 @@ import java.util.Map;
 public interface AdminProcedureService {
 	
 	public void execuAdminProcedure(Map<String, Object> params);
+	
 	public List<Map<String, Object>> getWaitArticles();
 
 }

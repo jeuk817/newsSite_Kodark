@@ -16,7 +16,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import com.kodark.news.interceptors.JwtInterceptor;
-import com.kodark.news.interceptors.TestInterceptor;
 
 
 @Configuration
@@ -65,6 +64,7 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 //		WebMvcConfigurer.super.addInterceptors(registry);
+		
 		registry.addInterceptor(jwtInterceptor)
 			.addPathPatterns("/users/*")
 			.addPathPatterns("/reporter/*")

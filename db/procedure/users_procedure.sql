@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `users_procedure`(
+CREATE DEFINER=`jack`@`localhost` PROCEDURE `users_procedure`(
    in _switch varchar(20)
     , in _id int
    , inout _email varchar(50)
