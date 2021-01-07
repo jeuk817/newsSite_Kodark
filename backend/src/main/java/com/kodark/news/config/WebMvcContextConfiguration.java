@@ -65,8 +65,8 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 //		WebMvcConfigurer.super.addInterceptors(registry);
 		registry.addInterceptor(jwtInterceptor)
 			.addPathPatterns("/users/*")
-			.addPathPatterns("/reporter/*")
-			.addPathPatterns("/admin/*");
+			.addPathPatterns("/reporter/*");
+//			.addPathPatterns("/admin/*");
 		
 //		registry.addInterceptor(new TestInterceptor())
 //			.addPathPatterns("/reporter");
