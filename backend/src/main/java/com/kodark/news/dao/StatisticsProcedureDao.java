@@ -21,5 +21,8 @@ public class StatisticsProcedureDao {
 	public List<Map<String, Object>> excuTodayPopularProcedure() {
 		return statiscticsProcedureMapper.todayPopularProcedure();
 	}
+	public List<Map<String, Object>> excuArticleStatisticsProcedure(int articleId) {
+		return statiscticsProcedureMapper.articleStatisticsProcedure(articleId);		
+	}
 	
 }

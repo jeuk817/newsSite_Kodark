@@ -18,4 +18,12 @@ public interface ReportersProcedureMapper {
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void reportersProcedure(Map<String, Object> params);
+	
+	@Select(value = "{CALL blind_procedure("
+			+ "#{_article_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
+			+ ",#{_reporter_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"		
+			+ ",#{result_set, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"		
+			+ ")}")
+	@Options(statementType = StatementType.CALLABLE)
+	public void reportersBlindProcedure(Map<String, Object> params);
 }

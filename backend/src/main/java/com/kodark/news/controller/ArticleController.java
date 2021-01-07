@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,25 +38,33 @@ public class ArticleController {
 	public ResponseEntity<Map<String,Object>> latest(@RequestParam(value = "section", required = false, defaultValue = "politics")String category, HttpServletResponse response){
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> temp = new HashMap<>();
-		List<Map<String,Object>>list = new ArrayList<>();
-		
-		StringBuffer sb = new StringBuffer();	
+		Map<String,Object> link = new HashMap<>();
+		List<Map<String,Object>>list = new ArrayList<>();		
+		//StringBuffer sb = new StringBuffer();	
 		params.put("category", category);
-		try {
+		System.out.println("check");
+	try {
 			list=articleProcedureService.execuLatestProcedure(params);
 			params.put("type", "latest");				
-			for(int i=0;i<list.size();i++) {				
-				sb.append("rel :\"article\", href : \"article?articleId="+list.get(i).get("id")+"\",method : \"get\"");
+			for(int i=0;i<list.size();i++) {
+				temp = new HashMap<>();
+				link = new HashMap<>();
+				link.put("rel","article");
+				link.put("href","/article?articleId="+list.get(i).get("id"));
+				link.put("method","get");
+				//sb.append("rel :\"article\", href : \"article?articleId="+list.get(i).get("id")+"\",method : \"get\"");
 				temp.put("id",list.get(i).get("id"));
 				temp.put("title", list.get(i).get("title"));
 				temp.put("content", list.get(i).get("content"));
 				temp.put("image", list.get(i).get("image"));
-				temp.put("imgDec", list.get(i).get("imgDec"));
-				temp.put("_link", sb.toString());		
-				list.set(i, temp);				
-				sb.delete(0, sb.length());				
-			}
-			params.put("data", list);	
+				temp.put("imgDec", list.get(i).get("imgDec"));				
+				temp.put("_link", link);		
+				list.set(i,temp);				
+			//	sb.delete(0, sb.length());			
+		}
+			params.put("data", list);
+			
+		
 			response.setHeader("Links","rel : \"article\","
 									 + "href : \"/article?articleId\","
 									 + "method : \"get\"");
@@ -77,14 +84,16 @@ public class ArticleController {
 			){
 		Map<String, Object> params = new HashMap<>();
 		List<Map<String,Object>>list = new ArrayList<>();
-		articleId = 1;
+		articleId = 3;
 			
 		try {
-		list=articleProcedureService.execuCommentProcedure();
+		list=articleProcedureService.execuCommentProcedure(articleId);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
-		params.put("data", list);
+		System.out.println("lsit :"+list);
+		params.put("data", list);		
 		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
 	}
+	
 }

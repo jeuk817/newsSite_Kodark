@@ -26,4 +26,9 @@ public class StatisticsServiceImpl implements StatisticsService{
 		return statisticsDao.excuTodayPopularProcedure();
 	}
 
+	@Override
+	public List<Map<String, Object>> execuArticleStatisticsProcedure(int articleId) {
+		return statisticsDao.excuArticleStatisticsProcedure(articleId);
+	}
+
 }

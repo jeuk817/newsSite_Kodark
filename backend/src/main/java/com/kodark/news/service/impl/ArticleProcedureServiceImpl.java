@@ -20,9 +20,12 @@ public class ArticleProcedureServiceImpl implements ArticleProcedureService{
 	
 	
 	@Override
-	public List<Map<String, Object>> execuCommentProcedure() {
+	public List<Map<String, Object>> execuCommentProcedure(int i) {
 		
-		return articleProcedureDao.commentProcedure();
+		return articleProcedureDao.commentProcedure(i);
 	}
+
+
+
 
 }

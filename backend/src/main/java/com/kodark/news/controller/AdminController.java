@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,20 +19,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kodark.news.dto.Mail;
 import com.kodark.news.dto.UserDto;
 import com.kodark.news.service.AdminProcedureService;
+import com.kodark.news.service.MailService;
 import com.kodark.news.service.StatisticsService;
 
 @RestController
 @RequestMapping(path = "/admin")
 public class AdminController {
 	
-
-	@Autowired
-	StatisticsService statisticsService;
 	
-	@Autowired 
+	Environment env;	
+	MailService mailService;		
+	StatisticsService statisticsService;	
 	AdminProcedureService adminProcedureService;
+	@Autowired
+	public AdminController(MailService mailService, StatisticsService statisticsService,
+			AdminProcedureService adminProcedureService,Environment env) {
+		super();
+		this.env = env;
+		this.mailService = mailService;
+		this.statisticsService = statisticsService;
+		this.adminProcedureService = adminProcedureService;
+		
+	}
+
 	/**
 	 * 관리자메인
 	 * 작성자 : 최윤수 
@@ -91,8 +104,8 @@ public class AdminController {
 	}
 	
 	//관리자 네비게이션
-	 @GetMapping(path = "/navigation")
-	   public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response) {
+	@GetMapping(path = "/navigation")
+	public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response) {
 	      /*
 	       * String token = jwtService.createToken("jack", (2 * 1000 * 60));
 	       * 
@@ -134,6 +147,28 @@ public class AdminController {
 	         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 
 	   }
-
+	/**
+	 * 기자에게 이메일보내기
+	 * 작성자 : 최윤수
+	 * 작성일 :2021-01-07
+	 */
+	@PostMapping(path = "/reporters/email")
+	public ResponseEntity<Map<String, Object>> sendMailToReporter(@RequestBody Map<String, Object> body){		
+		String email = (String) body.get("email");
+		String title = (String) body.get("title");	
+		String content = (String) body.get("content");			
+		Mail mail = new Mail();	
+		try {
+			mail.setMailFrom(env.getProperty("email.username"));
+			mail.setMailTo(email);
+			mail.setMailSubject(title);
+			mail.setMailContent(content);
+			mailService.sendMail(mail);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//500
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
+	}
 }
 	
