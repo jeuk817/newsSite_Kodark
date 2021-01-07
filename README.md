@@ -18,4 +18,10 @@
 
 데이터베이스 : MySQL
 
+협업툴 : Git, Google_Meeting
+
+외부 API 목록
+[]
+
+
 구현 : RestFull API 기반으로 한 Ajax 통신 서버 구현
