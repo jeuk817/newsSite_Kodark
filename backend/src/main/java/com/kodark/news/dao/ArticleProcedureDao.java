@@ -18,4 +18,7 @@ public class ArticleProcedureDao {
 	public List<Map<String, Object>> getEmotionInfo(int _articleId) {
 		return articleProcedureMapper.getEmotionInfo(_articleId);
 	}
+	public List<Map<String, Object>> getCommentReply(int _articleId, int _commentId) {
+		return articleProcedureMapper.getCommentReply(_articleId, _commentId);
+	}
 }

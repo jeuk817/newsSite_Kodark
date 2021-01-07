@@ -36,10 +36,23 @@ public class AdminController {
 	@Autowired 
 	AdminProcedureService adminProcedureService;
 	 
-	//기자목록(이종현 restAPI 57_line)
+	/**
+	 * 기자 목록
+	 * 날짜 : 2021-01-07
+	 * 작성자 : 이종현
+	 */
 	@GetMapping(path ="/reporters")
 	public ResponseEntity <List<Map<String, Object>>> getReportersList(){
-		return new ResponseEntity<List<Map<String,Object>>>(adminProcedureService.getReporterList(),HttpStatus.OK);
+		List<Map<String, Object>> list = null;
+		try {
+			list = adminProcedureService.getReporterList();		
+		} catch (Exception e) {
+			if(list.isEmpty()) {
+				return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);		
+		}
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
 	}
 
 	//기사작성대기

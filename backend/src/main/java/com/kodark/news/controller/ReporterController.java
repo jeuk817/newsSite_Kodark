@@ -23,20 +23,28 @@ public class ReporterController {
 	@Autowired
 	ReportersProcedureService reportersProcedureService;
 	
-	//기자프로필(이종현)
+	/**
+	 * 기자 프로필
+	 * 날짜 : 2021-01-07
+	 * 작성자 : 이종현
+	 */
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> getInfoProfile(@RequestBody Map<String, Object> body){
-		Map<String, Object> params = new HashMap<String, Object>();
-		params = reportersProcedureService.getReporterInfo(body);
+		Map<String, Object> params = null;
 		
-		if(body.get("result_set").equals("200")) {
-			return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);	
-		}else if(body.get("result_set").equals("404")) {
-			return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);	
-		}else {
-			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);	
-		}
-	
+		try {
+			params = new HashMap<String, Object>();
+			params = reportersProcedureService.getReporterInfo(body);
+
+			if(params.isEmpty()) {
+				throw new NullPointerException();
+			}
+		} catch (NullPointerException e) {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);			
+		} 
+		return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);	
 	}
 	
 	

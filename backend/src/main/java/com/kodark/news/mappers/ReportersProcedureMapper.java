@@ -21,9 +21,8 @@ public interface ReportersProcedureMapper {
 	public void reportersProcedure(Map<String, Object> params);
 	
 	//기자프로필(이종현)
-	@Select(value = "{CALL reporter_procedure("
+	@Select(value = "{CALL reporter_profile_procedure("
 			+ "#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
-			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public Map<String, Object> getReporterInfo(Map<String, Object> params);

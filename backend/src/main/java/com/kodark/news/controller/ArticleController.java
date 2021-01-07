@@ -1,5 +1,6 @@
 package com.kodark.news.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,11 @@ public class ArticleController {
 	@Autowired
 	private ArticleProcedureService articleProcedureService; 
 	
-	
+	/**
+	 * 기사 감정 데이터
+	 * 날짜 : 2021-01-07
+	 * 작성자 : 이종현
+	 */
 	@GetMapping(path ="/emotion")
 	public ResponseEntity<List<Map<String, Object>>> getEmotionInfo(@RequestParam("articleId") int articleId
 																			, HttpServletResponse response){
@@ -72,5 +77,51 @@ public class ArticleController {
 			e.printStackTrace();
 			return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR); //500
 		}
+	}
+	
+	/**
+	 * 대댓글 데이터
+	 * 날짜 : 2021-01-07
+	 * 작성자 : 이종현
+	 */
+	@GetMapping(path ="/comment")
+	public ResponseEntity<List<Map<String,Object>>> getCommentReply(
+			@RequestParam("articleId") int articleId, @RequestParam("commentStartId") int commentStartId){
+		
+		List<Map<String, Object>> list = articleProcedureService.getCommentReply(articleId, commentStartId);
+		List<Map<String, Object>> tempList = null;
+		Map<String,Object> map = null;
+		Map<String,Object> temp = null;
+		try {
+			tempList = new ArrayList<Map<String,Object>>();
+			for(int i=0; i<list.size(); i++) {
+				map = new HashMap<String, Object>();
+				temp = new HashMap<String, Object>();
+				map.put("user", list.get(i).get("userId"));
+				map.put("email", list.get(i).get("email"));
+				map.put("nickName", list.get(i).get("nickName"));
+				map.put("local", list.get(i).get("local"));
+				
+				temp.put("user", map);
+				temp.put("id", list.get(i).get("id"));
+				temp.put("content", list.get(i).get("content"));
+				temp.put("createdAt", list.get(i).get("createdAt"));
+				temp.put("delFlag", list.get(i).get("delFlag"));
+				tempList.add(temp);
+			}
+			
+			for(int i=0; i<list.size(); i++) {
+				map = new HashMap<String, Object>();
+				temp = new HashMap<String, Object>();
+				
+				map.put("recommend", list.get(i).get("recommend"));
+				map.put("decommend", list.get(i).get("decommend"));
+				temp.put("reputation", map);
+				tempList.add(temp);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);//500
+		}
+		return new ResponseEntity<List<Map<String,Object>>>(tempList,HttpStatus.OK);//200
 	}
 }

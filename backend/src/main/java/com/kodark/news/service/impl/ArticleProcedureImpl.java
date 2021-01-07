@@ -19,4 +19,9 @@ public class ArticleProcedureImpl implements ArticleProcedureService{
 		return articleProcedureDao.getEmotionInfo(params);
 	}
 
+	@Override
+	public List<Map<String, Object>> getCommentReply(int articleId, int commentId) {
+		return articleProcedureDao.getCommentReply(articleId, commentId);
+	}
+
 }

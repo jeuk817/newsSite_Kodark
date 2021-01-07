@@ -12,7 +12,7 @@ import org.apache.ibatis.mapping.StatementType;
 public interface AdminProcedureMapper {
 
 	
-	//±âÀÚ¸ñ·Ï(ÀÌÁ¾Çö restAPI 57_line)
+	//ê¸°ì ëª©ë¡(ì´ì¢…í˜„)
 	@Select(value = "{CALL admin_repoters_procedure}")
 	@Options(statementType = StatementType.CALLABLE)
 	public List<Map<String,Object>> getReporterList();

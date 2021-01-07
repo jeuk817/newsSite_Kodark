@@ -19,4 +19,11 @@ public interface ArticleProcedureMapper {
 	@Options(statementType = StatementType.CALLABLE)
 	public List<Map<String, Object>> getEmotionInfo(@Param("_articleId") int _articleId);
 	
+	@Select(value = "{CALL article_comment_reply_procedure("
+			+ "#{_articleId, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
+			+ ",#{_commentId, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"	
+			+ ")}")
+	@Options(statementType = StatementType.CALLABLE)
+	public List<Map<String, Object>> getCommentReply(@Param("_articleId") int _articleId,@Param("_commentId") int _commentId);
+	
 }
