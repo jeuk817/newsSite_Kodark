@@ -29,8 +29,10 @@ public interface ArticleProcedureMapper {
 	@Options(statementType = StatementType.CALLABLE)
 	void articleProcedure(Map<String, Object> params);
 	
-	@Select(value = "{CALL article_getArticleDetail(#{_articleId})}")
+	@Select(value = "{CALL article_getArticleDetail("
+			+ "#{_articleId, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
+			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
-	public Map<String, Object> getArticleDetail(@Param("_articleId") int articleId);
+	public List<Map<String, Object>> getArticleDetail(Map<String, Object> params);
 
 }

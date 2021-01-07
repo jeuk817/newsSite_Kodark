@@ -1,5 +1,6 @@
 package com.kodark.news.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,25 +54,28 @@ public class AdminController {
 	    * 발행 대기중 기사
 	    * 작성자 : 이푸름 
 	    * 작성일 : 2021-01-05
+	    * responsebody 안에 링크 역슬러쉬가 그대로 담기는 에러가 있음..
 	  */
 	@GetMapping(path="/article")
 	public ResponseEntity <List<Map<String, Object>>> waitingArticle(@RequestParam("status") String status, HttpServletResponse response) {
-		  response.setHeader("Links",
-			  "</admin/article?articleId&status=\"waiting\">; rel=\"waitingArticleDetail\"");
-		  
-		  response.setHeader("_links",
-				  	"{"
-				  	+ "rel: \"waitingArticleDetail\","
-				  	+ "href : \"/admin/article?articleId&status=waiting\","
-				  	+"method: \"get\"}"
-				  	);
+		List<Map<String,Object>>list = new ArrayList<>();
+		Map<String, Object> temp = new HashMap<>();
 		String _status = status;
+
+		list = adminProcedureService.getWaitArticles(_status);
+		System.out.println(list);
+		temp.put("_link", "{"+"rel :\"waitingArticleDetail\","+ "href : \"admin/article?articleId&status=waiting\","
+				+"method: \"get\"}" );
+		list.add(temp);
+		
+		response.setHeader("Links",
+				"</admin/article?articleId&status=\"waiting\">; rel=\"waitingArticleDetail\"");
 		if(adminProcedureService.getWaitArticles(_status).get(1) == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
 		}else if(adminProcedureService.getWaitArticles(_status).get(1) != null){
-			return new ResponseEntity<List<Map<String, Object>>> (adminProcedureService.getWaitArticles(_status), HttpStatus.OK); // 201;
+			return new ResponseEntity<List<Map<String, Object>>> (list, HttpStatus.OK); // 201;
 		}else {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//5000
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
 	}
 	

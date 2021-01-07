@@ -6,5 +6,5 @@ import java.util.Map;
 public interface ArticleProcedureService {
 	
 	public void execuArticleProcedure(Map<String, Object> params);
-	public Map<String, Object> getArticleDetail(int _articleId);
+	public List<Map<String, Object>> getArticleDetail(Map<String, Object> params);
 }

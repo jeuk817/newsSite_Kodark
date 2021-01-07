@@ -1,5 +1,6 @@
 package com.kodark.news.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,9 +85,29 @@ public class ReporterController {
 	    * 발행/발행대기 기사
 	    * 작성자 : 이푸름 
 	    * 작성일 : 2021-01-06
+	    * 
 	  */
 	  @GetMapping(path = "/article")
 	  public ResponseEntity<List<Map<String, Object>>> pubAndWaitArtlcles(@RequestParam("status") String status, HttpServletResponse response){
+		  List<Map<String,Object>>list = new ArrayList<>();
+		  Map<String, Object> temp = new HashMap<>();
+		  List<String> linkList = new ArrayList<>();
+		  
+		  linkList.add("{"
+					  	+ "rel: \"editArticleForm\","
+					  	+ "href : \"/ko/reporters/article\","
+					  	+"method: \"get\","
+					  	+ "}");
+		  linkList.add("{"
+				  	+ "rel: \"editArticleForm\","
+				  	+ "href : \"/ko/reporters/article\","
+				  	+"method: \"get\","
+				  	+ "}");
+		  linkList.add("{"
+				  	+ "rel: \"editArticleForm\","
+				  	+ "href : \"/ko/reporters/article\","
+				  	+"method: \"get\","
+				  	+ "}");
 		  
 		  response.setHeader("Links",
 					"</ko/reporters/article>; 					rel=\"editArticleForm\","
@@ -95,28 +116,24 @@ public class ReporterController {
 				  + "</reporters/article/statics\"> ;  rel=\"articlestatics\","
 				  + "</ko/article?articleId\">; rel=\"article\",");
 				 
-		  response.setHeader("_links",
-				  	"["
-				  	+ "{"
-				  	+ "rel: \"editArticleForm\","
-				  	+ "href : \"/ko/reporters/article\","
-				  	+"method: \"get\","
-				  	+ "},"
-					+ "{"
-				  	+ "rel: \"blindArticle\","
-				  	+ "href : \"/reporters/article?status=deleted\","
-				  	+"method: \"patch\","
-				  	+ "},"
-				  	+ "{"
-				  	+ "rel: \"deleteArticle\","
-				  	+ "href : \"/reporters/article?articleId\","
-				  	+"method: \"delete\","
-				  	+ "}"
-				  	+ "]");
 		  String _status = status;
+		  
+		  list = reportersProcedureService.getPubAndWaitArtlcles(_status);
+		  
+		  
+		  temp.put("_links", linkList);
+		  list.add(temp);
+		
+//		  temp.put("_links", "{"
+//				  	+ "rel: \"editArticleForm\","
+//				  	+ "href : \"/ko/reporters/article\","
+//				  	+"method: \"get\","
+//				  	+ "}");
+//		  list.add(temp);
+		  
 		  if( reportersProcedureService.getPubAndWaitArtlcles(_status).get(1) == null) {
 			  return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
 		  }
-		  return new ResponseEntity<List<Map<String, Object>>> (reportersProcedureService.getPubAndWaitArtlcles(_status), HttpStatus.OK); //200
+		  return new ResponseEntity<List<Map<String, Object>>> (list, HttpStatus.OK); //200
 	  }
 }

@@ -1,5 +1,6 @@
 package com.kodark.news.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class ArticleProcedureDao {
 		articleProcedureMapper.articleProcedure(params);
 	}
 	
-	public Map<String, Object> getArticleDetail(int _articleId) {
-		return articleProcedureMapper.getArticleDetail(_articleId);
+	public List<Map<String, Object>> getArticleDetail(Map<String, Object> params) {
+		return articleProcedureMapper.getArticleDetail(params);
 	}
 }

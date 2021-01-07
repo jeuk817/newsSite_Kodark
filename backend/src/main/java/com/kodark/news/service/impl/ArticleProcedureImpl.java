@@ -1,5 +1,6 @@
 package com.kodark.news.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,8 @@ public class ArticleProcedureImpl implements ArticleProcedureService{
 	}
 
 	@Override
-	public Map<String, Object> getArticleDetail(int _articleId) {
-		// TODO Auto-generated method stub
-		return articleProcedureDao.getArticleDetail(_articleId);
+	public List<Map<String, Object>> getArticleDetail(Map<String, Object> params) {
+		return articleProcedureDao.getArticleDetail(params);
 	}
 
 }
