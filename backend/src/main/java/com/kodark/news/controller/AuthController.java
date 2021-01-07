@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,7 +142,7 @@ public class AuthController {
 			String encodedPwd = (String)params.get("_pwd");
 			
 			if(passwordEncoder.matches(pwd, encodedPwd)) {
-				Cookie cookie = util.makeJwtCookie(params);
+				Cookie cookie = util.makeJwtCookie("jwt", params);
 		        
 		        response.addCookie(cookie);
 		        response.setHeader("Links", "</auth/sign-in>; rel=\"self\", </>; rel=\"next\"");
@@ -160,18 +161,23 @@ public class AuthController {
 	 */
 	@DeleteMapping(path = "/sign-out")
 	public ResponseEntity<Map<String, Object>> signOut(HttpServletResponse response) {
-		Cookie cookie = new Cookie("jwt", "");
-        cookie.setMaxAge(0);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
+		Cookie jwt = new Cookie("jwt", "");
+		jwt.setMaxAge(0);
+		jwt.setHttpOnly(true);
+		jwt.setPath("/");
+        response.addCookie(jwt);
         
-        response.addCookie(cookie);
 		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
 	}
 	
+	/*
+	 * title : 구글 oauth
+	 * dec : 구글 oauth 요청을 받고 구글 로그인 link를 보낸다.
+	 * 작성자 : 류제욱
+	 * 작성일 : 2020-01-07
+	 */
 	@PostMapping(path = "/google")
 	public ResponseEntity<Map<String, Object>> google(HttpServletResponse response) {
-		System.out.println("/google");
 		String link = "<https://accounts.google.com/o/oauth2/v2/auth?"
 			        + "client_id=" + env.getProperty("oauth.google.id")
 			        + "&redirect_uri=http://localhost:8090/auth/google/redirect"
@@ -184,6 +190,12 @@ public class AuthController {
 		return new ResponseEntity<>(HttpStatus.FOUND); // 302
 	}
 	
+	/*
+	 * title : 구글 oauth redirect
+	 * dec : 구글로그인 후 토큰을 받고 회원가입 및 로그인 처리를 한다.
+	 * 작성자 : 류제욱
+	 * 작성일 : 2020-01-08
+	 */
 	@GetMapping(path = "/google/redirect")
 	public void googleRedirect(@RequestParam(value = "code") String code
 			, HttpServletResponse response) throws IOException {
@@ -216,7 +228,6 @@ public class AuthController {
 		String resultJson = restTemplate.getForObject(requestUrl, String.class);
 		Map<String,String> userInfo = mapper.readValue(resultJson, new TypeReference<Map<String, String>>(){});
 		String email = userInfo.get("email");
-		System.out.println(email);
 		
 		Map<String, Object> parameter = new HashMap<>();		
 		parameter.put("_switch", "google_oauth");
@@ -227,9 +238,9 @@ public class AuthController {
 		if(!resultSet.equals("sign_up") || !resultSet.equals("exist")) {
 			// throw error
 		}
-		Cookie cookie = util.makeJwtCookie(parameter);
-        
-        response.addCookie(cookie);
+		Cookie jwt = util.makeJwtCookie("jwt", parameter);
+		
+        response.addCookie(jwt);
 		response.sendRedirect("http://localhost:8081/ko/home");
 	}
 }
