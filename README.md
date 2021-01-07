@@ -9,7 +9,7 @@
 기술 스택
 
 언어
-프론트엔드 : Html, Css, JavaScript
+프론트엔드 : JavaScript
 백엔드 : JAVA
 
 프레임워크
