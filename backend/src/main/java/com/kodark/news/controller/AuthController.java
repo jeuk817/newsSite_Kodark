@@ -103,7 +103,11 @@ public class AuthController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); //500
 		}
 	}
-
+	/**
+	 * verify
+	 * 작성자 : 최윤수
+	 * 작성일 : 2020-12-27
+	 */
 	@PatchMapping(path="/verify")
 	public ResponseEntity<String> verify(@RequestBody Map<String, Object> body){	
 		String _auth_string = (String) body.get("auth_string");

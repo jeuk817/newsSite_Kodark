@@ -29,4 +29,10 @@ public interface StatiscticsProcedureMapper {
 	@Options(statementType = StatementType.CALLABLE)
 	public List<Map<String, Object>> todayPopularProcedure();
 	
+	@Select(value = "{CALL articleStatistics_procedure("
+			+ "#{_article_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"			
+			+ ")}")
+	@Options(statementType = StatementType.CALLABLE)
+	public List<Map<String, Object>> articleStatisticsProcedure(int articleId);
+	
 }

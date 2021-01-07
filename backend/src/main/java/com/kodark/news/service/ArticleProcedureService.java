@@ -6,5 +6,7 @@ import java.util.Map;
 public interface ArticleProcedureService {
 	public List<Map<String,Object>> execuLatestProcedure(Map<String, Object> params);
 	
-	public List<Map<String,Object>> execuCommentProcedure();
+	public List<Map<String,Object>> execuCommentProcedure(int i);
+	
+	
 }

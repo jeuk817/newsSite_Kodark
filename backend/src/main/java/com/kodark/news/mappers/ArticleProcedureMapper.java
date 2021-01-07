@@ -18,8 +18,18 @@ public interface ArticleProcedureMapper {
 	public List<Map<String, Object>> latestProcedure(Map<String, Object> params);
 	
 
-	@Select(value = "{CALL comment_procedure()}")
+	@Select(value = "{CALL comment_procedure("
+			+ "#{_article_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"			
+			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
-	public List<Map<String, Object>> commentProcedure();
+	public List<Map<String, Object>> commentProcedure(int i);
+	
+	@Select(value = "{CALL article_procedure("
+			+ "#{_article_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
+			+ "#{_reporter_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"		
+			+ "#{result_set, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"		
+			+ ")}")
+	@Options(statementType = StatementType.CALLABLE)
+	public Map<String, Object> articleBlindProcedure(Map<String, Object> params);
 	
 }

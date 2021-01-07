@@ -16,7 +16,9 @@ public class ArticleProcedureDao {
 		return articleProcedureMapper.latestProcedure(params);
 	}
 	
-	public List<Map<String, Object>> commentProcedure(){
-		return articleProcedureMapper.commentProcedure();
+	public List<Map<String, Object>> commentProcedure(int i){
+		return articleProcedureMapper.commentProcedure(i);
 	}
+	
+	
 }

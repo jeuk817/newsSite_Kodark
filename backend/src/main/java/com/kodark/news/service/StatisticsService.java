@@ -8,4 +8,6 @@ public interface StatisticsService {
 	
 	public List<Map<String, Object>> execuTodayPopularProcedure();
 	
+	public List<Map<String, Object>> execuArticleStatisticsProcedure(int articleId);
+	
 }
