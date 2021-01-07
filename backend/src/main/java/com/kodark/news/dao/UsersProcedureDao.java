@@ -1,5 +1,6 @@
 package com.kodark.news.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,12 @@ public class UsersProcedureDao {
 	@Autowired
 	UsersProcedureMapper usersProcedureMapper;
 	
-	public void excuUsersProcedure(Map<String, Object> params) {
+	public void execuUsersProcedure(Map<String, Object> params) {
 		usersProcedureMapper.usersProcedure(params);
+	}
+
+	public Map<String, Object> myPage(Map<String, Object> params) {
+		return usersProcedureMapper.getMyPage(params);
+		
 	}
 }

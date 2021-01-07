@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodark.news.dto.CategoryDto;
@@ -59,25 +58,29 @@ public class ArticleController {
 	public ResponseEntity<Map<String,Object>> hotNews(HttpServletResponse response){
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> temp; 
+		Map<String, Object> link;
 		List<Map<String,Object>>list = new ArrayList<>();
 		
-		StringBuffer sb = new StringBuffer();	
 		
 		try {
 			list=articleProcedureService.hotNews();
+			
 			for(int i=0;i<list.size();i++) {		
 				temp = new HashMap<>();
-				sb.append("rel :\"article\", href : \"article?articleId="+list.get(i).get("id")+"\",method : \"get\"");
-				System.out.println("똑같은거 반복하니??" + i);
+				link = new HashMap<String, Object>();
+				  
+				link.put("rel", "article");
+				link.put("href", "article?articleId=" + list.get(i).get("id"));
+				link.put("method ", "get");
 				
 				temp.put("id",list.get(i).get("id"));
 				temp.put("title", list.get(i).get("title"));
 				temp.put("content", list.get(i).get("content"));
 				temp.put("image", list.get(i).get("image"));
 				temp.put("imgDec", list.get(i).get("imgDec"));
-				temp.put("_link", sb.toString());		
+				temp.put("_link", link);		
+				
 				list.set(i, temp);				
-				sb.delete(0, sb.length());				
 			}
 			
 			params.put("category", "all");

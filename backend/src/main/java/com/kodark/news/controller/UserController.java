@@ -1,9 +1,11 @@
 package com.kodark.news.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +52,69 @@ public class UserController {
 	}
 	
 	
-	//마이페이지
+	/**
+	 * 마이페이지
+	 * 작성자 : 최현지
+	 * 작성일 : 2021-01-07
+	 */
 	@GetMapping(path = "/my-page")
-    public ResponseEntity<String> myPage(){	
-	    return new ResponseEntity<>(HttpStatus.OK);//200
-    }
+    public ResponseEntity<Map<String, Object>> myPage(HttpServletResponse response, HttpServletRequest request){
+		Map<String, Object> params = new HashMap<String, Object>();
+		List<Map<String, Object>> linkList =  new ArrayList<Map<String,Object>>();
+		Map<String, Object> link1;
+		Map<String, Object> link2;
+		Map<String, Object> link3;
+		
+		request.getAttribute("id");
+		int id = 2;
+		params.put("_id", id);
+		
+		params.put("_switch", "my-page");
+		usersProcedureService.myPage(params);
+		
+		String email = (String) params.get("_email");
+		String auth = (String) params.get("_auth");
+		System.out.println("auth~~~~~~~~~~ " + auth);
+		params.clear();
+		
+		params.put("email", email);
+		params.put("auth", auth);
+		
+	    link1 = new HashMap<String, Object>();
+	    link2 = new HashMap<String, Object>();
+	    link3 = new HashMap<String, Object>();
+	  
+	    link1.put("rel", "deleteUser");
+	    link1.put("href", "/users");
+	    link1.put("method ", "delete");
+	    linkList.add(link1);
+		
+	    link2.put("rel", "editEmail");
+	    link2.put("href", "/auth");
+	    link2.put("method ", "patch");
+	    linkList.add(link2);
+		  
+	    link3.put("rel", "validation");
+	    link3.put("href", "/auth/verify");
+	    link3.put("method ", "patch");
+	    linkList.add(link3);
+	    
+	    params.put("_links", linkList);
+	    
+	
+		
+		response.setHeader("Links",
+				"</users/my-page>; 					rel=\"self\","
+		  	  + "</users/my-page/detail>;			rel=\"userDetail\","
+			  + "</users/my-page/subscribed-list>;	rel=\"subscribedList\","
+			  + "</auth>;  							rel=\"eidtEmail\","
+			  + "</auth/verify>;  					rel=\"validation\","
+			  + "</users>; 							rel=\"deleteUser\"");
+		
+		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);//200
+	}		  
+		 
+		  
 
 	@PostMapping(path = "/test")
 	public ResponseEntity<String> auth(@RequestBody Map<String, Object> body) {
