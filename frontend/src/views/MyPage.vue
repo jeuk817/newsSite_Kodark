@@ -1,25 +1,43 @@
 <template>
-  <div>
-    <MyPageHeader />
-    <div class="myPageBody">
-      <!-- <Navi />
-      <Content /> -->
+  <div class="myPage">
+    <div class="myPageHeader">
+      <MyPageHeader/>
     </div>
+    <div class="myPageContent">
+      <IntroduceSideBar />
+      <!-- <ProfileEditBody /> -->
+      <!-- MyPageBody -->
+      <SubscribeListBody />
+      <!-- <Content /> -->
+    </div>
+    <Footer />
   </div>
 </template>
 
 <script>
 import MyPageHeader from '../components/headers/MyPageHeader'
-
+import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
+import MyPageBody from '../components/bodies/MyPageBody'
+import ProfileEditBody from '../components/bodies/ProfileEditBody'
+import SubscribeListBody from '../components/bodies/SubscribeListBody'
+import Footer from '../components/footer/Footer'
 export default {
   components: {
-    MyPageHeader
+    MyPageHeader,
+    IntroduceSideBar,
+    // MyPageBody,
+    // ProfileEditBody,
+    SubscribeListBody,
+    Footer
   }
 }
 </script>
 
 <style scoped>
-.myPageBody {
-  padding-top: 48px;
+.myPageContent {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  padding-top: 120px;
+  padding-bottom: 120px;
 }
 </style>

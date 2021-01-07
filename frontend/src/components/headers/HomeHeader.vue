@@ -32,9 +32,9 @@
         </div>
       </li>
       <li>
-        <v-btn text large to="/ko/home">
-          KoDark Times
-        </v-btn>
+        <router-link to="/ko/home">
+          <img width="300" src="../../assets/img/kodark.svg">
+        </router-link>
       </li>
       <li>
         날씨 넣을 공간
