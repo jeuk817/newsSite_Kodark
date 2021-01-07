@@ -3,6 +3,7 @@
         <ul class="sidebar__menus">
             <a href="#">Account</a>
             <a href="#">Profile</a>
+            <a href="#">Profile Edit</a>
             <a href="#">Subscription List</a>
         </ul>
     </div>

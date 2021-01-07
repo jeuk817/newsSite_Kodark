@@ -5,8 +5,9 @@
     </div>
     <div class="myPageContent">
       <IntroduceSideBar />
-      <MyPageBody />
-      <!-- <SubscribeListBody /> -->
+      <!-- <ProfileEditBody /> -->
+      <!-- MyPageBody -->
+      <SubscribeListBody />
       <!-- <Content /> -->
     </div>
     <Footer />
@@ -17,14 +18,16 @@
 import MyPageHeader from '../components/headers/MyPageHeader'
 import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
 import MyPageBody from '../components/bodies/MyPageBody'
-// import SubscribeListBody from '../components/bodies/SubscribeListBody'
+import ProfileEditBody from '../components/bodies/ProfileEditBody'
+import SubscribeListBody from '../components/bodies/SubscribeListBody'
 import Footer from '../components/footer/Footer'
 export default {
   components: {
     MyPageHeader,
     IntroduceSideBar,
-    MyPageBody,
-    // SubscribeListBody,
+    // MyPageBody,
+    // ProfileEditBody,
+    SubscribeListBody,
     Footer
   }
 }

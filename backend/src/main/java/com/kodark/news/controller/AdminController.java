@@ -54,19 +54,40 @@ public class AdminController {
 	    * 발행 대기중 기사
 	    * 작성자 : 이푸름 
 	    * 작성일 : 2021-01-05
-	    * responsebody 안에 링크 역슬러쉬가 그대로 담기는 에러가 있음..
+	    * 
 	  */
 	@GetMapping(path="/article")
 	public ResponseEntity <List<Map<String, Object>>> waitingArticle(@RequestParam("status") String status, HttpServletResponse response) {
-		List<Map<String,Object>>list = new ArrayList<>();
-		Map<String, Object> temp = new HashMap<>();
 		String _status = status;
-
+		List<Map<String,Object>>list = new ArrayList<>();
+		Map<String, Object> container;
+		Map<String, Object> reporter;
+		Map<String, Object> article;
+		Map<String, Object> link;
 		list = adminProcedureService.getWaitArticles(_status);
-		System.out.println(list);
-		temp.put("_link", "{"+"rel :\"waitingArticleDetail\","+ "href : \"admin/article?articleId&status=waiting\","
-				+"method: \"get\"}" );
-		list.add(temp);
+		
+		for(int i=0; i<list.size(); i++) {
+			reporter =  new HashMap<>();
+			article = new HashMap<>();
+			container = new HashMap<>();
+			link = new HashMap<>();
+			
+			link.put("rel", "waitingArticleDetail");
+			link.put("href", "/admin/article?articleId&status=waiting");
+			link.put("method", "get");
+			
+			reporter.put("name", list.get(i).get("name"));
+			reporter.put("email", list.get(i).get("email"));
+			
+			article.put("id", list.get(i).get("id"));
+			article.put("title", list.get(i).get("title"));
+			
+		
+			container.put("reporter", reporter);
+			container.put("article", article);
+			container.put("_link", link);
+			list.set(i, container);
+		}
 		
 		response.setHeader("Links",
 				"</admin/article?articleId&status=\"waiting\">; rel=\"waitingArticleDetail\"");

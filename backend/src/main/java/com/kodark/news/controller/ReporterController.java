@@ -90,25 +90,76 @@ public class ReporterController {
 	  @GetMapping(path = "/article")
 	  public ResponseEntity<List<Map<String, Object>>> pubAndWaitArtlcles(@RequestParam("status") String status, HttpServletResponse response){
 		  List<Map<String,Object>>list = new ArrayList<>();
-		  Map<String, Object> temp = new HashMap<>();
-		  List<String> linkList = new ArrayList<>();
+		  Map<String, Object> container;
+		  List<Map<String, Object>> linkList;
+		  Map<String, Object> link1;
+		  Map<String, Object> link2;
+		  Map<String, Object> link3;
+		  String _status = status;
 		  
-		  linkList.add("{"
-					  	+ "rel: \"editArticleForm\","
-					  	+ "href : \"/ko/reporters/article\","
-					  	+"method: \"get\","
-					  	+ "}");
-		  linkList.add("{"
-				  	+ "rel: \"editArticleForm\","
-				  	+ "href : \"/ko/reporters/article\","
-				  	+"method: \"get\","
-				  	+ "}");
-		  linkList.add("{"
-				  	+ "rel: \"editArticleForm\","
-				  	+ "href : \"/ko/reporters/article\","
-				  	+"method: \"get\","
-				  	+ "}");
+		  list = reportersProcedureService.getPubAndWaitArtlcles(_status);
 		  
+		  System.out.println(list);
+		  System.out.println(list.size());
+		  
+	
+		  
+		  for(int i=0; i<list.size(); i++) {
+			  container = new HashMap<String, Object>();
+
+			  container.put("id", list.get(i).get("id"));
+			  container.put("category", list.get(i).get("category"));
+			  container.put("title ", list.get(i).get("title "));
+			  container.put("createdAt ", list.get(i).get("createdAt"));
+			  container.put("editedAt ", list.get(i).get("editedAt"));
+			  container.put("hit", list.get(i).get("hit"));
+			  container.put("status ", list.get(i).get("status"));
+			  
+			  linkList = new ArrayList<Map<String,Object>>();
+			  link1 = new HashMap<String, Object>();
+			  link2 = new HashMap<String, Object>();
+			  link3 = new HashMap<String, Object>();
+			  
+			  link1.put("rel", "editArticleForm");
+			  link1.put("href", "/ko/reporters/article");
+			  link1.put("method ", "get");
+			  linkList.add(link1);
+				  
+				  
+			  link2.put("rel", "blindArticle");
+			  link2.put("href", "/reporters/article?status=deleted");
+			  link2.put("method ", "patch");
+			  linkList.add(link2);
+				  
+			  link3.put("rel", "deleteArticle");
+			  link3.put("href", "/reporters/article?articleId");
+			  link3.put("method ", "delete");
+			  
+			  linkList.add(link3);
+			  container.put("_links", linkList);
+			  list.set(i, container);
+		  }
+		  
+
+		  
+		  
+		  
+//		  linkList.add("{"
+//					  	+ "rel: \"editArticleForm\","
+//					  	+ "href : \"/ko/reporters/article\","
+//					  	+"method: \"get\","
+//					  	+ "}");
+//		  linkList.add("{"
+//				  	+ "rel: \"editArticleForm\","
+//				  	+ "href : \"/ko/reporters/article\","
+//				  	+"method: \"get\","
+//				  	+ "}");
+//		  linkList.add("{"
+//				  	+ "rel: \"editArticleForm\","
+//				  	+ "href : \"/ko/reporters/article\","
+//				  	+"method: \"get\","
+//				  	+ "}");
+//		  
 		  response.setHeader("Links",
 					"</ko/reporters/article>; 					rel=\"editArticleForm\","
 			  	  + "</reporters/article?status=\"deleted\">; 	rel=\"blindArticle\","
@@ -116,14 +167,14 @@ public class ReporterController {
 				  + "</reporters/article/statics\"> ;  rel=\"articlestatics\","
 				  + "</ko/article?articleId\">; rel=\"article\",");
 				 
-		  String _status = status;
+	
+		 
 		  
-		  list = reportersProcedureService.getPubAndWaitArtlcles(_status);
-		  
-		  
-		  temp.put("_links", linkList);
-		  list.add(temp);
 		
+		  
+//		  temp.put("_links", linkList);
+//		  list.add(temp);
+//		
 //		  temp.put("_links", "{"
 //				  	+ "rel: \"editArticleForm\","
 //				  	+ "href : \"/ko/reporters/article\","
