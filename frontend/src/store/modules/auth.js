@@ -55,6 +55,23 @@ const actions = {
     } catch(err) {
       return err.response.status
     }
+  },
+
+  async google({ commit }) {
+    try {
+      const xsrf = commit('getXsrf', null, { root: true })
+      const res = await axios.post('/auth/google', null, {
+        headers: {
+          'X-XSRF-TOKEN': xsrf
+        }
+      })
+
+      const links = util.parseLinks(res.headers.links)
+      return { status: res.status, links }
+    } catch(err) {
+      const links = util.parseLinks(err.response.headers.links)
+      return { status: err.response.status, links}
+    }
   }
 
 }

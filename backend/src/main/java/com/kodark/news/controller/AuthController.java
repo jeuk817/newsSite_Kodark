@@ -1,7 +1,8 @@
 package com.kodark.news.controller;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -9,24 +10,35 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.kodark.news.controller.advice.exceptions.UnauthorizedException;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.kodark.news.dto.Mail;
 
 import com.kodark.news.service.AuthProcedureService;
 import com.kodark.news.service.MailService;
 import com.kodark.news.utils.JwtManager;
 import com.kodark.news.utils.PasswordEncoderImpl;
+import com.kodark.news.utils.Util;
 
 @RestController
 @RequestMapping(path = "/auth")
@@ -35,17 +47,17 @@ public class AuthController {
 	Environment env;
 	MailService mailService;
 	AuthProcedureService authProcedureService;
-	JwtManager jwtManager;
+	Util util;
 	PasswordEncoderImpl passwordEncoder;
 	
 	@Autowired
 	public AuthController(Environment env, MailService mailService
-			, AuthProcedureService authProcedureService, JwtManager jwtManager
+			, AuthProcedureService authProcedureService, Util util
 			, PasswordEncoderImpl passwordEncoder) {
 		this.env = env;
 		this.mailService = mailService;
 		this.authProcedureService = authProcedureService;
-		this.jwtManager = jwtManager;
+		this.util = util;
 		this.passwordEncoder = passwordEncoder;
 	}
 	
@@ -129,16 +141,7 @@ public class AuthController {
 			String encodedPwd = (String)params.get("_pwd");
 			
 			if(passwordEncoder.matches(pwd, encodedPwd)) {
-				Map<String, Object> claims = new HashMap<>();
-				claims.put("id", params.get("_id"));
-				claims.put("auth", params.get("_auth"));
-				String token = jwtManager.createJwt("userInfo", claims, (10 * 1000 * 60));
-				
-		        Cookie cookie = new Cookie("jwt", token);
-		        cookie.setMaxAge(7 * 24 * 60 * 60);
-		        //cookie.setSecure(true);
-		        cookie.setHttpOnly(true);
-		        cookie.setPath("/");
+				Cookie cookie = util.makeJwtCookie(params);
 		        
 		        response.addCookie(cookie);
 		        response.setHeader("Links", "</auth/sign-in>; rel=\"self\", </>; rel=\"next\"");
@@ -166,5 +169,68 @@ public class AuthController {
 		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
 	}
 	
+	@PostMapping(path = "/google")
+	public ResponseEntity<Map<String, Object>> google(HttpServletResponse response) {
+		System.out.println("/google");
+		String link = "<https://accounts.google.com/o/oauth2/v2/auth?"
+			        + "client_id=" + env.getProperty("oauth.google.id")
+			        + "&redirect_uri=http://localhost:8090/auth/google/redirect"
+			        + "&response_type=code"
+			        + "&scope=email"
+//			        + "&scope=email%20profile%20openid"
+//			        + "&scope=https://www.googleapis.com/auth/userinfo.email
+			        + "&access_type=offline>";
+		response.setHeader("Links", link + "; rel=\"next\"");
+		return new ResponseEntity<>(HttpStatus.FOUND); // 302
+	}
+	
+	@GetMapping(path = "/google/redirect")
+	public void googleRedirect(@RequestParam(value = "code") String code
+			, HttpServletResponse response) throws IOException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("code", code);
+		params.add("client_id", env.getProperty("oauth.google.id"));
+		params.add("client_secret", env.getProperty("oauth.google.secret"));
+		params.add("redirect_uri", "http://localhost:8090/auth/google/redirect");
+		params.add("grant_type", "authorization_code");
+		
+		HttpEntity<MultiValueMap<String, String>> restRequest = new HttpEntity<>(params, headers);
+		
+		RestTemplate restTemplate = new RestTemplate();
+		URI uri = URI.create("https://www.googleapis.com/oauth2/v4/token");
+		ResponseEntity<String> restResponse = restTemplate.postForEntity(uri, restRequest, String.class);
+		
+		String bodys = restResponse.getBody();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		
+		Map<String, String> map = mapper.readValue(bodys, new TypeReference<Map<String, String>>() {});
+		String googleJwt = map.get("id_token");
+		String requestUrl = UriComponentsBuilder.fromHttpUrl("https://oauth2.googleapis.com/tokeninfo")
+							.queryParam("id_token", googleJwt).encode().toUriString();
+		String resultJson = restTemplate.getForObject(requestUrl, String.class);
+		Map<String,String> userInfo = mapper.readValue(resultJson, new TypeReference<Map<String, String>>(){});
+		String email = userInfo.get("email");
+		System.out.println(email);
+		
+		Map<String, Object> parameter = new HashMap<>();		
+		parameter.put("_switch", "google_oauth");
+		parameter.put("_email", email);		
+		authProcedureService.execuAuthProcedure(parameter);
+		String resultSet = (String)parameter.get("result_set");
+		
+		if(!resultSet.equals("sign_up") || !resultSet.equals("exist")) {
+			// throw error
+		}
+		Cookie cookie = util.makeJwtCookie(parameter);
+        
+        response.addCookie(cookie);
+		response.sendRedirect("http://localhost:8081/ko/home");
+	}
 }
 
