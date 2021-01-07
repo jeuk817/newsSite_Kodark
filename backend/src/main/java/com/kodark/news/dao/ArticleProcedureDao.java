@@ -1,6 +1,7 @@
 package com.kodark.news.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,5 +17,9 @@ public class ArticleProcedureDao {
 
 	public List<CategoryDto> categoryInfo() {		
 		return articleProcedureMapper.getCategory();
+	}
+
+	public List<Map<String, Object>> hotNews(){
+		return articleProcedureMapper.getHotNews();
 	}
 }

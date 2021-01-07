@@ -7,6 +7,8 @@ import com.kodark.news.dto.CategoryDto;
 
 public interface ArticleProcedureService {
 
-	public List<CategoryDto> CategoryInfo();
+	public List<CategoryDto> categoryInfo();
+
+	public List<Map<String, Object>> hotNews();
 
 }

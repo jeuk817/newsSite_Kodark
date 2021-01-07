@@ -43,15 +43,14 @@ public class UserController {
 	@Autowired
 	UsersProceduerService usersProcedureService;
 	
+	//로그인 정보
 	@GetMapping(path = "/")
 	public ResponseEntity<String> userInfo(){
-		//????
 		return new ResponseEntity<>(HttpStatus.OK);//200 
 	}
 	
 	
-	
-	//
+	//마이페이지
 	@GetMapping(path = "/my-page")
     public ResponseEntity<String> myPage(){	
 	    return new ResponseEntity<>(HttpStatus.OK);//200
@@ -70,6 +69,8 @@ public class UserController {
 		
 		return new ResponseEntity<>(HttpStatus.CREATED); // 201
 	}
+	
+	//회원가입
 	@PostMapping(path = "/sign-up")
 	public ResponseEntity<String> signUp(@RequestBody Map<String, Object>body, HttpServletResponse response){
 		String email = (String) body.get("email");
@@ -87,8 +88,9 @@ public class UserController {
 		}else
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		
-		
 	}
+	
+	//로그인
 	@PostMapping(path = "/sign-in")
 	public ResponseEntity<String> signIn(@RequestBody Map<String, Object>body){
 		String email = (String) body.get("email");
@@ -109,6 +111,7 @@ public class UserController {
 //		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//205
 //	}
 	
+	//비밀번호 수정
 	@PatchMapping(path = "/pwd")
 	public ResponseEntity<String> pwdUpdate(@RequestBody Map<String, Object>body){
 		String pwd = (String)body.get("pwd");

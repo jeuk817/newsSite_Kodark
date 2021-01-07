@@ -41,6 +41,7 @@ public class AuthController {
 	@Autowired
 	JwtService jwtService;
 	
+	//로그인
 	@PostMapping(path = "/sign-in")
 	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body, HttpServletResponse response) {
 		System.out.println("/sign-in");
@@ -104,6 +105,7 @@ public class AuthController {
 		}
 	}
 
+	//인증번호 전달
 	@PatchMapping(path="/verify")
 	public ResponseEntity<String> verify(@RequestBody Map<String, Object> body){	
 		String _auth_string = (String) body.get("auth_string");
