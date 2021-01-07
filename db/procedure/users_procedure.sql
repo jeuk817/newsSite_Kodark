@@ -1,7 +1,7 @@
 CREATE DEFINER=`jack`@`localhost` PROCEDURE `users_procedure`(
    in _switch varchar(20)
     , in _id int
-   , inout _email varchar(50)
+    , inout _email varchar(50)
     , inout _pwd varchar(45)    
     , inout _nickName varchar(20)
     , inout _name varchar(20)    
@@ -105,6 +105,13 @@ declare idCount int;
       else 
          set result_set = '401';
       
+        end if;
+	elseif _switch = 'user_info' then
+		select email, auth into _email, _auth from users where id = _id;
+        if _email = null then
+			set result_set = 'not_found';
+		else
+			set result_set = 'success';
         end if;
     end if;
 END

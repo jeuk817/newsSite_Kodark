@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -47,10 +50,29 @@ public class UserController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	@GetMapping(path = "/")
-	public ResponseEntity<String> userInfo(){
-		//????
-		return new ResponseEntity<>(HttpStatus.OK);//200 
+	@GetMapping
+	public ResponseEntity<Map<String, Object>> userInfo(HttpServletRequest request, HttpServletResponse response){
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<>();		
+		params.put("_switch", "user_info");		
+		params.put("_id", id);
+		usersProcedureService.execuUsersProcedure(params);
+		String resultSet = (String)params.get("result_set");
+		if(resultSet.equals("success")) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("email", params.get("_email"));
+			map.put("auth", params.get("_auth"));
+			
+			response.setHeader("Links", "</users/my-page>; rel=\"myPage\""
+					+ ", </users/my-page/detail>; rel=\"userDetail\""
+					+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
+					+ ", </users/sign-out>; rel=\"signOut\"");
+			return new ResponseEntity<>(map, HttpStatus.OK);//200 
+		} else if(resultSet.equals("not_found")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+		} else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
+		}
 	}
 	
 	//����������
