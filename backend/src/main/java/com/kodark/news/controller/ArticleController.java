@@ -58,23 +58,25 @@ public class ArticleController {
 	@GetMapping(path = "/popular")
 	public ResponseEntity<Map<String,Object>> hotNews(HttpServletResponse response){
 		Map<String, Object> params = new HashMap<>();
-		Map<String, Object> temp = new HashMap<>();
+		Map<String, Object> temp; 
 		List<Map<String,Object>>list = new ArrayList<>();
 		
 		StringBuffer sb = new StringBuffer();	
 		
 		try {
 			list=articleProcedureService.hotNews();
-			for(int i=0;i<list.size();i++) {				
+			for(int i=0;i<list.size();i++) {		
+				temp = new HashMap<>();
 				sb.append("rel :\"article\", href : \"article?articleId="+list.get(i).get("id")+"\",method : \"get\"");
 				System.out.println("똑같은거 반복하니??" + i);
+				
 				temp.put("id",list.get(i).get("id"));
 				temp.put("title", list.get(i).get("title"));
 				temp.put("content", list.get(i).get("content"));
 				temp.put("image", list.get(i).get("image"));
 				temp.put("imgDec", list.get(i).get("imgDec"));
 				temp.put("_link", sb.toString());		
-				//list.set(i, temp);				
+				list.set(i, temp);				
 				sb.delete(0, sb.length());				
 			}
 			
