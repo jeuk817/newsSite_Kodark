@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -197,8 +198,13 @@ public class AuthController {
 	 * 작성일 : 2020-01-08
 	 */
 	@GetMapping(path = "/google/redirect")
-	public void googleRedirect(@RequestParam(value = "code") String code
-			, HttpServletResponse response) throws IOException {
+	public void googleRedirect(@RequestParam(value = "code", required = false) String code
+			, @RequestParam(value = "error", required = false) String error, HttpServletResponse response) throws IOException {
+		if(error != null && error.equals("access_denied")) {
+			response.sendRedirect("http://localhost:8081/ko/auth/signIn");
+			return;
+		}
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		
@@ -242,6 +248,66 @@ public class AuthController {
 		
         response.addCookie(jwt);
 		response.sendRedirect("http://localhost:8081/ko/home");
+	}
+	
+	/*
+	 * title : 카카오 oauth
+	 * dec : 카카오 oauth 요청을 받고 카카오 로그인 link를 보낸다.
+	 * 작성자 : 류제욱
+	 * 작성일 : 2020-01-08
+	 */
+	@PostMapping(path = "/kakao")
+	public ResponseEntity<Map<String, Object>> kakao(HttpServletResponse response) {
+		String link = "<https://kauth.kakao.com/oauth/authorize?"
+				+ "response_type=code"
+				+ "&client_id=" + env.getProperty("oauth.kakao.id")
+				+ "&redirect_uri=http://localhost:8090/auth/kakao/redirect"
+				+ ">";
+		response.setHeader("Links", link + "; rel=\"next\"");
+		return new ResponseEntity<>(HttpStatus.FOUND); // 302
+	}
+	
+	@GetMapping(path = "/kakao/redirect")
+	public void kakaoRedirect(@RequestParam(value = "code", required = false) String code
+			, @RequestParam(value = "error", required = false) String error, HttpServletResponse response) throws IOException {
+		if(error != null && error.equals("access_denied")) {
+			response.sendRedirect("http://localhost:8081/ko/auth/signIn");
+			return;
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("code", code);
+		params.add("client_id", env.getProperty("oauth.kakao.id"));
+		params.add("client_secret", env.getProperty("oauth.kakao.secret"));
+		params.add("redirect_uri", "http://localhost:8090/auth/kakao/redirect");
+		params.add("grant_type", "authorization_code");
+		
+		HttpEntity<MultiValueMap<String, String>> restRequest = new HttpEntity<>(params, headers);
+		
+		RestTemplate restTemplate = new RestTemplate();
+		URI uri = URI.create("https://kauth.kakao.com/oauth/token");
+		ResponseEntity<String> restResponse = restTemplate.postForEntity(uri, restRequest, String.class);
+		
+		String bodys = restResponse.getBody();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		
+		Map<String, String> map = mapper.readValue(bodys, new TypeReference<Map<String, String>>() {});
+		String accessToken = map.get("access_token");
+		headers.set("Authorization", accessToken);
+		
+		uri = URI.create("https://kauth.kakao.com/v2/user/me");
+		restRequest = new HttpEntity<>(headers);
+		
+		ResponseEntity<String> restResponse2 = restTemplate.exchange(uri, HttpMethod.GET, restRequest, String.class);
+		Map<String, Object> map2 = mapper.readValue(restResponse2.getBody()
+				, new TypeReference<Map<String, Object>>() {});
+		System.out.println(map2);
 	}
 }
 

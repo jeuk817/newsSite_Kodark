@@ -35,16 +35,16 @@ export default {
   },
   methods: {
     async googleOuath() {
-      console.log('googleOuath')
       const { status, links } = await this.$store.dispatch('auth/google')
-      console.log('----------')
-      console.log(status)
       if(status === 302) {
         window.location.href = links.next
       }
     },
-    kakaoOuath() {
-      console.log('kakaoOuath')
+    async kakaoOuath() {
+      const { status, links } = await this.$store.dispatch('auth/kakao')
+      if(status === 302) {
+        window.location.href = links.next
+      }
     }
   }
 }
