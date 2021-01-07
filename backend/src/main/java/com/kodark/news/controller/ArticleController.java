@@ -35,7 +35,7 @@ public class ArticleController {
 		int pSize = 0;
 		
 		try {
-			params = articleProcedureService.execuArticleProcedure(articleId);
+			params = articleProcedureService.getEmotionInfo(articleId);
 			sb = new StringBuffer();
 			pSize = params.size();
 			
@@ -56,8 +56,6 @@ public class ArticleController {
 					sb.insert(sb.length(), ",");
 				}
 			}
-			System.out.println(sb.toString().substring(sb.length()-1));
-			System.out.println(sb.toString().substring(sb.length()-1).equals(","));
 			if(sb.toString().substring(sb.length()-1).equals(",")) {
 				String str = sb.toString().substring(0, sb.length()-1);
 				sb = new StringBuffer(str);			

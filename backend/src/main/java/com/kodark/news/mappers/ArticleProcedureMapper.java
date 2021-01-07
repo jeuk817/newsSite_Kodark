@@ -17,6 +17,6 @@ public interface ArticleProcedureMapper {
 			+ "#{_articleId, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"		
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
-	public List<Map<String, Object>> articleProcedure(@Param("_articleId") int _articleId);
+	public List<Map<String, Object>> getEmotionInfo(@Param("_articleId") int _articleId);
 	
 }

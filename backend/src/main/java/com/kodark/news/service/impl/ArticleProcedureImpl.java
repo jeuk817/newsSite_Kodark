@@ -15,8 +15,8 @@ public class ArticleProcedureImpl implements ArticleProcedureService{
 	private ArticleProcedureDao articleProcedureDao;
 	
 	@Override
-	public List<Map<String, Object>> execuArticleProcedure(int params) {
-		return articleProcedureDao.excuArticleProcedure(params);
+	public List<Map<String, Object>> getEmotionInfo(int params) {
+		return articleProcedureDao.getEmotionInfo(params);
 	}
 
 }
