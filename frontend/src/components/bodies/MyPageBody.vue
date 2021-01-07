@@ -60,17 +60,28 @@
                     <v-text-field
                         label="New Password"
                         outlined
+                        type="password"
                         class="emailInput"
+                        v-model="newPassword"
+                        :rules="passwordRules"
+                        required
                     ></v-text-field>
                     <div class="emailInput__title">Confirm Password</div>
                     <v-text-field
                         label="Confirm Password"
+                        type="password"
                         outlined
                         class="emailInput"
+                        v-model="confirmPassword"
+                        :rules="[confirmRule]"
+                        :error-messages="errorMessages"
+                        required
                     ></v-text-field>
                 </div>
                 <div class="editProfileBtns">
-                    <v-btn depressed class="editBtn">
+                    <v-btn depressed class="editBtn"
+                    :disabled="didConfirmPassword"
+                    >
                         Save
                     </v-btn>
                     <v-btn depressed class="editBtn" @click="pwdFormCancle">
@@ -84,33 +95,47 @@
 
 <script>
 export default {
-    data () {
-        return{
-            didEdit: true,
-            didpwdChange: true
-        }
-    },
+    data: () => ({
+        didEdit: true,
+        didpwdChange: true,
+        didConfirmPassword: false,
+        newPassword: '',
+        confirmPassword: '',
+        passwordRules: [
+            v => !!v || 'Password is required',
+            v => (v.length >= 8 && /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(v)) || 'Use 8 or more characters with a mix of letters, numbers & symbols'
+        ],
+        errorMessages: ''
+    }),
     methods: {
-      emailFormShow () {
-          const emailForm = document.querySelector('.editEmail');
-          emailForm.classList.remove('show')
-          this.didEdit = false
-      },
-    emailFormCancle () {
-        const emailForm = document.querySelector('.editEmail');
-        emailForm.classList.add('show')
-        this.didEdit = true
-      },
-      pwdFormShow () {
-        const changePwdForm = document.querySelector('.changePwd');
-        changePwdForm.classList.remove('show')
-        this.didpwdChange = false
-      },
-      pwdFormCancle () {
-        const changePwdForm = document.querySelector('.changePwd');
-        changePwdForm.classList.add('show')
-        this.didpwdChange = true
-      }
+        emailFormShow () {
+            const emailForm = document.querySelector('.editEmail');
+            emailForm.classList.remove('show')
+            this.didEdit = false
+        },
+        emailFormCancle () {
+            const emailForm = document.querySelector('.editEmail');
+            emailForm.classList.add('show')
+            this.didEdit = true
+        },
+        pwdFormShow () {
+            const changePwdForm = document.querySelector('.changePwd');
+            changePwdForm.classList.remove('show')
+            this.didpwdChange = false
+        },
+        pwdFormCancle () {
+            const changePwdForm = document.querySelector('.changePwd');
+            changePwdForm.classList.add('show')
+            this.didpwdChange = true
+        },
+     // password와 confirmPassword가 일치하는지 확인하는 메소드
+        confirmRule () {
+            this.errorMessages = this.newPassword === this.confirmPassword ? '' : "Those passwords didn't match"
+            if(this.newPassword === this.confirmPassword){
+                this.didConfirmPassword = true;
+            }
+            return this.newPassword === this.confirmPassword
+        },
     }
 }
 </script>
