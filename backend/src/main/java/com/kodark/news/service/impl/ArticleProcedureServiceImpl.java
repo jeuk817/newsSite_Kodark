@@ -10,6 +10,7 @@ import com.kodark.news.dao.ArticleProcedureDao;
 import com.kodark.news.dto.CategoryDto;
 import com.kodark.news.service.ArticleProcedureService;
 
+
 @Service
 public class ArticleProcedureServiceImpl implements ArticleProcedureService{
 
@@ -17,11 +18,15 @@ public class ArticleProcedureServiceImpl implements ArticleProcedureService{
 	private ArticleProcedureDao articleProcedureDao;
 	
 	@Override
-	public List<CategoryDto> CategoryInfo() {
-
+	public List<CategoryDto> categoryInfo() {
 		List<CategoryDto> category = articleProcedureDao.categoryInfo();
-
 		return category;
+	}
+
+
+	@Override
+	public List<Map<String, Object>> hotNews() {
+		return articleProcedureDao.hotNews();
 	}
 
 }

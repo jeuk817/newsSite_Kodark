@@ -1,5 +1,7 @@
 package com.kodark.news.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodark.news.dto.CategoryDto;
@@ -22,7 +25,11 @@ public class ArticleController {
 	@Autowired
 	private ArticleProcedureService articleProcedureService;
 	
-	//메 네비게이션
+	/**
+	 * 메인네비 정보
+	 * 작성자 : 최현지
+	 * 작성일 : 2021-01-06
+	 */
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> mainNavi(HttpServletResponse response){
 			
@@ -43,11 +50,57 @@ public class ArticleController {
 			
 	}
 	
-
+	/**
+	 * 핫 뉴스 (popular)
+	 * 작성자 : 최현지
+	 * 작성일 : 2021-01-07
+	 */
+	@GetMapping(path = "/popular")
+	public ResponseEntity<Map<String,Object>> hotNews(HttpServletResponse response){
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> temp = new HashMap<>();
+		List<Map<String,Object>>list = new ArrayList<>();
+		
+		StringBuffer sb = new StringBuffer();	
+		
+		try {
+			list=articleProcedureService.hotNews();
+			for(int i=0;i<list.size();i++) {				
+				sb.append("rel :\"article\", href : \"article?articleId="+list.get(i).get("id")+"\",method : \"get\"");
+				System.out.println("똑같은거 반복하니??" + i);
+				temp.put("id",list.get(i).get("id"));
+				temp.put("title", list.get(i).get("title"));
+				temp.put("content", list.get(i).get("content"));
+				temp.put("image", list.get(i).get("image"));
+				temp.put("imgDec", list.get(i).get("imgDec"));
+				temp.put("_link", sb.toString());		
+				//list.set(i, temp);				
+				sb.delete(0, sb.length());				
+			}
+			
+			params.put("category", "all");
+			params.put("type", "popular");	
+			params.put("data", list);	
+			response.setHeader("Links","rel : \"article\","
+									 + "href : \"/article?articleId\","
+									 + "method : \"get\"");
+		
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(params, HttpStatus.INTERNAL_SERVER_ERROR);//500
+		}	
+		return new ResponseEntity<Map<String,Object>>(params,HttpStatus.OK);//200
+	}
+	
+	
+	/**
+	 * 카테고리 정보
+	 * 작성자 : 최현지
+	 * 작성일 : 2021-01-06
+	 */
 	//카테고리 정보
 	@GetMapping(path = "/category" )
 	public ResponseEntity<List<CategoryDto>> categoryInfo(){
 
-		return new ResponseEntity<List<CategoryDto>>(articleProcedureService.CategoryInfo(), HttpStatus.OK);//200 
+		return new ResponseEntity<List<CategoryDto>>(articleProcedureService.categoryInfo(), HttpStatus.OK);//200 
 	}
 }

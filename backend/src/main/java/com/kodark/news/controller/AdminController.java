@@ -40,6 +40,7 @@ public class AdminController {
 	@Autowired 
 	AdminProcedureService adminProcedureService;
 	
+	//관리자 메인
 	@GetMapping(path = "/statistics")
 	public ResponseEntity<List<Map<String, Object>>> mainPage(){
 		System.out.println("ck");			
@@ -89,7 +90,7 @@ public class AdminController {
 		
 	}
 	
-	//관리자 네비게이션
+	//관리자 네비정보
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> adminNavi(HttpServletResponse response) {
 		

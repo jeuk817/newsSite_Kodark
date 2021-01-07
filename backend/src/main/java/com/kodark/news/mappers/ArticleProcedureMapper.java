@@ -16,5 +16,9 @@ public interface ArticleProcedureMapper {
 	
 	@Select("select * from category")
 	public  List<CategoryDto> getCategory();
+
+	@Select(value = "{CALL hotNews_procedure()}")
+	@Options(statementType = StatementType.CALLABLE)
+	public List<Map<String, Object>> getHotNews();
 	
 }

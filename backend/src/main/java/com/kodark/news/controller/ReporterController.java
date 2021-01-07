@@ -20,7 +20,7 @@ import com.kodark.news.service.ReportersProcedureService;
 @RequestMapping(path = "/reporters")
 public class ReporterController {
 	
-	//기자 네비게이션
+	//기자 네비정보
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> reporterNavi(HttpServletResponse response){
 		
