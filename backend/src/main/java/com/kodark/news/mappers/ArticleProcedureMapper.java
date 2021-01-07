@@ -13,7 +13,7 @@ import org.apache.ibatis.mapping.StatementType;
 @Mapper
 public interface ArticleProcedureMapper {
 	
-	@Select(value = "{CALL article_procedure("
+	@Select(value = "{CALL article_emotion_Info_procedure("
 			+ "#{_articleId, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"		
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
