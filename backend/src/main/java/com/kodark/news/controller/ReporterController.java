@@ -82,9 +82,12 @@ public class ReporterController {
 	}
 
 	/**
-	 * 기사댓글통계데이터 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-07
+	 * title : 69.기사댓글통계데이터 
+	 * desc : 기사별 성별&연령대 통계 데이터
+	 * author : 최윤수 
+	 * date : 2021-01-07
+	 * @param : articleId
+	 * @return : gender(num), age(num)
 	 */
 	@GetMapping(path = "/article/statistics")
 	public ResponseEntity<Map<String, Object>> statistics(
@@ -117,9 +120,11 @@ public class ReporterController {
 	}
 
 	/**
-	 * 발행된 기사 블라인드 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-07
+	 * title : 68.발행된 기사 블라인드 
+	 * desc : 발행전에 올라온 기사 삭제
+	 * author : 최윤수 
+	 * date : 2021-01-07
+	 * @param : articleId
 	 */
 	@PatchMapping(path = "/article")
 	public ResponseEntity<String> articleBlind(@RequestBody Map<String, Object> body) {
@@ -140,9 +145,10 @@ public class ReporterController {
 	}
 
 	/**
-	 * 발행대기전 기사 삭제 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-07
+	 * title : 67.발행대기전 기사 삭제 
+	 * author : 최윤수 
+	 * date : 2021-01-07
+	 * @param : articleId
 	 */
 	@DeleteMapping(path = "/article")
 	public ResponseEntity<String> articleDelete(@RequestParam(value = "articleId") String param) {
@@ -161,9 +167,9 @@ public class ReporterController {
 	}
 
 	/**
-	 * 기사수정(일단보류2021-01-07) 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-07
+	 * title : 66.기사수정(일단보류2021-01-07) 
+	 * author : 최윤수 
+	 * date : 2021-01-07
 	 */
 	@PutMapping(path = "/new-post")
 	public ResponseEntity<String> articleModify(@RequestBody Map<String, Object> body) {
@@ -247,4 +253,5 @@ public class ReporterController {
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200
 	}
 
+	
 }
