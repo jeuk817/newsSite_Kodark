@@ -29,15 +29,14 @@ import com.kodark.news.service.StatisticsService;
 @RequestMapping(path = "/admin")
 public class AdminController {
 	
-	
 	Environment env;	
 	MailService mailService;		
 	StatisticsService statisticsService;	
 	AdminProcedureService adminProcedureService;
+
 	@Autowired
 	public AdminController(MailService mailService, StatisticsService statisticsService,
 			AdminProcedureService adminProcedureService,Environment env) {
-		super();
 		this.env = env;
 		this.mailService = mailService;
 		this.statisticsService = statisticsService;
@@ -103,50 +102,23 @@ public class AdminController {
 		
 	}
 	
-	//관리자 네비게이션
+	//관리자 네비정보
 	@GetMapping(path = "/navigation")
-	public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response) {
-	      /*
-	       * String token = jwtService.createToken("jack", (2 * 1000 * 60));
-	       * 
-	       * Map<String, Object> map = new HashMap<>(); Cookie cookie = new Cookie("jwt",
-	       * token); cookie.setMaxAge(7 * 24 * 60 * 60); cookie.setSecure(true);
-	       * cookie.setHttpOnly(true); cookie.setPath("/");
-	       * 
-	       * response.addCookie(cookie);
-	       */
+	public ResponseEntity<Map<String, Object>> adminNavi(HttpServletResponse response) {
+		
+		response.setHeader("Links",
+						  "</admin/statistics>; 									rel=\"statistics\","
+						+ "</admin/users?userStartId>; 	   							rel=\"userList\","
+						+ "</admin/question-list?questionStartId&status=\"all\">;	rel=\"allQuestionList\","
+						+ "</admin/report/comment>; 								rel=\"commentReportList\","
+						+ "</admin/report/article>; 								rel=\"articleReportList\","
+						+ "</admin/reporters>;  									rel=\"reporterList\","
+						+ "</admin/article/waiting>;  								rel=\"waitingArticleList\"");
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 
-	      response.setHeader("Links",
-	            "</admin/statistics>; rel=\"statistics\","
-	                  + "</admin/users?userStartId>; rel=\"userList\","
-	                  + "</admin/question-list?questionStartId&status=\"all\">; rel=\"allQuestionList\","
-	                  + "</admin/report/comment>; rel=\"commentReportList\","
-	                  + "</admin/report/article>; rel=\"articleReportList\","
-	                  + "</admin/reporters>; rel=\"reporterList\","
-	                  + "</admin/article/waiting>; rel=\"waitingArticleList\",");
-
-	      Map<String, Object> params = new HashMap<>();
-	      
-	       params.put("_switch", "navigation");
-	       params.put("_id", 34);
-	       params.put("_email", "admin@naver.com");
-	       
-	       
-
-	      adminProcedureService.execuAdminProcedure(params);
-
-	      System.out.println("파람스~~~~~~~~~~~~" + params);
-
-	      if (params.get("result_set").equals("204")) {
-	         return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
-	      } else if (params.get("result_set").equals("401")) {
-	         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);// 401
-	      } else if (params.get("result_set").equals("403")) {
-	         return new ResponseEntity<>(HttpStatus.FORBIDDEN);// 403
-	      } else
-	         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
-
-	   }
+	}
+	
 	/**
 	 * 기자에게 이메일보내기
 	 * 작성자 : 최윤수
@@ -170,5 +142,5 @@ public class AdminController {
 		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 	}
-}
 	
+}

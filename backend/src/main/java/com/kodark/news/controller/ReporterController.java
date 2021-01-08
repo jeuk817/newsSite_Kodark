@@ -27,12 +27,8 @@ import com.kodark.news.service.StatisticsService;
 @RequestMapping(path = "/reporters")
 public class ReporterController {
 	
-	
 	private ReportersProcedureService reportersProcedureService;
 	private StatisticsService statisticsService;
-	
-	
-	
 	
 	@Autowired
 	public ReporterController(ReportersProcedureService reportersProcedureService,
@@ -42,50 +38,26 @@ public class ReporterController {
 		this.statisticsService = statisticsService;
 	}
 
-
-
-	
+	/**
+	 * title : 기사네비정보
+	 * author : 최현지
+	 * date : 2020-01-06
+	 * @param response
+	 * @return
+	 */
 	@GetMapping(path = "/navigation")
-	public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response){
-		/*
-		 * String token = jwtService.createToken("jack", (2 * 1000 * 60));
-		 * 
-		 * Map<String, Object> map = new HashMap<>(); Cookie cookie = new Cookie("jwt",
-		 * token); cookie.setMaxAge(7 * 24 * 60 * 60); cookie.setSecure(true);
-		 * cookie.setHttpOnly(true); cookie.setPath("/");
-		 * 
-		 * response.addCookie(cookie);
-		 */
+	public ResponseEntity<Map<String, Object>> reporterNavi(HttpServletResponse response){
+		
 		response.setHeader("Links",
 								"</repoters?reporterId>; 					rel=\"reporterList\","
 						  	  + "</reporters/new-post>; 	   				rel=\"articlePostForm\","
 							  + "</reporters/article?status=\"published\">; rel=\"publishedArticleList\","
-							  + "</reporters/article?status=\"waiting\"> ;  rel=\"waitingArticleList\",");
+							  + "</reporters/article?status=\"waiting\"> ;  rel=\"waitingArticleList\"");
+	
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 		
-		Map<String, Object> params = new HashMap<>();	
-		
-		/*
-		 * params.put("_switch", "navigation");p
-		 * arams.put("_id", 4);
-		 * params.put("_email", "bit@gmail.com");
-		 */
-		
-		reportersProcedureService.execuReportersProcedure(params);
-		
-		System.out.println("파람스~~~~~~~~~~~~" + params);
-		
-		if(params.get("result_set").equals("204")){
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
-		}else if(params.get("result_set").equals("401")){
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
-		}else if(params.get("result_set").equals("403")) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);//403
-		}else if(params.get("result_set").equals("404")){		
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
-		}else
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
-
 	}
+	
 	/**
 	 * 기사댓글통계데이터
 	 * 작성자 : 최윤수
@@ -119,6 +91,7 @@ public class ReporterController {
 		}
 		return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);//200
 	}
+	
 	/**
 	 * 발행된 기사 블라인드
 	 * 작성자 : 최윤수
@@ -142,6 +115,7 @@ public class ReporterController {
 		
 		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//205
 	}
+	
 	/**
 	 * 발행대기전 기사 삭제
 	 * 작성자 : 최윤수
@@ -162,6 +136,7 @@ public class ReporterController {
 		}
 		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//205
 	}
+	
 	/**
 	 * 기사수정(일단보류2021-01-07)
 	 * 작성자 : 최윤수

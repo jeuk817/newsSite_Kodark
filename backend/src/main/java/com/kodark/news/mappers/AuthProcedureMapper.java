@@ -32,4 +32,3 @@ public interface AuthProcedureMapper {
 //	@Options(statementType = StatementType.CALLABLE)
 //	public void reporterProcedure(Map<String, Object> params);
 //}
-
