@@ -11,30 +11,18 @@ import org.apache.ibatis.mapping.StatementType;
 @Mapper
 public interface AuthProcedureMapper {
 	@Select(value = "{CALL auth_procedure("
-			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"		
-			+ ",#{_email, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"		
+			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_email, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_auth_string, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_pwd, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"			
+			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void authProcedure(Map<String, Object> params);
-	
-	//±âÀÚ¸ñ·Ï
+
+	// ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½
 	@Select(value = "{CALL admin_repoters_procedure}")
 	@Options(statementType = StatementType.CALLABLE)
-	public List<Map<String,Object>> getInfoReporters();
+	public List<Map<String, Object>> getInfoReporters();
 }
 
-//@Mapper
-//public interface reporterProcedureMapper {
-//	@Select(value = "{CALL reporter_procedure("
-//			+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"	
-//			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"					
-//			+ ",#{_email, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
-//			+ ",#{_auth, mode=IN, jdbcType=CHAR, javaType=java.lang.String}"
-//			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"			
-//			+ ")}")
-//	@Options(statementType = StatementType.CALLABLE)
-//	public void reporterProcedure(Map<String, Object> params);
-//}

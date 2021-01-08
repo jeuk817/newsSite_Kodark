@@ -1,7 +1,6 @@
 package com.kodark.news.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -9,10 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,7 +42,6 @@ public class AuthController {
 	@PostMapping(path = "/sign-in")
 	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body,
 			HttpServletResponse response) {
-		System.out.println("/sign-in");
 		String email = (String) body.get("email");
 		String pwd = (String) body.get("pwd");
 
@@ -106,7 +102,9 @@ public class AuthController {
 	}
 
 	/**
-	 * verify 작성자 : 최윤수 작성일 : 2020-12-27
+	 * verify 
+	 * 작성자 : 최윤수 
+	 * 작성일 : 2020-12-27
 	 */
 	@PatchMapping(path = "/verify")
 	public ResponseEntity<String> verify(@RequestBody Map<String, Object> body) {
@@ -116,9 +114,7 @@ public class AuthController {
 		params.put("_switch", "confirm_verify");
 		params.put("_email", email);
 		params.put("_auth_string", _auth_string);
-		System.out.println(params.toString());
 		authProcedureService.execuAuthProcedure(params);
-		System.out.println("check:" + params.get("result_set"));
 
 		if (params.get("result_set").equals("success")) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204

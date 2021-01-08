@@ -29,14 +29,65 @@ public class ArticleController {
 		this.articleProcedureService = articleProcedureService;
 	}
 	
+	 /**
+	    * 기사 상세 페이지
+	    * 작성자 : 이푸름 
+	    * 작성일 : 2021-01-06
+	  */
+	@GetMapping
+	public ResponseEntity<Map<String, Object>> getArticleDetail(@RequestParam("articleId") String articleId, HttpServletResponse response) {
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> temp;
+		List<Map<String,Object>>list = new ArrayList<>();
+		Map<String, Object> reporter = new HashMap<>();;
+		
+
+		
+		int _articleId = Integer.parseInt(articleId);
+		params.put("_articleId", _articleId);
+		
+		try {
+			list = articleProcedureService.getArticleDetail(params);
+			params.remove("_articleId");
+			params.put("articleId", list.get(0).get("articleId"));
+			params.put("title", list.get(0).get("title"));
+			params.put("content", list.get(0).get("content"));
+			params.put("createdAt", list.get(0).get("createdAt"));
+			params.put("editedAt", list.get(0).get("editedAt"));
+			params.put("hit", list.get(0).get("hit"));
+			reporter.put("id", list.get(0).get("reporterId"));
+			reporter.put("name", list.get(0).get("name"));
+			reporter.put("email", list.get(0).get("email"));
+			params.put("reporter", reporter);
+			
+			for(int i=0; i<list.size(); i++) {    
+				temp = new HashMap<>();
+				temp.put("image", list.get(i).get("image"));
+				temp.put("imgDec", list.get(i).get("description"));
+				temp.put("source", list.get(i).get("source"));
+				
+				list.set(i, temp);
+			}	
+			params.put("images", list);
+			
+			response.setHeader("Links",
+					"</article/emotion?id\">; rel=\"emotion\""
+							+"</article/comment?id\">; rel=\"comment\"");
+			
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.NOT_FOUND);//404
+		}
+		return new ResponseEntity<Map<String, Object>> (params, HttpStatus.OK);
+	}
+	
 	/**
 	 * 기사 감정 데이터
 	 * 날짜 : 2021-01-07
 	 * 작성자 : 이종현
 	 */
 	@GetMapping(path ="/emotion")
-	public ResponseEntity<List<Map<String, Object>>> getEmotionInfo(@RequestParam("articleId") int articleId
-																			, HttpServletResponse response){
+	public ResponseEntity<List<Map<String, Object>>> 
+	getEmotionInfo(@RequestParam("articleId") int articleId, HttpServletResponse response){
 		
 		List<Map<String, Object>> params = null;
 		Map<String, Object> map = null;
@@ -130,7 +181,9 @@ public class ArticleController {
 	}
 
 	/**
-	 * 메인네비 정보 작성자 : 최현지 작성일 : 2021-01-06
+	 * 메인네비 정보 
+	 * 작성자 : 최현지 
+	 * 작성일 : 2021-01-06
 	 */
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> mainNavi(HttpServletResponse response) {
@@ -148,7 +201,9 @@ public class ArticleController {
 	}
 
 	/**
-	 * 핫 뉴스 (popular) 작성자 : 최현지 작성일 : 2021-01-07
+	 * 핫 뉴스 (popular) 
+	 * 작성자 : 최현지 
+	 * 작성일 : 2021-01-07
 	 */
 	@GetMapping(path = "/popular")
 	public ResponseEntity<Map<String, Object>> hotNews(HttpServletResponse response) {
@@ -190,7 +245,9 @@ public class ArticleController {
 	}
 
 	/**
-	 * 섹션별 최신기사(10개) 작성자 : 최윤수 작성일 : 2021-01-06
+	 * 섹션별 최신기사(10개) 
+	 * 작성자 : 최윤수 
+	 * 작성일 : 2021-01-06
 	 */
 	@GetMapping(path = "/latest")
 	public ResponseEntity<Map<String, Object>> latest(
@@ -202,7 +259,6 @@ public class ArticleController {
 		List<Map<String, Object>> list = new ArrayList<>();
 		// StringBuffer sb = new StringBuffer();
 		params.put("category", category);
-		System.out.println("check");
 		try {
 			list = articleProcedureService.execuLatestProcedure(params);
 			params.put("type", "latest");
@@ -233,7 +289,9 @@ public class ArticleController {
 	}
 
 	/**
-	 * 카테고리 정보 작성자 : 최현지 작성일 : 2021-01-06
+	 * 카테고리 정보 
+	 * 작성자 : 최현지 
+	 * 작성일 : 2021-01-06
 	 */
 	// 카테고리 정보
 	@GetMapping(path = "/category")
@@ -243,7 +301,9 @@ public class ArticleController {
 	}
 
 	/**
-	 * 기사댓글 데이터 작성자 : 최윤수 작성일 : 2021-01-07
+	 * 기사댓글 데이터 
+	 * 작성자 : 최윤수 
+	 * 작성일 : 2021-01-07
 	 */
 	@GetMapping(path = "/comment")
 	public ResponseEntity<List<Map<String, Object>>> comment(
@@ -258,7 +318,6 @@ public class ArticleController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
-		System.out.println("lsit :" + list);
 		params.put("data", list);
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);// 200
 	}

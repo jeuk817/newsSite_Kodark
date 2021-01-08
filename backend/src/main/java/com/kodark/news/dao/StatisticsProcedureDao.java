@@ -10,19 +10,20 @@ import com.kodark.news.mappers.StatiscticsProcedureMapper;
 
 @Repository
 public class StatisticsProcedureDao {
-	
+
 	@Autowired
 	StatiscticsProcedureMapper statiscticsProcedureMapper;
-	
+
 	public Map<String, Object> excuStatisticsProcedure(Map<String, Object> params) {
 		return statiscticsProcedureMapper.statiscticsProcedure(params);
 	}
-	
+
 	public List<Map<String, Object>> excuTodayPopularProcedure() {
 		return statiscticsProcedureMapper.todayPopularProcedure();
 	}
+
 	public List<Map<String, Object>> excuArticleStatisticsProcedure(int articleId) {
-		return statiscticsProcedureMapper.articleStatisticsProcedure(articleId);		
+		return statiscticsProcedureMapper.articleStatisticsProcedure(articleId);
 	}
-	
+
 }
