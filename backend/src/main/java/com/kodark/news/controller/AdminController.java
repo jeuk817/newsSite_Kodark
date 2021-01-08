@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -187,9 +188,9 @@ public class AdminController {
 	}
 
 	/**
-	 * 기자에게 이메일보내기 
-	 * 작성자 : 최윤수 
-	 * 작성일 :2021-01-07
+	 * title : 기자에게 이메일보내기 
+	 * author : 최윤수 
+	 * date :2021-01-07
 	 */
 	@PostMapping(path = "/reporters/email")
 	public ResponseEntity<Map<String, Object>> sendMailToReporter(@RequestBody Map<String, Object> body) {
@@ -209,5 +210,122 @@ public class AdminController {
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 	}
+	 /**
+	 * title : 54.기사블라인드 토글
+	 * desc :  블라인드처리 on/off
+	 * author : 최윤수
+	 * date : 2021-01-08
+	 * @param : articleId,status	 
+	 */
+	@PatchMapping(path = "/report/article")
+	public ResponseEntity<Map<String, Object>> articleBlind(@RequestBody Map<String, Object> body){
+		System.out.println("aaa:"+body);
+		Map<String, Object> params = new HashMap<>();
+		int articleId = Integer.valueOf((String)body.get("articleId"));
+		String status = (String)body.get("status");
+		params.put("_id", articleId);
+		params.put("_auth", status);
+		params.put("_switch", "article_blind");
+		adminProcedureService.execuAdminProcedure(params);
+		if(params.get("result_set").equals("404")) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
+		}else if(params.get("result_set").equals("204")) {
+			return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//204
+		}else
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500		
+	}
+	/**
+	 * title : 신고기사목록
+	 * desc : 맵9개사용...
+	 * author : 최윤수
+	 * date : 2021-01-08
+	 * @return : List<Map<String,Object>> 
+	 */
+	@GetMapping(path = "/report/article")
+	public ResponseEntity<List<Map<String, Object>>> articleReportList(){
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> temp = new HashMap<>();
+		Map<String, Object> temp1 = new HashMap<>();
+		Map<String, Object> temp2 = new HashMap<>();
+		Map<String, Object> temp3 = new HashMap<>();
+		Map<String, Object> temp4 = new HashMap<>();
+		Map<String, Object> temp5 = new HashMap<>();
+		Map<String, Object> temp6 = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
+		List<Map<String, Object>> list = new ArrayList<>();
+		List<Map<String, Object>> templist = new ArrayList<>();			
+		params.put("_switch", "article_list");
+		
+		try {
+			list = adminProcedureService.getArticleList(params);			
+			for (int i = 0; i < list.size(); i++) {
+				templist = new ArrayList<>();	
+				temp = new HashMap<>();
+				temp1 = new HashMap<>();
+				temp2 = new HashMap<>();
+				temp3 = new HashMap<>();
+				temp4 = new HashMap<>();
+				temp5 = new HashMap<>();
+				map = new HashMap<>();
+				int id = (int) list.get(i).get("id");				
+				int articleId = (int)list.get(i).get("article_id");
+				String reason = (String)list.get(i).get("reason");				 				
+				map.put("id",id);
+				map.put("reason", reason);
+				map.put("createdAt", list.get(i).get("created_at"));			
+				temp.put("id", list.get(i).get("userId"));
+				temp.put("email", list.get(i).get("userEmail"));
+				map.put("user", temp);				
+				temp1.put("id", list.get(i).get("article_id"));
+				temp1.put("title", list.get(i).get("title"));
+				temp1.put("status", list.get(i).get("status"));
+				map.put("article", temp1);			
+				temp2.put("id",list.get(i).get("reporterId"));
+				temp2.put("email", list.get(i).get("reporterEmail"));
+				map.put("reporter", temp2);			
+				temp3.put("rel", "blindArticle");
+				temp3.put("href", "\"/admin/report/article?articleId="+articleId+"&status=unpublish\"");
+				temp3.put("method", "patch");
+				templist.add(temp3);
+				temp4.put("rel", "openArticle");
+				temp4.put("href", "\"/admin/report/article?articleId="+articleId+"&status=publish\"");
+				temp4.put("method", "patch");
+				templist.add(temp4);
+				temp5.put("rel", "sendEmailToReporter");
+				temp5.put("href", "\"/admin/reporters/"+list.get(i).get("reporterEmail"));
+				temp5.put("method", "post");
+				templist.add(temp5);
+				temp6.put("rel", "articleReportDone");
+				temp6.put("href", "\"/admin/report/article/done?articleId="+articleId+"\"");
+				temp6.put("method", "patch");
+				templist.add(temp6);
+				map.put("_links",templist);		
+				list.set(i, map);
+				
+			}
+			
 
+		
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
+		}
+		return new ResponseEntity<List<Map<String, Object>>>(list,HttpStatus.OK);// 200
+	}
+	
+	/**
+	 * title : 56.기사신고확인(일단보류 사유 : 이해못함)
+	 * desc : 
+	 * author : 최윤수
+	 * date : 2021-01-07
+	 * @param body
+	 * @return
+	 */
+	@PatchMapping(path = "/report/article/done")
+	public ResponseEntity<Map<String, Object>> articleReportCheck(@RequestBody Map<String, Object> body){
+		Map<String, Object> params = new HashMap<>();
+		int articleReportId = Integer.valueOf((String)body.get("articleReportId"));
+		params.put("_articleReportId", articleReportId);
+		params.put("_switch", "article_report");
+		return new ResponseEntity<Map<String,Object>>(HttpStatus.RESET_CONTENT);//205
+	}
 }
