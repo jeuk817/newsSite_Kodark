@@ -26,4 +26,5 @@ public interface UserMapper {
 	@Delete("delete from user where id = #{id}")
 	public void deleteUser(@Param("id")int id);
 	
+	
 }

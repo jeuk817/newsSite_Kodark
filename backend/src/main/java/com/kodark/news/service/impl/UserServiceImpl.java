@@ -1,6 +1,7 @@
 package com.kodark.news.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,6 +30,10 @@ public class UserServiceImpl implements UserService{
 	public List<UserDto> getInfoUsers() {
 		return userDao.getInfoUsers();
 	}
+
+
+
+
 	
 
 }

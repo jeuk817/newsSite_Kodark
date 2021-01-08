@@ -21,11 +21,8 @@ public class UserDao {
 		return userMapper.getEmail(email);
 	}
 	
-	//마이페이지
-	
-	
-	//유저 목록 조회
 	public List<UserDto> getInfoUsers(){
 		return userMapper.getInfoUsers();
 	}
+
 }
