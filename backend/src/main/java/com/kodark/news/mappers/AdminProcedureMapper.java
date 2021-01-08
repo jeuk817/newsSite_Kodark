@@ -11,9 +11,15 @@ import org.apache.ibatis.mapping.StatementType;
 
 @Mapper
 public interface AdminProcedureMapper {
+
+	// 기자 목록(이종현)
+	@Select(value = "{CALL admin_repoters_procedure}")
+	@Options(statementType = StatementType.CALLABLE)
+	public List<Map<String, Object>> getReporterList();
+
 	@Select(value = "{CALL admin_procedure("
 			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"			
+			+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
 			+ ",#{_email, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_pwd, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_nickName, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
@@ -27,10 +33,9 @@ public interface AdminProcedureMapper {
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void adminProcedure(Map<String, Object> params);
-	
-	
+
 	@Select(value = "{CALL admin_getWaitArticle(#{_status})}")
 	@Options(statementType = StatementType.CALLABLE)
 	public List<Map<String, Object>> getWaitArticle(@Param("_status") String _status);
-	
+
 }

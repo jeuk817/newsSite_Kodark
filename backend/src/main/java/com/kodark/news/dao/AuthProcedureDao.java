@@ -9,13 +9,12 @@ import com.kodark.news.mappers.AuthProcedureMapper;
 
 @Repository
 public class AuthProcedureDao {
-	
+
 	@Autowired
 	AuthProcedureMapper authProcedureMapper;
-	
+
 	public void excuAuthProcedure(Map<String, Object> params) {
 		authProcedureMapper.authProcedure(params);
 	}
 
 }
-

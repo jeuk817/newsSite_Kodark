@@ -22,10 +22,3 @@ BEGIN
     group by users.id
     ;
 END
-
-
-
-
-
-
-
