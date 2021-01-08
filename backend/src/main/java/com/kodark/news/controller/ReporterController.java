@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -22,6 +22,32 @@ public class ReporterController {
 	
 	@Autowired
 	ReportersProcedureService reportersProcedureService;
+	
+	/**
+	 * 기자 프로필
+	 * 날짜 : 2021-01-07
+	 * 작성자 : 이종현
+	 */
+	@GetMapping
+	public ResponseEntity<Map<String, Object>> getInfoProfile(@RequestBody Map<String, Object> body){
+		Map<String, Object> params = null;
+		
+		try {
+			params = new HashMap<String, Object>();
+			params = reportersProcedureService.getReporterInfo(body);
+
+			if(params.isEmpty()) {
+				throw new NullPointerException();
+			}
+		} catch (NullPointerException e) {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);			
+		} 
+		return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);	
+	}
+	
+	
 	
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response){
@@ -50,7 +76,7 @@ public class ReporterController {
 		
 		reportersProcedureService.execuReportersProcedure(params);
 		
-		System.out.println("파람스~~~~~~~~~~~~" + params);
+		System.out.println("�뙆�엺�뒪~~~~~~~~~~~~" + params);
 		
 		if(params.get("result_set").equals("204")){
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204

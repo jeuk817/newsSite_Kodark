@@ -24,4 +24,10 @@ public class AdminProcedureServiceImpl implements AdminProcedureService{
 	public List<Map<String, Object>> getWaitArticles() {
 		return adminProcedureDao.getWaitArticles();
 	}
+	
+	//기자목록
+	@Override
+	public List<Map<String, Object>> getReporterList() {
+		return adminProcedureDao.getReporterList();
+	}
 }

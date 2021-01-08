@@ -16,4 +16,8 @@ public class UsersProcedureDao {
 	public void excuUsersProcedure(Map<String, Object> params) {
 		usersProcedureMapper.usersProcedure(params);
 	}
+	public String writeCommentReply(Map<String, Object> params) {
+		return usersProcedureMapper.writeCommentReply(params);
+	}
+	
 }

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.mapping.StatementType;
 
@@ -18,4 +19,11 @@ public interface ReportersProcedureMapper {
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void reportersProcedure(Map<String, Object> params);
+	
+	//기자프로필(이종현)
+	@Select(value = "{CALL reporter_profile_procedure("
+			+ "#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
+			+ ")}")
+	@Options(statementType = StatementType.CALLABLE)
+	public Map<String, Object> getReporterInfo(Map<String, Object> params);
 }

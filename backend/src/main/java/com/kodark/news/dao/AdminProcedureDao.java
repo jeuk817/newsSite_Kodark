@@ -21,4 +21,10 @@ public class AdminProcedureDao {
 	public List<Map<String, Object>> getWaitArticles() {
 		return adminProcedureMapper.getWaitArticle();
 	}
+	
+	//기자목록(rest_API 57_line)
+	public List<Map<String, Object>> getReporterList() {
+		return adminProcedureMapper.getReporterList();
+	}
+	
 }

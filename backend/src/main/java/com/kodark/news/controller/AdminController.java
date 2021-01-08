@@ -1,6 +1,6 @@
 package com.kodark.news.controller;
 
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +23,6 @@ import java.text.SimpleDateFormat;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.kodark.news.dto.ArticleDto;
 import com.kodark.news.service.AdminProcedureService;
 
 @RestController
@@ -39,7 +35,29 @@ public class AdminController {
 	
 	@Autowired 
 	AdminProcedureService adminProcedureService;
-	
+	 
+	/**
+	 * 기자 목록
+	 * 날짜 : 2021-01-07
+	 * 작성자 : 이종현
+	 */
+	@GetMapping(path ="/reporters")
+	public ResponseEntity <List<Map<String, Object>>> getReportersList(){
+		List<Map<String, Object>> list = null;
+		try {
+			list = adminProcedureService.getReporterList();	
+			System.out.println(list);
+		} catch (Exception e) {
+			if(list.isEmpty()) {
+				return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);		
+		}
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
+	}
+
+	//기사작성대기
+
 	@GetMapping(path = "/statistics")
 	public ResponseEntity<List<Map<String, Object>>> mainPage(){
 		System.out.println("ck");			
@@ -51,11 +69,10 @@ public class AdminController {
 	//발행대기중 기사
 	@GetMapping(path="/article")
 	public ResponseEntity <List<Map<String, Object>>> waitingArticle() {
-		
 		return new ResponseEntity<List<Map<String, Object>>> (adminProcedureService.getWaitArticles(), HttpStatus.CREATED); // 201;
 	}
 	
-	//기자아이디 생성
+	//
 	@PostMapping(path="/reporters")
 	public ResponseEntity<UserDto> createReporter(@RequestBody Map<String, Object> body) throws ParseException {
 		String email = (String) body.get("email");
@@ -89,7 +106,7 @@ public class AdminController {
 		
 	}
 	
-	//관리자 네비게이션
+	//愿�由ъ옄 �꽕鍮꾧쾶�씠�뀡
 	 @GetMapping(path = "/navigation")
 	   public ResponseEntity<Map<String, Object>> reportNavi(HttpServletResponse response) {
 	      /*

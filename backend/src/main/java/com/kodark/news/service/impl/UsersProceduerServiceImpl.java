@@ -21,6 +21,9 @@ public class UsersProceduerServiceImpl implements UsersProceduerService{
 		usersProcedureDao.excuUsersProcedure(params);
 		
 	}
-	
+	@Override
+	public String writeCommentReply(Map<String, Object> params) {
+		return usersProcedureDao.writeCommentReply(params);
+	}
 	
 }

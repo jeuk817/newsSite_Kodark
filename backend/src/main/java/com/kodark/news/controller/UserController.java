@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodark.news.dto.UserDto;
@@ -44,13 +45,11 @@ public class UserController {
 	
 	@GetMapping(path = "/")
 	public ResponseEntity<String> userInfo(){
-		//????
 		return new ResponseEntity<>(HttpStatus.OK);//200 
 	}
 	
 	
-	
-	//����������
+	//
 	@GetMapping(path = "/my-page")
     public ResponseEntity<String> myPage(){	
 	    return new ResponseEntity<>(HttpStatus.OK);//200
@@ -143,5 +142,29 @@ public class UserController {
 		return new ResponseEntity<List<UserDto>>(userService.getInfoUsers(), HttpStatus.OK);//200
 	}
 	
+	
+	/**
+	 * 대댓글 작성
+	 * 날짜 : 2021-01-08
+	 * 작성자 : 이종현
+	 */
+	@PostMapping(path ="/comment/reply")
+	public ResponseEntity<String> writeCommentReply(@RequestParam("commentId") int commentId, 
+												@RequestBody Map<String,Object> body) {
+		Map<String, Object> params = null;
+		try {
+			params = new HashMap<String, Object>();
+			params.put("_commentId", commentId);
+			params.put("_email", body.get("email"));
+			params.put("_content", body.get("content"));
+			usersProcedureService.writeCommentReply(params);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
 }
+
 

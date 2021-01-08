@@ -5,13 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("index")
 public class TestController {
 	
 	@GetMapping
 	public String SmartEdit() {
-		System.out.println("===================== SmartEdit ===========");
-		
-		return "smartEdit";
+		return "index";
 	}
 }

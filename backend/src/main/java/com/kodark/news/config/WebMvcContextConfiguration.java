@@ -13,10 +13,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import com.kodark.news.interceptors.JwtInterceptor;
-import com.kodark.news.interceptors.TestInterceptor;
 
 
 @Configuration
@@ -67,8 +65,8 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 //		WebMvcConfigurer.super.addInterceptors(registry);
 		registry.addInterceptor(jwtInterceptor)
 			.addPathPatterns("/users/*")
-			.addPathPatterns("/reporter/*")
-			.addPathPatterns("/admin/*");
+			.addPathPatterns("/reporter/*");
+//			.addPathPatterns("/admin/*");
 		
 //		registry.addInterceptor(new TestInterceptor())
 //			.addPathPatterns("/reporter");
