@@ -42,6 +42,9 @@
                         Send
                         </v-btn>
                     </div>
+                    <v-alert type="warning" dense dismissible v-model="emailError">
+                        {{ emailErrorMsg }}
+                    </v-alert>
                     <div class="emailInput__title">Verify Code</div>
                     <div class="verifyEmailForm">
                         <v-text-field
@@ -50,22 +53,34 @@
                             hint="Verification code was sent.(Valid time 30 minutes)"
                             outlined
                             class="emailInput"
+                            :persistent-hint="didSend"
+                            :disabled="!didSend"
+                            v-model="verifCode"
+                            :rules="verifCodeRules"
                         ></v-text-field>
                         <v-btn class="text-capitalize white--text sendBtn" height="45px" depressed color="black"
-                        @click="getVerifCode" :loading="gettingVerifCode"
+                        :disabled="!didSend" @click="sendVerifCode" :loading="sendingVerifCode"
                         >
                         verify
                         </v-btn>
                     </div>
-                    <div class="emailInput__title">Current Password</div>
+                    <v-alert type="success" dense dismissible v-model="didAuth">
+                        Success
+                    </v-alert>
+                    <v-alert type="warning" dense dismissible v-model="didAuthFail">
+                        {{ authFailMsg }}
+                    </v-alert>
+                    <!-- <div class="emailInput__title">Current Password</div>
                     <v-text-field
                         label="Current Password"
                         outlined
                         class="emailInput__pwd"
-                    ></v-text-field>
+                    ></v-text-field> -->
                 </div>
                 <div class="editProfileBtns">
-                    <v-btn depressed class="editBtn text-capitalize white--text" color="indigo">
+                    <v-btn depressed class="editBtn text-capitalize white--text" color="indigo"
+                    :disabled="!didAuth" @click="changeEmail" :loading="changingEmail"
+                    >
                         Save
                     </v-btn>
                     <v-btn depressed class="editBtn text-capitalize white--text" color="indigo" @click="emailFormCancle">
@@ -128,6 +143,27 @@ import { mapGetters } from 'vuex'
 export default {
     data: () => ({
         didEdit: true,
+        didSend: false,
+        email: '',
+        emailRules: [
+            v => !!v || 'Email Address is required',
+            v => /.+@.+/.test(v) || 'Email Address must be valid'
+        ],
+        emailError: false,
+        emailErrorMsg: '',
+        verifCode: '',
+        verifCodeRules: [
+            v => !!v || 'Verification code is required',
+            v => v.length === 6 || 'Verification code must be 6-digit'
+        ],
+        gettingVerifCode: false,
+        didAuth: false,
+        didAuthFail: false,
+        authFailMsg: '',
+        sendingVerifCode: false,
+        sendedEmail: '',
+        changingEmail: false,
+
         didpwdChange: true,
         didConfirmPassword: true,
         newPassword: '',
@@ -139,6 +175,68 @@ export default {
         errorMessages: ''
     }),
     methods: {
+        // 이메일로 인증문자를 요청하는 메소드
+        async getVerifCode () {
+            if (!this.$refs.emailAddress.validate(true)) return
+            this.gettingVerifCode = true
+            const status = await this.$store.dispatch('auth/getVerifCode', this.email)
+            if(status === 201) { // success
+                this.didSend = true
+                this.emailError = false
+                this.sendedEmail = this.email
+                this.didAuth = false
+            }
+            if(status === 409) {
+                this.emailErrorMsg = 'Those email is already taken'
+                this.emailError = true // conflict
+            }
+            this.gettingVerifCode = false
+        },
+        // 인증문자를 인증하는 메소드
+        async sendVerifCode () {
+            if (!this.$refs.verificationCode.validate(true)) return
+                this.sendingVerifCode = true
+                const status = await this.$store.dispatch('auth/sendVerifCode', { email: this.email, authString: this.verifCode })
+            if(status === 204) {
+                this.didAuth = true
+                this.didAuthFail = false
+            }
+            if(status === 401) {
+                this.authFailMsg = 'Wrong code. Try again'
+                this.didAuth = false
+                this.didAuthFail = true
+            }
+            if(status === 408) {
+                this.authFailMsg = 'Timed out. Get a new verification code'
+                this.didAuth = false
+                this.didAuthFail = true
+            }
+            this.sendingVerifCode = false
+        },
+        // 이메일 바꾸는 메소드
+        async changeEmail() {
+            if(!this.sendedEmail) {
+                this.emailErrorMsg = 'You need to get email verification code'
+                return this.emailError = true
+            }
+            if(!this.didAuth) {
+                this.authFailMsg = 'Verification code needs to be verified.'
+                return this.didAuthFail = true
+            }
+
+            this.changingEmail = true
+            const { status, links } = await this.$store.dispatch('users/changeEmail', { email: this.sendedEmail, pwd: this.password })
+
+            if(status === 409) {
+                this.emailErrorMsg = 'Those email is already taken'
+                this.emailError = true
+            }
+            if(status === 201) {
+                this.wasCreated = true
+                this.nextLink = links.next
+            }
+            this.changingEmail = false
+        },
         emailFormShow () {
             const emailForm = document.querySelector('.editEmail');
             emailForm.classList.remove('show')
