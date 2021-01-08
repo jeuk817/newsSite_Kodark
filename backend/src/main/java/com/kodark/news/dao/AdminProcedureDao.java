@@ -26,5 +26,9 @@ public class AdminProcedureDao {
 	public List<Map<String, Object>> getReporterList() {
 		return adminProcedureMapper.getReporterList();
 	}
+	
+	public List<Map<String, Object>> getArticleList(Map<String, Object> params) {
+		return adminProcedureMapper.getArticleList(params);
+	}
 
 }
