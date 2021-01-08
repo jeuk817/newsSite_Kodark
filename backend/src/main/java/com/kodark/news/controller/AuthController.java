@@ -3,6 +3,7 @@ package com.kodark.news.controller;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -37,6 +38,7 @@ import com.kodark.news.dto.Mail;
 
 import com.kodark.news.service.AuthProcedureService;
 import com.kodark.news.service.MailService;
+import com.kodark.news.utils.OauthManager;
 import com.kodark.news.utils.PasswordEncoderImpl;
 import com.kodark.news.utils.Util;
 
@@ -49,15 +51,17 @@ public class AuthController {
 	AuthProcedureService authProcedureService;
 	Util util;
 	PasswordEncoderImpl passwordEncoder;
+	OauthManager oauthManager;
 
 	@Autowired
 	public AuthController(Environment env, MailService mailService, AuthProcedureService authProcedureService,
-			Util util, PasswordEncoderImpl passwordEncoder) {
+			Util util, PasswordEncoderImpl passwordEncoder, OauthManager oauthManager) {
 		this.env = env;
 		this.mailService = mailService;
 		this.authProcedureService = authProcedureService;
 		this.util = util;
 		this.passwordEncoder = passwordEncoder;
+		this.oauthManager = oauthManager;
 	}
 
 	/*
@@ -206,37 +210,11 @@ public class AuthController {
 			return;
 		}
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("code", code);
-		params.add("client_id", env.getProperty("oauth.google.id"));
-		params.add("client_secret", env.getProperty("oauth.google.secret"));
-		params.add("redirect_uri", "http://localhost:8090/auth/google/redirect");
-		params.add("grant_type", "authorization_code");
-
-		HttpEntity<MultiValueMap<String, String>> restRequest = new HttpEntity<>(params, headers);
-
-		RestTemplate restTemplate = new RestTemplate();
-		URI uri = URI.create("https://www.googleapis.com/oauth2/v4/token");
-		ResponseEntity<String> restResponse = restTemplate.postForEntity(uri, restRequest, String.class);
-
-		String bodys = restResponse.getBody();
-
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-		mapper.setSerializationInclusion(Include.NON_NULL);
-
-		Map<String, String> map = mapper.readValue(bodys, new TypeReference<Map<String, String>>() {
-		});
-		String googleJwt = map.get("id_token");
-		String requestUrl = UriComponentsBuilder.fromHttpUrl("https://oauth2.googleapis.com/tokeninfo")
-				.queryParam("id_token", googleJwt).encode().toUriString();
-		String resultJson = restTemplate.getForObject(requestUrl, String.class);
-		Map<String, String> userInfo = mapper.readValue(resultJson, new TypeReference<Map<String, String>>() {
-		});
-		String email = userInfo.get("email");
+		Map<String, String> oauthToken = oauthManager.getOauthToken("google", code);
+		String googleJwt = oauthToken.get("id_token");
+		
+		Map<String, Object> userInfo = oauthManager.getUserInfo("google", googleJwt);
+		String email = (String)userInfo.get("email");
 
 		Map<String, Object> parameter = new HashMap<>();
 		parameter.put("_switch", "oauth");
@@ -276,39 +254,25 @@ public class AuthController {
 			return;
 		}
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		Map<String, String> oauthToken = oauthManager.getOauthToken("kakao", code);
+		String accessToken = oauthToken.get("access_token");
+		
+		Map<String, Object> userInfo = oauthManager.getUserInfo("kakao", accessToken);
+		Map<String, Object> kakaoAccount = (Map<String, Object>)userInfo.get("kakao_account");
+		String email = (String)kakaoAccount.get("email");
+		
+		Map<String, Object> parameter = new HashMap<>();
+		parameter.put("_switch", "oauth");
+		parameter.put("_email", email);
+		authProcedureService.execuAuthProcedure(parameter);
+		String resultSet = (String) parameter.get("result_set");
 
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("code", code);
-		params.add("client_id", env.getProperty("oauth.kakao.id"));
-		params.add("client_secret", env.getProperty("oauth.kakao.secret"));
-		params.add("redirect_uri", "http://localhost:8090/auth/kakao/redirect");
-		params.add("grant_type", "authorization_code");
+		if (!resultSet.equals("sign_up") || !resultSet.equals("exist")) {
+			// throw error
+		}
+		Cookie jwt = util.makeJwtCookie("jwt", parameter);
 
-		HttpEntity<MultiValueMap<String, String>> restRequest = new HttpEntity<>(params, headers);
-
-		RestTemplate restTemplate = new RestTemplate();
-		URI uri = URI.create("https://kauth.kakao.com/oauth/token");
-		ResponseEntity<String> restResponse = restTemplate.postForEntity(uri, restRequest, String.class);
-
-		String bodys = restResponse.getBody();
-
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-		mapper.setSerializationInclusion(Include.NON_NULL);
-
-		Map<String, String> map = mapper.readValue(bodys, new TypeReference<Map<String, String>>() {
-		});
-		String accessToken = map.get("access_token");
-		headers.set("Authorization", accessToken);
-
-		uri = URI.create("https://kauth.kakao.com/v2/user/me");
-		restRequest = new HttpEntity<>(headers);
-
-		ResponseEntity<String> restResponse2 = restTemplate.exchange(uri, HttpMethod.GET, restRequest, String.class);
-		Map<String, Object> map2 = mapper.readValue(restResponse2.getBody(), new TypeReference<Map<String, Object>>() {
-		});
-		System.out.println(map2);
+		response.addCookie(jwt);
+		response.sendRedirect("http://localhost:8081/ko/home");
 	}
 }

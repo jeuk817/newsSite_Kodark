@@ -21,8 +21,8 @@ public interface UsersProcedureMapper {
 			+ ",#{_birth, mode=INOUT, jdbcType=DATE, javaType=java.util.Date}"
 			+ ",#{_gender, mode=INOUT, jdbcType=CHAR, javaType=java.lang.String}"
 			+ ",#{_image, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_auth, mode=OUT, jdbcType=CHAR, javaType=java.lang.String}"
+			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void usersProcedure(Map<String, Object> params);

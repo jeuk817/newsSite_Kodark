@@ -59,7 +59,8 @@ public class UserController {
 			map.put("auth", params.get("_auth"));
 
 			response.setHeader("Links",
-					"</users/my-page>; rel=\"myPage\"" + ", </users/my-page/detail>; rel=\"userDetail\""
+					"</users/my-page>; rel=\"myPage\""
+							+ ", </users/my-page/detail>; rel=\"userDetail\""
 							+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
 							+ ", </users/sign-out>; rel=\"signOut\"");
 			return new ResponseEntity<>(map, HttpStatus.OK);// 200
