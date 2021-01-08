@@ -22,4 +22,13 @@ public class ArticleProcedureDao {
 	public List<Map<String, Object>> hotNews(){
 		return articleProcedureMapper.getHotNews();
 	}
+	
+	public List<Map<String, Object>> latestProcedure(Map<String, Object>params){
+		return articleProcedureMapper.latestProcedure(params);
+	}
+	
+	public List<Map<String, Object>> commentProcedure(int i){
+		return articleProcedureMapper.commentProcedure(i);
+	}
+	
 }

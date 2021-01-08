@@ -5,19 +5,18 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kodark.news.dao.ReporterProcedureDao;
+import com.kodark.news.dao.ReportersProcedureDao;
 import com.kodark.news.service.ReportersProcedureService;
 
 @Service	
 public class ReportersProcedureServiceImpl implements ReportersProcedureService {
 	
 	@Autowired
-	private ReporterProcedureDao reporterProcedureDao;
-
+	private ReportersProcedureDao reportersProcedureDao;
+	
 	@Override
 	public void execuReportersProcedure(Map<String, Object> params) {
-		reporterProcedureDao.execuReportersProcedure(params);
-		
+		reportersProcedureDao.reportersBlindProcedure(params);
 	}
-	
+
 }

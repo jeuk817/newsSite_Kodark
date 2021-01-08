@@ -14,7 +14,15 @@ public class StatisticsProcedureDao {
 	@Autowired
 	StatiscticsProcedureMapper statiscticsProcedureMapper;
 	
-	public List<Map<String, Object>> excuStatisticsProcedure(int _id) {
-		return statiscticsProcedureMapper.statiscticsProcedure(_id);
+	public Map<String, Object> excuStatisticsProcedure(Map<String, Object> params) {
+		return statiscticsProcedureMapper.statiscticsProcedure(params);
 	}
+	
+	public List<Map<String, Object>> excuTodayPopularProcedure() {
+		return statiscticsProcedureMapper.todayPopularProcedure();
+	}
+	public List<Map<String, Object>> excuArticleStatisticsProcedure(int articleId) {
+		return statiscticsProcedureMapper.articleStatisticsProcedure(articleId);		
+	}
+	
 }

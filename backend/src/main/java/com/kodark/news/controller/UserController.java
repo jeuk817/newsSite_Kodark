@@ -141,8 +141,9 @@ public class UserController {
 		params.put("_pwd", pwd);		
 		authProcedureService.execuAuthProcedure(params);
 		
-		response.setHeader("Links", "</users/sign-up>; rel=\"self\","
-							+"</ko/signIn>; rel=\"next\"");
+		response.setHeader("Links", 
+							 "</users/sign-up>; rel=\"self\","
+							+"</ko/signIn>; 	rel=\"next\"");
 		if(params.get("result_set").equals("success")) {
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		}else
