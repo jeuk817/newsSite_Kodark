@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.kodark.news.mappers.ReportersProcedureMapper;
 
 @Repository
-public class ReporterDao {
+public class ReporterProcedureDao {
 	
 	@Autowired
 

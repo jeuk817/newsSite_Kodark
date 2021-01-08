@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.mapping.StatementType;
 
@@ -26,4 +25,13 @@ public interface ReportersProcedureMapper {
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public Map<String, Object> getReporterInfo(Map<String, Object> params);
+
+	@Select(value = "{CALL blind_procedure("
+			+ "#{_article_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
+			+ ",#{_reporter_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"		
+			+ ",#{result_set, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"		
+			+ ")}")
+	@Options(statementType = StatementType.CALLABLE)
+	public void reportersBlindProcedure(Map<String, Object> params);
+
 }

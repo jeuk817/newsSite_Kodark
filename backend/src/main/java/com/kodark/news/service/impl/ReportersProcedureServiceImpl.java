@@ -9,26 +9,24 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kodark.news.dao.ReporterDao;
+import com.kodark.news.dao.ReportersProcedureDao;
 import com.kodark.news.service.ReportersProcedureService;
 
 @Service	
 public class ReportersProcedureServiceImpl implements ReportersProcedureService {
 	
 	@Autowired
-	private ReporterDao reporterDao;
-
+	private ReportersProcedureDao reportersProcedureDao;
+	
 	@Override
 	public void execuReportersProcedure(Map<String, Object> params) {
-		reporterDao.execuReportersProcedure(params);
-		
+		reportersProcedureDao.reportersBlindProcedure(params);
 	}
 	
 	//기자프로필
 	@Override
 	public Map<String, Object> getReporterInfo(Map<String, Object> params) {		
-		return reporterDao.getReporterInfo(params);
+		return reportersProcedureDao.getReporterInfo(params);
 	}
-	
 	
 }
