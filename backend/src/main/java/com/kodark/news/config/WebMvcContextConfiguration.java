@@ -13,11 +13,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import com.kodark.news.interceptors.JwtInterceptor;
-
-
 
 @Configuration
 @EnableWebMvc
@@ -31,14 +28,11 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
     
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-//		System.out.println("configureDefaultServletHandling");
 		configurer.enable();
-		//WebMvcConfigurer.super.configureDefaultServletHandling(configurer);
 	}
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//		System.out.println("addResourceHandlers");
 		registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(31556926);
 		registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(31556926);
 		registry.addResourceHandler("/img/**").addResourceLocations("/img/").setCachePeriod(31556926);
@@ -47,7 +41,6 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-//		System.out.println("addViewControllers");
 		registry.addViewController("/").setViewName("index");
 		registry.addViewController("/ko/*").setViewName("index");
 		registry.addViewController("/en/*").setViewName("index");
@@ -56,35 +49,24 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	@Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//        viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix(VIEW_RESOLVER_PREFIX);
         viewResolver.setSuffix(VIEW_RESOLVER_SUFFIX);
         return viewResolver;
 	}
 
-//	@Override
-//	public void addInterceptors(InterceptorRegistry registry) {
-//		WebMvcConfigurer.super.addInterceptors(registry);
-//		registry.addInterceptor(jwtInterceptor)
-//			.addPathPatterns("/users/*")
-//			.addPathPatterns("/reporter/*")
-//			.addPathPatterns("/admin/*");
-//		
-//		registry.addInterceptor(new TestInterceptor())
-//			.addPathPatterns("/reporter");
-//		
-//		registry.addInterceptor(new TestInterceptor())
-//		.addPathPatterns("/reporter");
-//	}
-	
-	
-	
-//	@Bean
-//	public MultipartResolver multipartResolver() {
-//		return null;
-//		
-//	}
-	
+	// 인터셉터 : 요청과 응답을 기록하는 LogInterceptor와 인증을 검사하는 JwtInterceptor를 세팅
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
 		
-    
+		registry.addInterceptor(jwtInterceptor)
+			.addPathPatterns("/users")
+			.addPathPatterns("/users/*")
+			.addPathPatterns("/reporter")
+			.addPathPatterns("/reporter/*")
+			.addPathPatterns("/admin")
+			.addPathPatterns("/admin/*")
+			.excludePathPatterns("/users/sign-up");
+		
+	}
+		
 }

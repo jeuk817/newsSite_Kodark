@@ -8,5 +8,5 @@ public interface AdminProcedureService {
 	public void execuAdminProcedure(Map<String, Object> params);
 	
 	public List<Map<String, Object>> getWaitArticles();
-
+	public List<Map<String,Object>> getReporterList(); 
 }

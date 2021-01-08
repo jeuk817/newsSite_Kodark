@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="/se2/js/HuskyEZCreator.js" charset="utf-8"></script>
 </head>
 <body>
-	home html
+    <textarea name="ir1" id="ir1" rows="10" cols="100">
+    hello
+    </textarea>
 </body>
+<script type="text/javascript">
+   
+        var oEditors = [];
+        nhn.husky.EZCreator.createInIFrame({
+         oAppRef: oEditors,
+         elPlaceHolder: "ir1",
+         sSkinURI: "/se2/SmartEditor2Skin.html",
+         fCreator: "createSEditor2"
+        });
+        function pasteHTML() {
+        	var sHTML = "<span style='color:#FF0000;'>이미지도 같은 방식으로 삽입합니다.<\/span>";
+        	oEditors.getById["ir1"].exec("PASTE_HTML", [sHTML]);
+        }
+</script>
 </html>

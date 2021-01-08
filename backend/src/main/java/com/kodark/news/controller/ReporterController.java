@@ -37,7 +37,31 @@ public class ReporterController {
 		this.reportersProcedureService = reportersProcedureService;
 		this.statisticsService = statisticsService;
 	}
+	
+	/**
+	 * 기자 프로필
+	 * 날짜 : 2021-01-07
+	 * 작성자 : 이종현
+	 */
+	@GetMapping
+	public ResponseEntity<Map<String, Object>> getInfoProfile(@RequestBody Map<String, Object> body){
+		Map<String, Object> params = null;
+		
+		try {
+			params = new HashMap<String, Object>();
+			params = reportersProcedureService.getReporterInfo(body);
 
+			if(params.isEmpty()) {
+				throw new NullPointerException();
+			}
+		} catch (NullPointerException e) {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);			
+		} 
+		return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);	
+	}
+	
 	/**
 	 * title : 기사네비정보
 	 * author : 최현지
@@ -99,7 +123,6 @@ public class ReporterController {
 	 */
 	@PatchMapping(path = "/article")
 	public ResponseEntity<String> articleBlind(@RequestBody Map<String, Object>body){
-		System.out.println(body);
 		int articleId = Integer.valueOf((String)body.get("articleId"));		
 		int reporterId = Integer.valueOf((String)body.get("reporterId"));
 		Map<String, Object>params = new HashMap<>();

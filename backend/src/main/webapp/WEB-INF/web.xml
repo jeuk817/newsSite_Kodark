@@ -50,7 +50,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+	<!-- 
 	<filter>
 	    <filter-name>springSecurityFilterChain</filter-name>
 	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -59,7 +59,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+	 -->
 	<error-page>
 		<error-code>404</error-code>
 		<location>/WEB-INF/views/index.html</location>

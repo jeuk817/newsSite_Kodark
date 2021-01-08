@@ -1,5 +1,6 @@
 package com.kodark.news.mappers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -18,6 +19,11 @@ public interface AuthProcedureMapper {
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void authProcedure(Map<String, Object> params);
+	
+	//기자목록
+	@Select(value = "{CALL admin_repoters_procedure}")
+	@Options(statementType = StatementType.CALLABLE)
+	public List<Map<String,Object>> getInfoReporters();
 }
 
 //@Mapper

@@ -36,12 +36,32 @@ public class AdminController {
 
 	@Autowired
 	public AdminController(MailService mailService, StatisticsService statisticsService,
-			AdminProcedureService adminProcedureService,Environment env) {
+			AdminProcedureService adminProcedureService, Environment env) {
 		this.env = env;
 		this.mailService = mailService;
 		this.statisticsService = statisticsService;
 		this.adminProcedureService = adminProcedureService;
 		
+	}
+	 
+	/**
+	 * 기자 목록
+	 * 날짜 : 2021-01-07
+	 * 작성자 : 이종현
+	 */
+	@GetMapping(path ="/reporters")
+	public ResponseEntity <List<Map<String, Object>>> getReportersList(){
+		List<Map<String, Object>> list = null;
+		try {
+			list = adminProcedureService.getReporterList();	
+			System.out.println(list);
+		} catch (Exception e) {
+			if(list.isEmpty()) {
+				return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.NO_CONTENT);
+			}
+			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);		
+		}
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
 	}
 
 	/**
@@ -64,11 +84,10 @@ public class AdminController {
 	//발행대기중 기사
 	@GetMapping(path="/article")
 	public ResponseEntity <List<Map<String, Object>>> waitingArticle() {
-		
 		return new ResponseEntity<List<Map<String, Object>>> (adminProcedureService.getWaitArticles(), HttpStatus.CREATED); // 201;
 	}
 	
-	//기자아이디 생성
+	//
 	@PostMapping(path="/reporters")
 	public ResponseEntity<UserDto> createReporter(@RequestBody Map<String, Object> body) throws ParseException {
 		String email = (String) body.get("email");
