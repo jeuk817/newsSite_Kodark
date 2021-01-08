@@ -71,7 +71,9 @@ public class UserController {
 	}
 
 	/**
-	 * 마이페이지 작성자 : 최현지 작성일 : 2021-01-07
+	 * 마이페이지 
+	 * 작성자 : 최현지 
+	 * 작성일 : 2021-01-07
 	 */
 	@GetMapping(path = "/my-page")
 	public ResponseEntity<Map<String, Object>> myPage(HttpServletResponse response, HttpServletRequest request) {
@@ -85,7 +87,7 @@ public class UserController {
 		int id = 2;
 		params.put("_id", id);
 
-		params.put("_switch", "my-page");
+		params.put("_switch", "my_page");
 		usersProcedureService.myPage(params);
 
 		String email = (String) params.get("_email");
@@ -117,8 +119,8 @@ public class UserController {
 		params.put("_links", linkList);
 
 		response.setHeader("Links",
-				"</users/my-page>; 					rel=\"self\","
-						+ "</users/my-page/detail>;			rel=\"userDetail\","
+						"</users/my-page>; 						rel=\"self\","
+						+ "</users/my-page/detail>;				rel=\"userDetail\","
 						+ "</users/my-page/subscribed-list>;	rel=\"subscribedList\","
 						+ "</auth>;  							rel=\"eidtEmail\","
 						+ "</auth/verify>;  					rel=\"validation\","
@@ -139,7 +141,7 @@ public class UserController {
 		params.put("_pwd", encodedPwd);
 		authProcedureService.execuAuthProcedure(params);
 
-		response.setHeader("Links", "</users/sign-up>; rel=\"self\"," + "</ko/signIn>; 	rel=\"next\"");
+		response.setHeader("Links", "</users/sign-up>; rel=\"self\"," + "</ko/auth/signIn>; rel=\"next\"");
 		if (params.get("result_set").equals("success"))
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		else
@@ -171,7 +173,9 @@ public class UserController {
 	}
 
 	/**
-	 * 대댓글 작성 날짜 : 2021-01-08 작성자 : 이종현
+	 * 대댓글 
+	 * 작성 날짜 : 2021-01-08 
+	 * 작성자 : 이종현
 	 */
 	@PostMapping(path = "/comment/reply")
 	public ResponseEntity<String> writeCommentReply(@RequestParam("commentId") int commentId,

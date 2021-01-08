@@ -1,4 +1,5 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `hotNews_procedure`()
+CREATE DEFINER=`jack`@`localhost` PROCEDURE `hotNews_procedure`(
+)
 BEGIN
 
 select a.id, a.title, a.content, i.image, i.description as imgDec

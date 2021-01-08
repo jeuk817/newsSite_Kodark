@@ -239,7 +239,7 @@ public class AuthController {
 		String email = userInfo.get("email");
 
 		Map<String, Object> parameter = new HashMap<>();
-		parameter.put("_switch", "google_oauth");
+		parameter.put("_switch", "oauth");
 		parameter.put("_email", email);
 		authProcedureService.execuAuthProcedure(parameter);
 		String resultSet = (String) parameter.get("result_set");

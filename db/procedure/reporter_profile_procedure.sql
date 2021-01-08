@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reporter_profile_procedure`(
+CREATE DEFINER=`jack`@`localhost` PROCEDURE `reporter_profile_procedure`(
 	in _id int
  
 )

@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `admin_repoters_procedure`(
+CREATE DEFINER=`jack`@`localhost` PROCEDURE `admin_repoters_procedure`(
 )
 BEGIN
 	

@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `comment_procedure`(
+CREATE DEFINER=`jack`@`localhost` PROCEDURE `comment_procedure`(
 in _article_id int
 )
 BEGIN
@@ -18,4 +18,4 @@ select
     join user_detail as ud on u.id = ud.user_id
 	where c.article_id = _article_id
     ;
-    END
+END

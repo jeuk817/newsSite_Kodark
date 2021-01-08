@@ -122,8 +122,6 @@ public class ArticleController {
 			}
 			response.setHeader("Links", sb.toString());	
 			
-			
-			
 			if(params.isEmpty()) {
 				return new ResponseEntity<List<Map<String, Object>>>(params,HttpStatus.NO_CONTENT); //404
 			}
@@ -258,7 +256,7 @@ public class ArticleController {
 		Map<String, Object> link = new HashMap<>();
 		List<Map<String, Object>> list = new ArrayList<>();
 		// StringBuffer sb = new StringBuffer();
-		params.put("category", category);
+		params.put("_category", category);
 		try {
 			list = articleProcedureService.execuLatestProcedure(params);
 			params.put("type", "latest");

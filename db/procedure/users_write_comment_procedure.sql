@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `users_write_comment_procedure`(
+CREATE DEFINER=`jack`@`localhost` PROCEDURE `users_write_comment_procedure`(
     in _commentId int,
     in _email varchar(50),
     in _content varchar(500)

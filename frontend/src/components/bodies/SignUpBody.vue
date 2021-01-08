@@ -233,8 +233,8 @@ export default {
     // sing in 페이지로 이동하는 메소드
     moveRoute () {
       this.wasCreated = false
-      // this.$router.push({ path: this.nextLink })
-      this.$router.push({ path: '/ko/auth/signIn' })
+      this.$router.push({ path: this.nextLink })
+      // this.$router.push({ path: '/ko/auth/signIn' })
     }
   }
 }

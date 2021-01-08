@@ -53,7 +53,7 @@ set _id = -1;
 			set result_set = 'success';
 		end if;
         
-	elseif _switch = 'google_oauth' then
+	elseif _switch = 'oauth' then
 		select id, auth into _id, _auth from users where email = _email;
         
         if _id = -1 then

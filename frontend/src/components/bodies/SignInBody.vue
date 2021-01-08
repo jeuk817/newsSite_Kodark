@@ -99,8 +99,7 @@ export default {
       const { status, links } = await this.$store.dispatch('auth/signIn', { email: this.email, pwd: this.password })
       console.log(status)
       if(status === 401) this.failMsg = true
-      if(status === 204) this.$router.push({ path: '/' })
-      // if(status === 204) this.$router.push({ path: links.next })
+      if(status === 204) this.$router.push({ path: links.next })
       this.signningIn = false
     }
   }

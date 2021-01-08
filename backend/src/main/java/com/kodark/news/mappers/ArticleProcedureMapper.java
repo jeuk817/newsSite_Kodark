@@ -60,7 +60,7 @@ public interface ArticleProcedureMapper {
 	public List<Map<String, Object>> getHotNews();
 
 	@Select(value = "{CALL latest_procedure("
-			+ "#{category, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ "#{_category, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public List<Map<String, Object>> latestProcedure(Map<String, Object> params);
