@@ -19,7 +19,7 @@
     </appender>
 
     <logger name="org.springframework" level="info"/>
-    <logger name="kr.or.jack" level="debug"/>
+    <logger name="com.kodark.news" level="debug"/>
 
     <root level="debug">
         <appender-ref ref="CONSOLE"/>

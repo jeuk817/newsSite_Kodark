@@ -13,18 +13,18 @@ public class AdminProcedureDao {
 
 	@Autowired
 	AdminProcedureMapper adminProcedureMapper;
-	
+
 	public void excuAdminProcedure(Map<String, Object> params) {
 		adminProcedureMapper.adminProcedure(params);
 	}
-	
-	public List<Map<String, Object>> getWaitArticles() {
-		return adminProcedureMapper.getWaitArticle();
+
+	public List<Map<String, Object>> getWaitArticles(String _status) {
+		return adminProcedureMapper.getWaitArticle(_status);
 	}
-	
-	//기자목록(rest_API 57_line)
+
+	// 기자목록(rest_API 57_line)
 	public List<Map<String, Object>> getReporterList() {
 		return adminProcedureMapper.getReporterList();
 	}
-	
+
 }
