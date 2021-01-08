@@ -4,7 +4,8 @@
       <MyPageHeader/>
     </div>
     <div class="myPageContent">
-      <IntroduceSideBar />
+      <!-- <IntroduceSideBar /> -->
+      <AdminSideBar />
       <!-- <ProfileEditBody /> -->
       <!-- MyPageBody -->
       <SubscribeListBody />
@@ -16,7 +17,8 @@
 
 <script>
 import MyPageHeader from '../components/headers/MyPageHeader'
-import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
+// import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
+import AdminSideBar from '../components/sidebars/AdminSideBar'
 import MyPageBody from '../components/bodies/MyPageBody'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import SubscribeListBody from '../components/bodies/SubscribeListBody'
@@ -24,7 +26,8 @@ import Footer from '../components/footer/Footer'
 export default {
   components: {
     MyPageHeader,
-    IntroduceSideBar,
+    // IntroduceSideBar,
+    AdminSideBar,
     // MyPageBody,
     // ProfileEditBody,
     SubscribeListBody,
