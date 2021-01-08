@@ -1,20 +1,22 @@
 <template>
   <div class="profile">
-        <h1 class="profile__title">Profile</h1>
-        <h2 class="profile__subTitle">Manage profile</h2>
+        <h1 class="profile__title">Account</h1>
+        <h2 class="profile__subTitle">Manage account</h2>
         <div class="profileContent">
             <div class="userProfile">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis enim ratione nostrum vitae itaque quisquam, bland
-                   
+                <p>
+                   You’re using <strong>{{ account.userData.email }}</strong> to log in — this is also where we send newsletters.
                 </p>
             </div>
             <div class="editProfileBtns">
-                <v-btn depressed class="editBtn"
+                <v-btn depressed class="editBtn text-capitalize white--text"
+                color="indigo"
                 :disabled="!didEdit"
                 @click="emailFormShow">
                     Edit
                 </v-btn>
-                <v-btn depressed class="editBtn"
+                <v-btn depressed class="editBtn text-capitalize white--text"
+                color="indigo"
                 :disabled="!didpwdChange"
                  @click="pwdFormShow">
                     change Password
@@ -63,10 +65,10 @@
                     ></v-text-field>
                 </div>
                 <div class="editProfileBtns">
-                    <v-btn depressed class="editBtn">
+                    <v-btn depressed class="editBtn text-capitalize white--text" color="indigo">
                         Save
                     </v-btn>
-                    <v-btn depressed class="editBtn" @click="emailFormCancle">
+                    <v-btn depressed class="editBtn text-capitalize white--text" color="indigo" @click="emailFormCancle">
                         Cancle
                     </v-btn>
                 </div>
@@ -104,13 +106,14 @@
                     ></v-text-field>
                 </div>
                 <div class="editProfileBtns">
-                    <v-btn depressed class="editBtn"
+                    <v-btn depressed class="editBtn text-capitalize white--text"
+                    color="indigo"
                     :disabled="didConfirmPassword"
                     @click="OnChangePwd"
                     >
                         Save
                     </v-btn>
-                    <v-btn depressed class="editBtn" @click="pwdFormCancle">
+                    <v-btn depressed class="editBtn text-capitalize white--text" color="indigo" @click="pwdFormCancle">
                         Cancle
                     </v-btn>
                 </div>
@@ -120,6 +123,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     data: () => ({
         didEdit: true,
@@ -171,6 +176,14 @@ export default {
                 
             }
         }
+    },
+    computed: {
+        ...mapGetters({
+            account: 'getAccount'
+        })
+    },
+    created () {
+        this.$store.dispatch('users/getUserData')
     }
 }
 </script>

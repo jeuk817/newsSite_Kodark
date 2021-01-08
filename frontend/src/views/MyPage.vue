@@ -6,11 +6,11 @@
     <div class="myPageContent">
       <IntroduceSideBar />
       <!-- <ProfileEditBody /> -->
-      <!-- MyPageBody -->
-      <SubscribeListBody />
+      <MyPageBody />
+      <!-- <SubscribeListBody /> -->
       <!-- <Content /> -->
     </div>
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 
@@ -25,8 +25,8 @@ export default {
   components: {
     MyPageHeader,
     IntroduceSideBar,
-    // MyPageBody,
-    // ProfileEditBody,
+    MyPageBody,
+    ProfileEditBody,
     SubscribeListBody,
     Footer
   }
