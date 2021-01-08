@@ -2,11 +2,13 @@
   <div class="ProfileEditComponent">
       <h1 class="title">Profile Detail</h1>
       <div class="inputContainer">
-          <div class="inputTitle">닉네임</div>
+          <div class="inputTitle" style="margin-right: 20px">
+            <p>Nick Name</p>
+          </div>
           <v-text-field
             ref="nickName"
             label="NickName"
-            height="45px"
+            height="40px"
             outlined
             v-model="nickName"
             required
@@ -15,11 +17,11 @@
         </v-text-field>
       </div>
       <div class="inputContainer">
-          <div class="inputTitle" style="margin-right: 76px">이름</div>
+          <div class="inputTitle" style="margin-right: 76px">Name</div>
           <v-text-field
             ref="name"
             label="Name"
-            height="45px"
+            height="40px"
             
             outlined
             v-model="nickName"
@@ -29,11 +31,11 @@
         </v-text-field>
       </div>
       <div class="inputContainer">
-          <div class="inputTitle" style="margin-right: 76px">지역</div>
+          <div class="inputTitle" style="margin-right: 76px">Local</div>
           <v-text-field
             ref="local"
             label="Local"
-            height="45px"
+            height="40px"
             outlined
             v-model="nickName"
             required
@@ -42,7 +44,7 @@
         </v-text-field>
       </div>
         <div class="inputContainer">
-          <div class="inputTitle" style="margin-right: 40px">생년월일</div>
+          <div class="inputTitle" style="margin-right: 70px; line-height:70px ">Birth</div>
             <v-menu
                     ref="menu"
                     v-model="menu"
@@ -71,27 +73,30 @@
             </v-menu>
         </div>
 
-        <div class="inputContainer">
-          <div class="inputTitle" style="margin-right: 76px; line-height: 65px">성별</div>
+        <div class="inputContainer gender">
+          <div class="inputTitle" style="margin-right: 76px; line-height: 65px">Gender</div>
             <v-checkbox
                 input-value="true"
                 label="Male"
                 value
+                class="maleCheck"
             ></v-checkbox>
-               <v-checkbox
+              <v-checkbox
                 input-value="true"
                 label="Female"
                 value
             ></v-checkbox>
         </div>
-        <v-btn depressed
-        class="saveBtn">
-            Save
-        </v-btn>
-        <v-btn depressed
-        class="delAccountBtn">
-            Delete Account
-        </v-btn>
+        <div class="Btns">
+          <v-btn depressed
+          class="saveBtn">
+              Save
+          </v-btn>
+          <v-btn depressed
+          class="delAccountBtn">
+              Delete Account
+          </v-btn>
+        </div>
 
   </div>
 </template>
@@ -117,22 +122,41 @@ export default {
 </script>
 
 <style scoped>
-
+.title{
+  padding: 10px 10px 10px 0 ;
+  border-bottom: 1px solid black;
+  margin-bottom: 50px;
+}
 .inputContainer{
     margin-top: 35px;
     width: 450px;
     height: 30px;
     display: flex;
 }
+
 .inputTitle{
     margin-right: 60px;
-    line-height: 45px;
+    line-height: 40px;
     height: 45px;
+    font-size: 13px;
+    flex-basis: 10%;
+}
+
+.inputTitle p{
+  width: 100px;
 }
 .inputBox{
     width: 350px;
+    height: 40px;
+    flex-basis: 95%;
 }
 
+.maleCheck{
+  margin-right: 40px;
+}
+.Btns{
+  margin-top: 140px;
+}
 .saveBtn{
     display: block;
     margin-top: 50px;
@@ -141,8 +165,9 @@ export default {
     /* margin: auto; */
 
 }
+
 .delAccountBtn{
-  display: block;
+    display: block;
     margin-top: 50px;
     margin-left: 190px;
     width: 150px;

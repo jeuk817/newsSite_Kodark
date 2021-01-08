@@ -39,7 +39,8 @@ export default {
 <style scoped>
 
 .adminSideBar{
-    width: 320px;
+    margin-top: 50px;
+    width: 420px;
     height: 100%;
 }
 .topSideBar{

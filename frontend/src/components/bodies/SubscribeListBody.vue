@@ -6,13 +6,13 @@
                 <template v-slot:default>
                     <thead>
                         <tr>
-                            <th class="text-left">
+                            <th class="text-left" style="font-size:15px">
                                 Reporter
                             </th>
-                            <th class="text-left">
+                            <th class="text-left" style="font-size:15px">
                                 NewsLetter
                             </th>
-                            <th class="text-left">
+                            <th class="text-left" style="font-size:15px">
                                 Subscribe
                             </th>
                         </tr>
@@ -23,8 +23,21 @@
                         :key="item.name"
                         >
                             <td>이푸름</td>
-                            <td>토글버튼</td>
-                            <td>취소버튼</td>
+                            <td> 
+                              <v-switch
+                              v-model="switch1"
+                              :label="`Switch 1: ${switch1.toString()}`"
+                              ></v-switch>
+                            </td>
+                            <td>
+                                <v-btn
+                                small
+                                color="primary"
+                                dark
+                                >
+                                Cancle
+                              </v-btn>
+                            </td>
                         </tr>
                     </tbody>
                 </template>
@@ -37,6 +50,7 @@
 export default {
     data () {
       return {
+        switch1: true,
         desserts: [
           {
             name: 'Frozen Yogurt',

@@ -6,9 +6,9 @@
     <div class="myPageContent">
       <!-- <IntroduceSideBar /> -->
       <AdminSideBar />
-      <!-- <ProfileEditBody /> -->
+      <ProfileEditBody />
       <!-- MyPageBody -->
-      <SubscribeListBody />
+      <!-- <SubscribeListBody /> -->
       <!-- <Content /> -->
     </div>
     <Footer />
@@ -29,8 +29,8 @@ export default {
     // IntroduceSideBar,
     AdminSideBar,
     // MyPageBody,
-    // ProfileEditBody,
-    SubscribeListBody,
+    ProfileEditBody,
+    // SubscribeListBody,
     Footer
   }
 }
