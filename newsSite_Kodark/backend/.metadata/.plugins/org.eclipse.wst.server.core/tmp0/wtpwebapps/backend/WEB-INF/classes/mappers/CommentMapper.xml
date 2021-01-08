@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+  파일명: CommentMapper.xml
+  설명: 댓글 Mapper 설정
+  작성일: 2020-12-24
+  작성자: 이종현
+ -->
+<mapper namespace="mappers.CommentMapper">
+    <!-- 조회 -->
+    <!--
+	<select id="selectPerson" parameterType="int" resultType="hashmap">
+	  SELECT * FROM USER
+	</select>
+	 -->
+	
+	<insert id="insertComment">
+	  INSERT INTO Comment (content,del_flag)
+	  VALUES (#{content},#{del_flag})
+	</insert>
+
+	<update id="updateComment">
+	  UPDATE Comment SET
+	    content =#{content},
+	    del_flag = #{del_flag},	
+	  where user_id = #{id} AND article_id = #{id}
+	</update>
+	
+	<!-- 삭제 여부 -->
+	<update id="delFlagComment">
+	  UPDATE Comment SET
+	    del_flag = #{del_flag},	
+	  where user_id = #{id} AND article_id = #{id}
+	</update>
+	
+	<!-- 이거 사용하면 진짜로 삭제하니깐 일단 보류
+	<delete id="deleteComment">
+	  DELETE FROM Comment where user_id = #{id} AND article_id = #{id}
+	</delete>
+	 -->
+</mapper>
