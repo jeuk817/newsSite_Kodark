@@ -179,9 +179,10 @@ public class ArticleController {
 	}
 
 	/**
-	 * 메인네비 정보 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-06
+	 * title : 메인네비 정보(14) 
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> mainNavi(HttpServletResponse response) {
@@ -199,9 +200,10 @@ public class ArticleController {
 	}
 
 	/**
-	 * 핫 뉴스 (popular) 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-07
+	 * title : 핫 뉴스(6)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-07
 	 */
 	@GetMapping(path = "/popular")
 	public ResponseEntity<Map<String, Object>> hotNews(HttpServletResponse response) {
@@ -287,15 +289,15 @@ public class ArticleController {
 	}
 
 	/**
-	 * 카테고리 정보 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-06
+	 * title : 카테고리 정보(63)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-06
 	 */
-	// 카테고리 정보
 	@GetMapping(path = "/category")
-	public ResponseEntity<List<CategoryDto>> categoryInfo() {
-		List<CategoryDto> categoryInfo = articleProcedureService.categoryInfo();
-		return new ResponseEntity<List<CategoryDto>>(categoryInfo, HttpStatus.OK);// 200
+	public ResponseEntity<List<Map<String, Object>>> categoryInfo() {
+		List<Map<String, Object>> categoryInfo = articleProcedureService.categoryInfo();
+		return new ResponseEntity<List<Map<String, Object>>>(categoryInfo, HttpStatus.OK);// 200
 	}
 
 	/**
