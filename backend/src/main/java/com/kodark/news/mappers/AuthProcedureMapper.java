@@ -1,5 +1,6 @@
 package com.kodark.news.mappers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -26,18 +27,10 @@ public interface AuthProcedureMapper {
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void authProcedure(Map<String, Object> params);
-}
 
-//@Mapper
-//public interface reporterProcedureMapper {
-//	@Select(value = "{CALL reporter_procedure("
-//			+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"	
-//			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"					
-//			+ ",#{_email, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
-//			+ ",#{_auth, mode=IN, jdbcType=CHAR, javaType=java.lang.String}"
-//			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"			
-//			+ ")}")
-//	@Options(statementType = StatementType.CALLABLE)
-//	public void reporterProcedure(Map<String, Object> params);
-//}
+	// ���ڸ��
+	@Select(value = "{CALL admin_repoters_procedure}")
+	@Options(statementType = StatementType.CALLABLE)
+	public List<Map<String, Object>> getInfoReporters();
+}
 

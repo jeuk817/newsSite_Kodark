@@ -18,5 +18,5 @@ public class AuthProcedureServiceImpl implements AuthProcedureService {
 	public void execuAuthProcedure(Map<String, Object> params) {
 		authProcedureDao.excuAuthProcedure(params);
 	}
-	
+
 }

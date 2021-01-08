@@ -7,9 +7,9 @@
   >
     <v-spacer></v-spacer>
     <div>
-      <v-btn text large to="/ko/home">
-        KoDark Times
-      </v-btn>
+       <router-link to="/ko/home">
+        <img width="186" src="../../assets/img/kodark.svg">
+      </router-link>
     </div>
     <v-spacer></v-spacer>
   </v-app-bar>

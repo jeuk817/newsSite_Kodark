@@ -10,7 +10,7 @@ import com.kodark.news.dao.AdminProcedureDao;
 import com.kodark.news.service.AdminProcedureService;
 
 @Service
-public class AdminProcedureServiceImpl implements AdminProcedureService{
+public class AdminProcedureServiceImpl implements AdminProcedureService {
 
 	@Autowired
 	AdminProcedureDao adminProcedureDao;
@@ -21,7 +21,13 @@ public class AdminProcedureServiceImpl implements AdminProcedureService{
 	}
 
 	@Override
-	public List<Map<String, Object>> getWaitArticles() {
-		return adminProcedureDao.getWaitArticles();
+	public List<Map<String, Object>> getWaitArticles(String _status) {
+		return adminProcedureDao.getWaitArticles(_status);
+	}
+
+	// ���ڸ��
+	@Override
+	public List<Map<String, Object>> getReporterList() {
+		return adminProcedureDao.getReporterList();
 	}
 }
