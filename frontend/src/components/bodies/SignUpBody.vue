@@ -188,6 +188,7 @@ export default {
       if (!this.$refs.verificationCode.validate(true)) return
       this.sendingVerifCode = true
       const status = await this.$store.dispatch('auth/sendVerifCode', { email: this.email, authString: this.verifCode })
+      console.log(status)
       if(status === 204) {
         this.didAuth = true
         this.didAuthFail = false
@@ -218,7 +219,7 @@ export default {
 
       this.creatingAccount = true
       const { status, links } = await this.$store.dispatch('users/createAccount', { email: this.sendedEmail, pwd: this.password })
-
+      console.log(links)
       if(status === 409) {
         this.emailErrorMsg = 'Those email is already taken'
         this.emailError = true
@@ -232,7 +233,8 @@ export default {
     // sing in 페이지로 이동하는 메소드
     moveRoute () {
       this.wasCreated = false
-      this.$router.push({ path: this.nextLink })
+      // this.$router.push({ path: this.nextLink })
+      this.$router.push({ path: '/ko/auth/signIn' })
     }
   }
 }

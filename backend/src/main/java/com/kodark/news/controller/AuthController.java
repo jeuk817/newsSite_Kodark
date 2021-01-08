@@ -101,20 +101,22 @@ public class AuthController {
 	 * 작성일 : 2020-12-27
 	 */
 	@PatchMapping(path = "/verify")
-	public ResponseEntity<String> verify(@RequestBody Map<String, Object> body) {
-		String _auth_string = (String) body.get("auth_string");
+	public ResponseEntity<String> verify(@RequestBody Map<String, Object> body, HttpServletResponse response) {
+		String _auth_string = (String) body.get("authString");
 		String email = (String) body.get("email");
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "confirm_verify");
 		params.put("_email", email);
 		params.put("_auth_string", _auth_string);
 		authProcedureService.execuAuthProcedure(params);
-
+		
 		if (params.get("result_set").equals("success")) {
+			response.setHeader("Links", "</users/sign-up>; rel='self',"
+								+ "</ko/auth/signIn>; rel='next'");
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 		} else if (params.get("result_set").equals("fail")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);// 401
-		} else if (params.get("result_set").equals("Request timeout")) {
+		} else if (params.get("result_set").equals("expiration")) {
 			return new ResponseEntity<>(HttpStatus.REQUEST_TIMEOUT);// 408
 		} else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
@@ -146,8 +148,8 @@ public class AuthController {
 				Cookie cookie = util.makeJwtCookie("jwt", params);
 
 				response.addCookie(cookie);
-				response.setHeader("Links", "</auth/sign-in>; rel=\"self\", </>; rel=\"next\"");
-				return new ResponseEntity<>(HttpStatus.CREATED); // 201
+				response.setHeader("Links", "</auth/sign-in>; rel='self', </>; rel='next'");
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
 			}
 		}
 

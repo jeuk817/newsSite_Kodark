@@ -139,7 +139,7 @@ public class ArticleController {
 	 * 날짜 : 2021-01-07
 	 * 작성자 : 이종현
 	 */
-	@GetMapping(path ="/comment")
+	@GetMapping(path ="/comment/reply")
 	public ResponseEntity<List<Map<String,Object>>> getCommentReply(
 			@RequestParam("articleId") int articleId, @RequestParam("commentStartId") int commentStartId){
 		

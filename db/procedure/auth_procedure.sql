@@ -1,31 +1,20 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `auth_procedure`(
+CREATE DEFINER=`jack`@`localhost` PROCEDURE `auth_procedure`(
 	in _switch varchar(20)
 	, inout _email varchar(50)
-<<<<<<< HEAD
 	, inout _auth_string varchar(6)
     , inout _pwd varchar(300)
     , out _id int
     , out _auth varchar(8)
-=======
-    , inout _auth_string varchar(6)
-    , inout _pwd varchar(45)
->>>>>>> tmp
     , out result_set varchar(10)
-    
 )
 BEGIN
 declare emailCount int;
 declare verify varchar(6);
-declare exp date;
-<<<<<<< HEAD
+declare exp datetime;
 set _id = -1;
 
    if _switch = 'create_auth' then
       select count(*) into emailCount from users where email = _email;
-=======
-	if _switch = 'create_auth' then
-		select count(*) into emailCount from users where email = _email;
->>>>>>> tmp
         
       if emailCount > 0 then
          set result_set = 'conflict';
@@ -36,16 +25,17 @@ set _id = -1;
       end if;
 
    elseif _switch = 'confirm_verify' then   
-         
             select auth_string, created_at into verify , exp from auth_string where email = _email order by created_at desc limit 1 ;
-            
-            if now() > date_add(exp, interval 30 minute) then
-				set result_set = 'expiration';
-            elseif _auth_string = verify then
-				set result_set = 'success';          
-			else 
+            if _auth_string = verify then
+				if now() > date_add(exp, interval 30 minute) then
+					set result_set = 'expiration';
+				else
+					set result_set = 'success';
+                end if;
+			else
 				set result_set = 'fail';
             end if;
+            
    elseif  _switch = 'sign_up' then         
          select count(*) into emailCount from users where email = _email;
 		if emailCount > 0 then
@@ -62,7 +52,6 @@ set _id = -1;
 		else
 			set result_set = 'success';
 		end if;
-<<<<<<< HEAD
         
 	elseif _switch = 'google_oauth' then
 		select id, auth into _id, _auth from users where email = _email;
@@ -75,43 +64,4 @@ set _id = -1;
 			set result_set = 'exist';
 		end if;
    end if;
-=======
-
-	elseif _switch = 'confirm_verify' then	
-			
-            select auth_string, created_at into verify , exp from auth_string where email = _email order by created_at desc limit 1 ;
-				
-            if now() > date_add(exp, interval 30 minute) then
-				set result_set = 'expiration';
-            elseif _auth_string = verify then
-				set result_set = 'success';          
-			else 
-				set result_set = 'fail';
-            end if;
-	elseif  _switch = 'sign_up' then			
-			select count(*) into emailCount from users where email = _email;
-            if emailCount > 0 then
-				set result_set = 'conflict';
-            else	
-				insert into users(email, pwd) values(_email, _pwd);
-                set result_set = 'success';
-			end if;
-	elseif _switch = 'sign_in' then
-			select count(*) into emailCount from users where email = _email and pwd = _pwd;
-            if emailCount > 0 then
-				set result_set = 'no content';
-            else
-				set result_set = 'fail';
-            end if;   
- 
-            
-	end if;
-    
-    
-    
-    
-    
-		
-    
->>>>>>> tmp
 END
