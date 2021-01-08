@@ -103,13 +103,14 @@ public class AuthController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); //500
 		}
 	}
-
+	/**
+	 * verify
+	 * 작성자 : 최윤수
+	 * 작성일 : 2020-12-27
+	 */
 	@PatchMapping(path="/verify")
-	public ResponseEntity<String> verify(@RequestBody Map<String, Object> body){
-		System.out.println("======================================");
-		System.out.println("@PatchMapping");
-		System.out.println("======================================");
-		String _auth_string = (String) body.get("_auth_string");
+	public ResponseEntity<String> verify(@RequestBody Map<String, Object> body){	
+		String _auth_string = (String) body.get("auth_string");
 		String email = (String)body.get("email");
 		Map<String, Object>params = new HashMap<>();
 		params.put("_switch", "confirm_verify");
@@ -124,10 +125,9 @@ public class AuthController {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 		}else if(params.get("result_set").equals("fail")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);//401
-//		}else if(params.get("result_set").equals("Request timeout")){
-//			return new ResponseEntity<>(HttpStatus.REQUEST_TIMEOUT);//408
-		}else {
-			System.out.println("errorrrrrrrrrrrrrrrrrrrrrrr");
+		}else if(params.get("result_set").equals("Request timeout")){
+			return new ResponseEntity<>(HttpStatus.REQUEST_TIMEOUT);//408
+		}else {		
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
 	
