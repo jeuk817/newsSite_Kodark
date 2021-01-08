@@ -10,6 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+/*
+ * title : Mybatis 환경
+ * dec : datasource를 가져와 sqlsession을 만든다.
+ * 작성자 : 류제욱
+ * 작성일 : 2020-01-06
+ */
 @Configuration
 @MapperScan(
 		basePackages = "com.kodark.news.mappers")

@@ -23,33 +23,55 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kodark.news.service.AuthProcedureService;
 import com.kodark.news.service.MailService;
 import com.kodark.news.service.UsersProceduerService;
+import com.kodark.news.utils.PasswordEncoderImpl;
 
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
 
-	@Autowired
 	Environment env;
-
-	@Autowired
 	MailService mailService;
-
-	@Autowired
 	AuthProcedureService authProcedureService;
+	UsersProceduerService usersProcedureService;
+	PasswordEncoderImpl passwordEncoder;
 
 	@Autowired
-	UsersProceduerService usersProcedureService;
+	public UserController(Environment env, MailService mailService, AuthProcedureService authProcedureService,
+			UsersProceduerService usersProcedureService, PasswordEncoderImpl passwordEncoder) {
+		this.env = env;
+		this.mailService = mailService;
+		this.authProcedureService = authProcedureService;
+		this.usersProcedureService = usersProcedureService;
+		this.passwordEncoder = passwordEncoder;
+	}
 
-	// 로그인 정보
-	@GetMapping(path = "/")
-	public ResponseEntity<String> userInfo() {
-		return new ResponseEntity<>(HttpStatus.OK);// 200
+	@GetMapping
+	public ResponseEntity<Map<String, Object>> userInfo(HttpServletRequest request, HttpServletResponse response) {
+		int id = (int) request.getAttribute("id");
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "user_info");
+		params.put("_id", id);
+		usersProcedureService.execuUsersProcedure(params);
+		String resultSet = (String) params.get("result_set");
+		if (resultSet.equals("success")) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("email", params.get("_email"));
+			map.put("auth", params.get("_auth"));
+
+			response.setHeader("Links",
+					"</users/my-page>; rel=\"myPage\"" + ", </users/my-page/detail>; rel=\"userDetail\""
+							+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
+							+ ", </users/sign-out>; rel=\"signOut\"");
+			return new ResponseEntity<>(map, HttpStatus.OK);// 200
+		} else if (resultSet.equals("not_found")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+		} else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
+		}
 	}
 
 	/**
-	 * 마이페이지 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-07
+	 * 마이페이지 작성자 : 최현지 작성일 : 2021-01-07
 	 */
 	@GetMapping(path = "/my-page")
 	public ResponseEntity<Map<String, Object>> myPage(HttpServletResponse response, HttpServletRequest request) {
@@ -110,35 +132,19 @@ public class UserController {
 	public ResponseEntity<String> signUp(@RequestBody Map<String, Object> body, HttpServletResponse response) {
 		String email = (String) body.get("email");
 		String pwd = (String) body.get("pwd");
+		String encodedPwd = passwordEncoder.encode(pwd);
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "sign_up");
 		params.put("_email", email);
-		params.put("_pwd", pwd);
+		params.put("_pwd", encodedPwd);
 		authProcedureService.execuAuthProcedure(params);
 
 		response.setHeader("Links", "</users/sign-up>; rel=\"self\"," + "</ko/signIn>; 	rel=\"next\"");
-		if (params.get("result_set").equals("success")) {
+		if (params.get("result_set").equals("success"))
 			return new ResponseEntity<>(HttpStatus.CREATED);
-		} else
+		else
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 
-	}
-
-	// 로그인
-	@PostMapping(path = "/sign-in")
-	public ResponseEntity<String> signIn(@RequestBody Map<String, Object> body) {
-		String email = (String) body.get("email");
-		String pwd = (String) body.get("pwd");
-		Map<String, Object> params = new HashMap<>();
-		params.put("_switch", "sign_in");
-		params.put("_email", email);
-		params.put("_pwd", pwd);
-		authProcedureService.execuAuthProcedure(params);
-
-		if (params.get("result_set").equals("no content")) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
-		} else
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);// 401
 	}
 
 	// 비밀번호 수정
@@ -165,9 +171,7 @@ public class UserController {
 	}
 
 	/**
-	 * 대댓글 작성 
-	 * 날짜 : 2021-01-08 
-	 * 작성자 : 이종현
+	 * 대댓글 작성 날짜 : 2021-01-08 작성자 : 이종현
 	 */
 	@PostMapping(path = "/comment/reply")
 	public ResponseEntity<String> writeCommentReply(@RequestParam("commentId") int commentId,

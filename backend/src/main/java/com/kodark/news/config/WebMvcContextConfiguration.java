@@ -14,13 +14,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.kodark.news.interceptors.JwtInterceptor;
+import com.kodark.news.interceptors.LogInterceptor;
 
+/*
+ * title : web mvc 환경
+ * dec : servlet환경을 세팅.
+ * 작성자 : 류제욱
+ * 작성일 : 2020-01-06
+ */
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "com.kodark.news.controller", "com.kodark.news.interceptors" })
 public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	private static final String VIEW_RESOLVER_PREFIX = "/WEB-INF/views/";
 	private static final String VIEW_RESOLVER_SUFFIX = ".html";
+	
+	@Autowired
+	private LogInterceptor logInterceptor;
 	
 	@Autowired
 	private JwtInterceptor jwtInterceptor;
@@ -30,6 +40,7 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 		configurer.enable();
 	}
 	
+	// controller를 부르지 않는 단순 데이터 요청을 처리. ex) image
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/assets/**").addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(31556926);
@@ -38,6 +49,7 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 		registry.addResourceHandler("/js/**").addResourceLocations("/js/").setCachePeriod(31556926);
 	}
 	
+	// restcontroller에 대한 요청이아닌 vue.js 파일 요청을 처리
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("index");
@@ -56,6 +68,7 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 	// 인터셉터 : 요청과 응답을 기록하는 LogInterceptor와 인증을 검사하는 JwtInterceptor를 세팅
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(logInterceptor);
 		
 		registry.addInterceptor(jwtInterceptor)
 			.addPathPatterns("/users")
@@ -67,5 +80,5 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 			.excludePathPatterns("/users/sign-up");
 		
 	}
-		
+    
 }

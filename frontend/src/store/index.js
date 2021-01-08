@@ -7,11 +7,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    account: null
+    account: null,
+    xsrf: null
   },
   getters: {
     getAccount: (state) => {
       return state.account
+    },
+    getXsrf: (state) => {
+      return state.xsrf
     }
   },
   mutations: {
@@ -20,6 +24,9 @@ export default new Vuex.Store({
     },
     deleteAccount(state) {
       state.account = null
+    },
+    setXsrf(state, xsrf) {
+      state.xsrf = xsrf
     }
   },
   actions: {

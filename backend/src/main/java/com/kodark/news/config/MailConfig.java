@@ -10,6 +10,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+/*
+ * title : 이메일환경
+ * dec : 관리자의 이메일과 비밀번호를 세팅하고 그 외 다른 부가적인 환경을 세팅한다.
+ * 작성자 : 류제욱
+ * 작성일 : 2020-01-06
+ */
 @Configuration
 @PropertySource("classpath:email.properties")
 public class MailConfig {

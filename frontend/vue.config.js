@@ -6,7 +6,7 @@ module.exports = {
   devServer: {
     proxy: { // proxyTable 설정
         '': {
-            target: 'http://localhost:3000/',
+            target: 'http://localhost:8090/',
             changeOrigin: true ,
         }
     }

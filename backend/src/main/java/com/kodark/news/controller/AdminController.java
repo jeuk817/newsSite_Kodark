@@ -46,8 +46,8 @@ public class AdminController {
 	}
 
 	/**
-	 * 기자 목록
-	 * 날짜 : 2021-01-07
+	 * 기자 목록 
+	 * 날짜 : 2021-01-07 
 	 * 작성자 : 이종현
 	 */
 	@GetMapping(path = "/reporters")
@@ -65,8 +65,8 @@ public class AdminController {
 	}
 
 	/**
-	 * 관리자메인
-	 * 작성자 : 최윤수
+	 * 관리자메인 
+	 * 작성자 : 최윤수 
 	 * 작성일 : 2021-01-06
 	 */
 	@GetMapping(path = "/statistics")
@@ -81,8 +81,8 @@ public class AdminController {
 	}
 
 	/**
-	 * 발행 대기중 기사
-	 * 작성자 : 이푸름
+	 * 발행 대기중 기사 
+	 * 작성자 : 이푸름 
 	 * 작성일 : 2021-01-05
 	 */
 	@GetMapping(path = "/article")
@@ -129,8 +129,8 @@ public class AdminController {
 	}
 
 	/**
-	 * 기자 아이디 생성
-	 * 작성자 : 이푸름
+	 * 기자 아이디 생성 
+	 * 작성자 : 이푸름 
 	 * 작성일 : 2021-01-05
 	 */
 	@PostMapping(path = "/reporters")
@@ -187,8 +187,8 @@ public class AdminController {
 	}
 
 	/**
-	 * 기자에게 이메일보내기
-	 * 작성자 : 최윤수
+	 * 기자에게 이메일보내기 
+	 * 작성자 : 최윤수 
 	 * 작성일 :2021-01-07
 	 */
 	@PostMapping(path = "/reporters/email")
