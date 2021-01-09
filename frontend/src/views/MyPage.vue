@@ -6,8 +6,9 @@
     <div class="myPageContent">
       <IntroduceSideBar />
       <!-- <AdminSideBar /> -->
-      <ProfileEditBody />
+      <!-- <ProfileEditBody /> -->
       <!-- <MyPageBody /> -->
+      <ArticleWriteBody />
       <!-- <SubscribeListBody /> -->
       <!-- <Content /> -->
     </div>
@@ -22,14 +23,16 @@ import AdminSideBar from '../components/sidebars/AdminSideBar'
 import MyPageBody from '../components/bodies/MyPageBody'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import SubscribeListBody from '../components/bodies/SubscribeListBody'
+import ArticleWriteBody from '../components/bodies/ArticleWriteBody'
 import Footer from '../components/footer/Footer'
 export default {
   components: {
     MyPageHeader,
     IntroduceSideBar,
+    ArticleWriteBody,
     // AdminSideBar,
     // MyPageBody,
-    ProfileEditBody,
+    // ProfileEditBody,
     // SubscribeListBody,
     Footer
   }
