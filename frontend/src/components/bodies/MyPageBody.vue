@@ -34,11 +34,12 @@
                             outlined
                             v-model="email"
                             :rules="emailRules"
-                            required
+                            
                         ></v-text-field>
                         <v-btn class="text-capitalize white--text sendBtn" height="45px" depressed color="black"
-                        @click="getVerifCode" :loading="gettingVerifCode"
+                        @click="save('email')"
                         >
+                        <!-- @click="getVerifCode" :loading="gettingVerifCode" -->
                         Send
                         </v-btn>
                     </div>
@@ -79,11 +80,13 @@
                 </div>
                 <div class="editProfileBtns">
                     <v-btn depressed class="editBtn text-capitalize white--text" color="indigo"
-                    :disabled="!didAuth" @click="changeEmail" :loading="changingEmail"
+                    :disabled="!didAuth" @click="save('email')"
                     >
                         Save
                     </v-btn>
-                    <v-btn depressed class="editBtn text-capitalize white--text" color="indigo" @click="emailFormCancle">
+                    <v-btn depressed class="editBtn text-capitalize white--text" color="indigo" 
+                    @click="emailFormCancle"
+                    >
                         Cancle
                     </v-btn>
                 </div>
@@ -124,7 +127,7 @@
                     <v-btn depressed class="editBtn text-capitalize white--text"
                     color="indigo"
                     :disabled="didConfirmPassword"
-                    @click="OnChangePwd"
+                    @click="save('password')"
                     >
                         Save
                     </v-btn>
@@ -134,6 +137,44 @@
                 </div>
             </div>
         </div>
+        <v-dialog
+        v-model="isActivatedSave"
+        max-width="450"
+        >
+        <!-- @click:outside="moveRoute" -->
+            <v-card :loading="processSubmit">
+                <div class="verifyPwdContainer">
+                    <v-card-title class="headline">Enter your password</v-card-title>
+                    <v-card-text>
+                        To continue, first verify it's you
+                    </v-card-text>
+                    <v-text-field
+                    ref="verifPassword"
+                    label="Password"
+                    :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="show ? 'text' : 'password'"
+                    @click:append="show = !show"
+                    outlined
+                    color="black"
+                    height="45px"
+                    dense=true
+                    class="test"
+                    v-model="verifPassword"
+                    required
+                    ></v-text-field>
+                </div>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="target === 'email' ? changeEmail() : changePwd()"
+                >
+                    Submit
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -146,14 +187,14 @@ export default {
         didSend: false,
         email: '',
         emailRules: [
-            v => !!v || 'Email Address is required',
+            // v => !!v || 'Email Address is required',
             v => /.+@.+/.test(v) || 'Email Address must be valid'
         ],
         emailError: false,
         emailErrorMsg: '',
         verifCode: '',
         verifCodeRules: [
-            v => !!v || 'Verification code is required',
+            // v => !!v || 'Verification code is required',
             v => v.length === 6 || 'Verification code must be 6-digit'
         ],
         gettingVerifCode: false,
@@ -162,7 +203,12 @@ export default {
         authFailMsg: '',
         sendingVerifCode: false,
         sendedEmail: '',
-        changingEmail: false,
+        isActivatedSave: false,
+
+        target: '',
+        verifPassword: '',
+        show: false,
+        processSubmit: false,
 
         didpwdChange: true,
         didConfirmPassword: true,
@@ -213,9 +259,9 @@ export default {
             }
             this.sendingVerifCode = false
         },
-        // 이메일 바꾸는 메소드
-        async changeEmail() {
-            if(!this.sendedEmail) {
+        save(target) {
+            if(target === 'email') {
+                if(!this.sendedEmail) {
                 this.emailErrorMsg = 'You need to get email verification code'
                 return this.emailError = true
             }
@@ -223,8 +269,13 @@ export default {
                 this.authFailMsg = 'Verification code needs to be verified.'
                 return this.didAuthFail = true
             }
-
-            this.changingEmail = true
+            }
+            this.target = target
+            this.isActivatedSave = true
+        },
+        // 이메일 바꾸는 메소드
+        async changeEmail() {
+            this.processSubmit = true
             const { status, links } = await this.$store.dispatch('users/changeEmail', { email: this.sendedEmail, pwd: this.password })
 
             if(status === 409) {
@@ -232,10 +283,14 @@ export default {
                 this.emailError = true
             }
             if(status === 201) {
-                this.wasCreated = true
-                this.nextLink = links.next
+                this.wasChanged = true
+                this.emailFormCancle()
+                this.isActivatedSave = false
             }
-            this.changingEmail = false
+            this.processSubmit = false
+        },
+        changePwd() {
+            console.log('changePwd')
         },
         emailFormShow () {
             const emailForm = document.querySelector('.editEmail');
@@ -246,6 +301,17 @@ export default {
             const emailForm = document.querySelector('.editEmail');
             emailForm.classList.add('show')
             this.didEdit = true
+            didSend = false
+            email = ''
+            emailError = false
+            emailErrorMsg = ''
+            verifCode = ''
+            gettingVerifCode = false
+            didAuth = false
+            didAuthFail = false
+            authFailMsg = ''
+            sendingVerifCode = false
+            sendedEmail = ''
         },
         pwdFormShow () {
             const changePwdForm = document.querySelector('.changePwd');
@@ -352,6 +418,18 @@ button{
 
 .emailInput{
     width:320px;
+}
+
+.verifyPwdContainer {
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 10px;
+    /* display: grid;
+    justify-content: center; */
+}
+
+.test {
+    padding: 0px 15px;
 }
 
 </style>
