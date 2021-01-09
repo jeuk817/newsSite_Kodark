@@ -3,24 +3,15 @@
       <h1 class="title">Profile Detail</h1>
       <div class="userDetailInfo">
         <div class="userDetailContainer">
-            <div class="userInfoTitle" style="margin-right: 20px">
-              <p>Nick Name</p>
-            </div>
+            <p class="userInfoTitle">
+              Nick Name
+            </p>
             <div class="userInfoContent">
-              <p>닉네임입니다</p> 
-            </div>
-            <div class="EditBtn">
-                <v-btn
-                  depressed
-                  color="indigo"
-                  @click="InputShow"
-                >
-                  Edit
-                </v-btn>
+              <p>이푸름</p> 
             </div>
         </div>
         <div class="userDetailContainer">
-            <div class="userInfoTitle" style="margin-right: 20px">
+            <div class="userInfoTitle">
               <p>Name</p>
             </div>
             <div class="userInfoContent">
@@ -28,7 +19,7 @@
             </div>
         </div>
         <div class="userDetailContainer">
-            <div class="userInfoTitle" style="margin-right: 20px">
+            <div class="userInfoTitle">
               <p>Local</p>
             </div>
             <div class="userInfoContent">
@@ -36,7 +27,7 @@
             </div>
         </div>
         <div class="userDetailContainer">
-            <div class="userInfoTitle" style="margin-right: 20px">
+            <div class="userInfoTitle">
               <p>Birth</p>
             </div>
             <div class="userInfoContent">
@@ -44,12 +35,30 @@
             </div>
         </div>
         <div class="userDetailContainer">
-            <div class="userInfoTitle" style="margin-right: 20px">
+            <div class="userInfoTitle">
               <p>Gender</p>
             </div>
             <div class="userInfoContent">
               <p>Male</p> 
             </div>
+        </div>
+        <div class="EditBtn">
+          <v-btn
+            depressed
+            color="indigo"
+            @click="InputShow"
+          >
+            <span>Edit</span>
+          </v-btn>
+        </div>
+        <div class="delBtn">
+          <v-btn
+              depressed
+              color="indigo"
+              @click="userDelete"
+            >
+              <span>Delete</span> 
+            </v-btn>
         </div>
       </div>
       <div class="editInputContainer inputHide">
@@ -62,7 +71,7 @@
               label="NickName"
               height="40px"
               outlined
-              v-model="nickName"
+
               required
               dense=true
           >
@@ -74,9 +83,7 @@
               ref="name"
               label="Name"
               height="40px"
-              
               outlined
-              v-model="nickName"
               required
               dense=true
           >
@@ -90,7 +97,6 @@
               label="Local"
               height="40px"
               outlined
-              v-model="nickName"
               required
               dense=true
           >
@@ -141,19 +147,18 @@
                   value
               ></v-checkbox>
           </div>
+        <div class="submitBtn">
+            <v-btn
+              depressed
+              color="indigo"
+              @click="userDetailSubmit"
+            >
+              <span>SubMit</span>
+            </v-btn>
+          </div>
       </div>
   </div>
 
-        <!-- <div class="Btns">
-          <v-btn depressed
-          class="saveBtn">
-              Save
-          </v-btn>
-          <v-btn depressed
-          class="delAccountBtn">
-              Delete Account
-          </v-btn>
-         -->
 </template>
 
 <script>
@@ -195,18 +200,41 @@ export default {
   /* justfico */
 }
 .userInfoContent{
-  margin-top: 10px;
-  flex-basis: 70%;
-}
-.userInfoTitle{
-  margin-top: 10px;
-  flex-basis: 30%;
-}
-.EditBtn{
-  position: absolute;
-  right: 300px;
+  width: 250px;
+  height: 40px;
+  border: 1px solid black;
+  /* margin-top: 10px; */
+  /* flex-basis: 70%; */
 }
 
+.userInfoContent p{
+  margin-left: 5px;
+  padding-top: 8px;
+}
+
+.userInfoTitle{
+  margin-top: 10px;
+  flex-basis: 20%;
+}
+
+.EditBtn span,
+.delBtn span,
+.submitBtn span{
+  color: white;
+}
+
+.EditBtn{
+  position: absolute;
+  margin: 70px 10px 0 100px;
+}
+
+.delBtn, .submitBtn{
+  margin: 70px 0 0 230px;
+}
+
+.submitBtn{
+
+}
 
 .inputHide{
   visibility: hidden;
@@ -232,6 +260,7 @@ export default {
 }
 
 .inputTitle p{
+  line-height: 50px;
   width: 100px;
 }
 .inputBox{
