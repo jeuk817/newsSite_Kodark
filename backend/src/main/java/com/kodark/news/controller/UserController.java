@@ -1,6 +1,7 @@
 package com.kodark.news.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -193,5 +194,54 @@ public class UserController {
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
+	/**
+	 * 회원정보
+	 * 작성 날짜 : 2021-01-10
+	 * 작성자 : 이푸름
+	 */
+	
+	@GetMapping(path = "/my-page/detail")
+	public ResponseEntity<Map<String, Object>> myPageDetail(HttpServletResponse response, HttpServletRequest request) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> link1;
+		
+//		request.getAttribute("id");
+		int id = 35;
+		params.put("_id", id);
+
+		params.put("_switch", "mypage_detail");
+		usersProcedureService.execuUsersProcedure(params);
+
+		String NickName= (String) params.get("_nickName");
+		String name= (String) params.get("_name");
+		String local= (String) params.get("_local");
+		Date birth= (Date) params.get("_birth");
+		String gender= (String) params.get("_gender");
+		
+		System.out.println(NickName);
+		params.clear();
+		link1 = new HashMap<String, Object>();
+		link1.put("rel", "editUserDetail");
+		link1.put("href", "/users/detail");
+		link1.put("method ", "put");
+		
+		params.put("nackName", NickName);
+		params.put("name", name);
+		params.put("local", local);
+		params.put("birth", birth);
+		params.put("gender", gender);
+		params.put("_link", link1);
+		
+
+		response.setHeader("Links",
+						"</users/my-page>; 						rel=\"myPage\","
+						+ "</users/my-page/detail>;				rel=\"self\","
+						+ "</users/my-page/subscribed-list>;	rel=\"subscribedList\","
+						+ "</users/detail>;  					rel=\"editUserDetail\","
+						);
+
+		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
+	}
+	
 
 }

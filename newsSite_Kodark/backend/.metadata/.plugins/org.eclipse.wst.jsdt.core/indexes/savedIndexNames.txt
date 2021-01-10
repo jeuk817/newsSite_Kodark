@@ -3,4 +3,5 @@ INDEX VERSION 1.4+C:\Users\vnfma\ÄÚµù\finalPrj\newsSite_Kodark\backend\.metadata
 2744910865.index
 1415789832.index
 2139672253.index
+343093389.index
 19735134.index

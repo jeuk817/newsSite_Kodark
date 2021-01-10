@@ -8,9 +8,10 @@
       <!-- <AdminSideBar /> -->
       <!-- <ProfileEditBody /> -->
       <!-- <MyPageBody /> -->
-      <ArticleWriteBody />
+      <!-- <ArticleWriteBody /> -->
       <!-- <SubscribeListBody /> -->
       <!-- <Content /> -->
+      <AdminWaitArticleList />
     </div>
     <Footer />
   </div>
@@ -24,16 +25,18 @@ import MyPageBody from '../components/bodies/MyPageBody'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import SubscribeListBody from '../components/bodies/SubscribeListBody'
 import ArticleWriteBody from '../components/bodies/ArticleWriteBody'
+import AdminWaitArticleList from '../components/bodies/AdminWaitArticleList'
 import Footer from '../components/footer/Footer'
 export default {
   components: {
     MyPageHeader,
     IntroduceSideBar,
     ArticleWriteBody,
-    // AdminSideBar,
-    // MyPageBody,
-    // ProfileEditBody,
-    // SubscribeListBody,
+    AdminSideBar,
+    MyPageBody,
+    ProfileEditBody,
+    SubscribeListBody,
+    AdminWaitArticleList,
     Footer
   }
 }
