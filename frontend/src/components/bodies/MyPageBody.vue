@@ -37,9 +37,9 @@
                             
                         ></v-text-field>
                         <v-btn class="text-capitalize white--text sendBtn" height="45px" depressed color="black"
-                        @click="save('email')"
+                        @click="getVerifCode" :loading="gettingVerifCode"
                         >
-                        <!-- @click="getVerifCode" :loading="gettingVerifCode" -->
+                        <!-- @click="save('email')" -->
                         Send
                         </v-btn>
                     </div>
@@ -150,7 +150,7 @@
                     </v-card-text>
                     <v-text-field
                     ref="verifPassword"
-                    label="Password"
+                    label="Enter your password"
                     :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="show ? 'text' : 'password'"
                     @click:append="show = !show"
@@ -158,10 +158,13 @@
                     color="black"
                     height="45px"
                     dense=true
-                    class="test"
+                    class="verifPassword"
                     v-model="verifPassword"
                     required
                     ></v-text-field>
+                    <v-alert type="warning" dense dismissible v-model="verifPwdError">
+                        {{ verifPwdErrorMsg }}
+                    </v-alert>
                 </div>
                 <v-card-actions>
                 <v-spacer></v-spacer>
@@ -209,6 +212,8 @@ export default {
         verifPassword: '',
         show: false,
         processSubmit: false,
+        verifPwdError: false,
+        verifPwdErrorMsg: '',
 
         didpwdChange: true,
         didConfirmPassword: true,
@@ -262,13 +267,13 @@ export default {
         save(target) {
             if(target === 'email') {
                 if(!this.sendedEmail) {
-                this.emailErrorMsg = 'You need to get email verification code'
-                return this.emailError = true
-            }
-            if(!this.didAuth) {
-                this.authFailMsg = 'Verification code needs to be verified.'
-                return this.didAuthFail = true
-            }
+                    this.emailErrorMsg = 'You need to get email verification code'
+                    return this.emailError = true
+                }
+                if(!this.didAuth) {
+                    this.authFailMsg = 'Verification code needs to be verified.'
+                    return this.didAuthFail = true
+                }
             }
             this.target = target
             this.isActivatedSave = true
@@ -276,16 +281,24 @@ export default {
         // 이메일 바꾸는 메소드
         async changeEmail() {
             this.processSubmit = true
-            const { status, links } = await this.$store.dispatch('users/changeEmail', { email: this.sendedEmail, pwd: this.password })
+            console.log(this.sendedEmail)
+            console.log(this.verifPassword)
+            const { status } = await this.$store.dispatch('users/changeEmail', { email: this.sendedEmail, verifPwd: this.verifPassword })
 
+            if(status === 401) {
+                this.verifPwdErrorMsg = 'The password you entered is incorrect'
+                this.verifPwdError = true
+            }
             if(status === 409) {
                 this.emailErrorMsg = 'Those email is already taken'
                 this.emailError = true
+                this.isActivatedSave = false
+                this.verifPassword = ''
             }
-            if(status === 201) {
+            if(status === 204) {
+                this.$store.dispatch('users/getUserData')
                 this.wasChanged = true
                 this.emailFormCancle()
-                this.isActivatedSave = false
             }
             this.processSubmit = false
         },
@@ -301,17 +314,19 @@ export default {
             const emailForm = document.querySelector('.editEmail');
             emailForm.classList.add('show')
             this.didEdit = true
-            didSend = false
-            email = ''
-            emailError = false
-            emailErrorMsg = ''
-            verifCode = ''
-            gettingVerifCode = false
-            didAuth = false
-            didAuthFail = false
-            authFailMsg = ''
-            sendingVerifCode = false
-            sendedEmail = ''
+            this.didSend = false
+            this.email = ''
+            this.emailError = false
+            this.emailErrorMsg = ''
+            this.verifCode = ''
+            this.gettingVerifCode = false
+            this.didAuth = false
+            this.didAuthFail = false
+            this.authFailMsg = ''
+            this.sendingVerifCode = false
+            this.sendedEmail = ''
+            this.isActivatedSave = false
+            this.verifPassword = ''
         },
         pwdFormShow () {
             const changePwdForm = document.querySelector('.changePwd');
@@ -428,7 +443,7 @@ button{
     justify-content: center; */
 }
 
-.test {
+.verifPassword {
     padding: 0px 15px;
 }
 

@@ -39,6 +39,20 @@ const actions = {
     } catch(err) {
       return err.response.status
     }
+  },
+
+  async changeEmail({}, { email, verifPwd }) {
+    try {
+      const res = await axios.patch('/users/email', { email, verifPwd }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
   }
 }
 

@@ -149,6 +149,36 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 
 	}
+	
+	@PatchMapping(path = "/email")
+	public ResponseEntity<String> pwdUpdate(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+		int id = (int)request.getAttribute("id");
+		String verifPwd = (String) body.get("verifPwd");
+		String email = (String) body.get("email");
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "user_info");
+		params.put("_id", id);
+		usersProcedureService.execuUsersProcedure(params);
+		String encodedPwd = (String) params.get("_pwd");
+		
+		if(!passwordEncoder.matches(verifPwd, encodedPwd))
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+		
+		params.put("_switch", "update_email");
+		params.put("_id", id);
+		params.put("_email", email);
+		usersProcedureService.execuUsersProcedure(params);
+		String resultSet = (String)params.get("result_set");
+		
+		if(resultSet.equals("success")) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+		} else if(resultSet.equals("conflict")) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT); // 409
+		} else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
+		}
+	}
+	
 
 	// 비밀번호 수정
 	@PatchMapping(path = "/pwd")
