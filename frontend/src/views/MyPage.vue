@@ -33,9 +33,9 @@ export default {
   computed: {
     sideMenu() {
       const sideMenu = []
-      sideMenu.push({ type: 'sub', text: 'Account', link: '/ko/users/my-page' })
-      sideMenu.push({ type: 'sub', text: 'Profile', link: '/ko/users/my-page/profile' })
-      sideMenu.push({ type: 'sub', text: 'Subscription', link: '/ko/users/my-page/subscription' })
+      sideMenu.push({ type: 'sub', text: 'Account', link: '/en/users/my-page' })
+      sideMenu.push({ type: 'sub', text: 'Profile', link: '/en/users/my-page/profile' })
+      sideMenu.push({ type: 'sub', text: 'Subscription', link: '/en/users/my-page/subscription' })
       return sideMenu
     }
   }
