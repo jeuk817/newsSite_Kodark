@@ -54,15 +54,24 @@ public class UserController {
 		usersProcedureService.execuUsersProcedure(params);
 		String resultSet = (String) params.get("result_set");
 		if (resultSet.equals("success")) {
+			String auth = (String)params.get("_auth");
 			Map<String, Object> map = new HashMap<>();
 			map.put("email", params.get("_email"));
-			map.put("auth", params.get("_auth"));
-
-			response.setHeader("Links",
-					"</users/my-page>; rel=\"myPage\""
-							+ ", </users/my-page/detail>; rel=\"userDetail\""
-							+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
-							+ ", </users/sign-out>; rel=\"signOut\"");
+			map.put("auth", auth);
+			
+			if(auth.equals("user")) {
+				response.setHeader("Links",
+						"</users/my-page>; rel=\"myPage\""
+								+ ", </users/my-page/detail>; rel=\"userDetail\""
+								+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
+								+ ", </users/sign-out>; rel=\"signOut\"");
+			} else if(auth.equals("admin")) {
+				response.setHeader("Links",
+						"</admin/admin-page>; rel=\"adminPage\""
+								+ ", </admin/admin-page/users>; rel=\"userManage\""
+								+ ", </admin/admin-page/reporters>; rel=\"reporterManage\""
+								+ ", </users/sign-out>; rel=\"signOut\"");
+			}
 			return new ResponseEntity<>(map, HttpStatus.OK);// 200
 		} else if (resultSet.equals("not_found")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
