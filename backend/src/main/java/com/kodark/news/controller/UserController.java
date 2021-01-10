@@ -151,7 +151,7 @@ public class UserController {
 	}
 	
 	@PatchMapping(path = "/email")
-	public ResponseEntity<String> pwdUpdate(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+	public ResponseEntity<String> emailUpdate(@RequestBody Map<String, Object> body, HttpServletRequest request) {
 		int id = (int)request.getAttribute("id");
 		String verifPwd = (String) body.get("verifPwd");
 		String email = (String) body.get("email");
@@ -161,7 +161,7 @@ public class UserController {
 		usersProcedureService.execuUsersProcedure(params);
 		String encodedPwd = (String) params.get("_pwd");
 		
-		if(!passwordEncoder.matches(verifPwd, encodedPwd))
+		if(encodedPwd != null && !passwordEncoder.matches(verifPwd, encodedPwd))
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 		
 		params.put("_switch", "update_email");
@@ -182,15 +182,24 @@ public class UserController {
 
 	// 비밀번호 수정
 	@PatchMapping(path = "/pwd")
-	public ResponseEntity<String> pwdUpdate(@RequestBody Map<String, Object> body) {
+	public ResponseEntity<String> pwdUpdate(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+		int id = (int)request.getAttribute("id");
 		String pwd = (String) body.get("pwd");
-		String email = (String) body.get("email");
-		int id = Integer.valueOf((String) body.get("id"));
+		String verifPwd = (String) body.get("verifPwd");
+		
 		Map<String, Object> params = new HashMap<>();
-		params.put("_switch", "update_password");
-		params.put("_pwd", pwd);
+		params.put("_switch", "user_info");
 		params.put("_id", id);
-		params.put("_email", email);
+		usersProcedureService.execuUsersProcedure(params);
+		String encodedPwd = (String) params.get("_pwd");
+		
+		if(encodedPwd != null && !passwordEncoder.matches(verifPwd, encodedPwd))
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+		
+		pwd = passwordEncoder.encode(pwd);
+		params.put("_switch", "update_password");
+		params.put("_id", id);
+		params.put("_pwd", pwd);
 		usersProcedureService.execuUsersProcedure(params);
 
 		if (params.get("result_set").equals("204")) {

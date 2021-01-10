@@ -88,7 +88,8 @@ declare tmp_pwd varchar(300);
 			update users set email = _email where id = _id;
             set result_set = 'success';
 		end if;
-        
+	
+    /***** 비밀번호 업데이트 *****/
 	elseif _switch = 'update_password' then 
 		select count(*) into idCount from users where  id = _id;   
 

@@ -53,6 +53,20 @@ const actions = {
     } catch(err) {
       return { status: err.response.status }
     }
+  },
+
+  async changePwd({}, { pwd, verifPwd }) {
+    try {
+      const res = await axios.patch('/users/pwd', { pwd, verifPwd }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
   }
 }
 

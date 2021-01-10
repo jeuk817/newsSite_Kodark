@@ -39,7 +39,6 @@
                         <v-btn class="text-capitalize white--text sendBtn" height="45px" depressed color="black"
                         @click="getVerifCode" :loading="gettingVerifCode"
                         >
-                        <!-- @click="save('email')" -->
                         Send
                         </v-btn>
                     </div>
@@ -71,12 +70,6 @@
                     <v-alert type="warning" dense dismissible v-model="didAuthFail">
                         {{ authFailMsg }}
                     </v-alert>
-                    <!-- <div class="emailInput__title">Current Password</div>
-                    <v-text-field
-                        label="Current Password"
-                        outlined
-                        class="emailInput__pwd"
-                    ></v-text-field> -->
                 </div>
                 <div class="editProfileBtns">
                     <v-btn depressed class="editBtn text-capitalize white--text" color="indigo"
@@ -95,17 +88,14 @@
         <div class="changePwd show">
             <div class="editEmail__container">
                 <div class="changePwd__container">
-                    <div class="emailInput__title">Current Password</div>
-                    <v-text-field
-                        label="Current Password"
-                        outlined
-                        class="emailInput"
-                    ></v-text-field>
                     <div class="emailInput__title">New Password</div>
                     <v-text-field
+                        ref="newPassword"
                         label="New Password"
+                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="show1 ? 'text' : 'password'"
+                        @click:append="show1 = !show1"
                         outlined
-                        type="password"
                         class="emailInput"
                         v-model="newPassword"
                         :rules="passwordRules"
@@ -113,8 +103,11 @@
                     ></v-text-field>
                     <div class="emailInput__title">Confirm Password</div>
                     <v-text-field
+                        ref="newConfirmPassword"
                         label="Confirm Password"
-                        type="password"
+                        :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="show2 ? 'text' : 'password'"
+                        @click:append="show2 = !show2"
                         outlined
                         class="emailInput"
                         v-model="confirmPassword"
@@ -141,7 +134,6 @@
         v-model="isActivatedSave"
         max-width="450"
         >
-        <!-- @click:outside="moveRoute" -->
             <v-card :loading="processSubmit">
                 <div class="verifyPwdContainer">
                     <v-card-title class="headline">Enter your password</v-card-title>
@@ -190,14 +182,12 @@ export default {
         didSend: false,
         email: '',
         emailRules: [
-            // v => !!v || 'Email Address is required',
             v => /.+@.+/.test(v) || 'Email Address must be valid'
         ],
         emailError: false,
         emailErrorMsg: '',
         verifCode: '',
         verifCodeRules: [
-            // v => !!v || 'Verification code is required',
             v => v.length === 6 || 'Verification code must be 6-digit'
         ],
         gettingVerifCode: false,
@@ -215,8 +205,9 @@ export default {
         verifPwdError: false,
         verifPwdErrorMsg: '',
 
+        show1: false,
+        show2: false,
         didpwdChange: true,
-        didConfirmPassword: true,
         newPassword: '',
         confirmPassword: '',
         passwordRules: [
@@ -274,6 +265,9 @@ export default {
                     this.authFailMsg = 'Verification code needs to be verified.'
                     return this.didAuthFail = true
                 }
+            } else {
+                if(!this.$refs.newPassword.validate(true)
+                || !this.$refs.newConfirmPassword.validate(true)) return
             }
             this.target = target
             this.isActivatedSave = true
@@ -281,8 +275,6 @@ export default {
         // 이메일 바꾸는 메소드
         async changeEmail() {
             this.processSubmit = true
-            console.log(this.sendedEmail)
-            console.log(this.verifPassword)
             const { status } = await this.$store.dispatch('users/changeEmail', { email: this.sendedEmail, verifPwd: this.verifPassword })
 
             if(status === 401) {
@@ -297,13 +289,24 @@ export default {
             }
             if(status === 204) {
                 this.$store.dispatch('users/getUserData')
-                this.wasChanged = true
                 this.emailFormCancle()
+                this.pwdFormCancle()
             }
             this.processSubmit = false
         },
-        changePwd() {
+        async changePwd() {
             console.log('changePwd')
+            this.processSubmit = true
+            const { status } = await this.$store.dispatch('users/changePwd', { pwd: this.newPassword, verifPwd: this.verifPassword })
+            if(status === 401) {
+                this.verifPwdErrorMsg = 'The password you entered is incorrect'
+                this.verifPwdError = true
+            }
+            if(status === 204) {
+                this.emailFormCancle()
+                this.pwdFormCancle()
+            }
+            this.processSubmit = false
         },
         emailFormShow () {
             const emailForm = document.querySelector('.editEmail');
@@ -337,8 +340,15 @@ export default {
             const changePwdForm = document.querySelector('.changePwd');
             changePwdForm.classList.add('show')
             this.didpwdChange = true
+            this.show1 = false
+            this.show2 = false
+            this.didpwdChange = true
+            this.didConfirmPassword = false
+            this.newPassword = ''
+            this.confirmPassword = ''
+            this.isActivatedSave = false
         },
-     // password와 confirmPassword가 일치하는지 확인하는 메소드
+        // password와 confirmPassword가 일치하는지 확인하는 메소드
         confirmRule () {
             this.errorMessages = this.newPassword === this.confirmPassword ? '' : "Those passwords didn't match"
             return this.newPassword === this.confirmPassword
@@ -359,7 +369,10 @@ export default {
     computed: {
         ...mapGetters({
             account: 'getAccount'
-        })
+        }),
+        didConfirmPassword() {
+            return this.newPassword !== this.confirmPassword
+        }
     },
     created () {
         this.$store.dispatch('users/getUserData')
