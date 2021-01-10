@@ -25,9 +25,15 @@ public class AdminProcedureServiceImpl implements AdminProcedureService {
 		return adminProcedureDao.getWaitArticles(_status);
 	}
 
-	// ���ڸ��
+	//
 	@Override
 	public List<Map<String, Object>> getReporterList() {
 		return adminProcedureDao.getReporterList();
+	}
+
+	@Override
+	public List<Map<String, Object>> getArticleList(Map<String, Object> params) {
+		return adminProcedureDao.getArticleList(params);
+		
 	}
 }
