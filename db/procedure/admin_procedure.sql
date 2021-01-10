@@ -68,16 +68,18 @@ declare authCheck char(8);
         join article as a on a.id = ar.article_id
         join users as u on u.id = ar.user_id
         where done_flag = 'F';
+    -- 49.문의글 목록    
 	elseif _switch = 'question_list' then
-		select q.id,q.user_id,q.title,q.content
+	 	select q.id,q.user_id,q.title,q.content
         ,(select u.id from users u where u.id = q.user_id)userId
         ,(select u.email from users u where u.id = q.user_id)userEmail
+        ,aw.question_id , aw.content as answer
         from question q 
         join users u on u.id = q.user_id
+        left outer join answer aw on aw.question_id = q.id 
         order by q.id asc
         limit 10 offset _id
         ;
-		
 		
 	end if;
 END

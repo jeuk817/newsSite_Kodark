@@ -235,7 +235,7 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500		
 	}
 	/**
-	 * title : 신고기사목록
+	 * title : 53.신고기사목록
 	 * desc : 맵9개사용...
 	 * author : 최윤수
 	 * date : 2021-01-08
@@ -316,33 +316,53 @@ public class AdminController {
 	 * title : 49.문의글목록
 	 * desc : 문의글 리스트
 	 * author : 최윤수
-	 * date : 2021-01-08
+	 * date : 2021-01-10
 	 * @param : questionStartId, status
 	 * @return : List<Map<String, Object(Map)>>
 	 */
-	@GetMapping(path = "/question-list")
+	@GetMapping(path = "/question-list") //-넣으면 nullpoint error발생 -대신 /넣으면 잘 실행됨
 	public ResponseEntity<List<Map<String,Object>>> questionList(
 			@RequestParam(value = "status", required = false,defaultValue = "wait" ) String status, 
-			@RequestParam(value = "questionStartId", required = false, defaultValue = "2")int sId){
+			@RequestParam(value = "questionStartId", required = false, defaultValue = "2")int sId,
+			HttpServletResponse response
+			){
 		List<Map<String, Object>> list = new ArrayList<>();
 		List<Map<String, Object>> temp = new ArrayList<>();
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> maps = new HashMap<>();
-		System.out.println(status+":"+sId);
+		Map<String, Object> userInfo = new HashMap<>();
+		 System.out.println(status+":"+sId);
 		int id = sId;	
 		params.put("_switch","question_list");
 		params.put("_id", id-1);		
+		try {
+			
 		
-		System.out.println("param:"+params);
-		list = adminProcedureService.getArticleList(params);
-		System.out.println("list:"+list);
+		list = adminProcedureService.getArticleList(params);		
 		for(int i=0;i<list.size();i++) {
+			System.out.println("list:"+list.get(i));
 			maps = new HashMap<>();
-			list = new ArrayList<>();
+			temp = new ArrayList<>();			
+			userInfo = new HashMap<>();
 			maps.put("id", list.get(i).get("id"));
 			maps.put("title",list.get(i).get("title"));
 			maps.put("content",list.get(i).get("content"));
-			temp.add(maps);
+			maps.put("answer",list.get(i).get("answer"));
+			int userId = (int)list.get(i).get("userId");
+			String userEmail = (String)list.get(i).get("userEmail");
+			userInfo.put("id", userId);
+			userInfo.put("email", userEmail);
+			maps.put("user", userInfo);
+			temp.add(maps);	
+			list.set(i, maps);
+			
+		}
+		
+		response.setHeader("Links", "</admin/question-list?questionStartId="+sId+"&status=\"all\">; rel=\"allQuestionList\","
+								  + "</admin/question-list?questionStartId="+sId+"&status=\"waiting\">; rel=\"waitingQuestionList\","
+								  + "</admin/question-list?questionStartId="+sId+"&status=\"done\">; rel=\"doneQuestionList\",");
+		} catch (Exception e) {
+			return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
 		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
 		
