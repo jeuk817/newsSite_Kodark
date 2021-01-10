@@ -313,6 +313,41 @@ public class AdminController {
 	}
 	
 	/**
+	 * title : 49.문의글목록
+	 * desc : 문의글 리스트
+	 * author : 최윤수
+	 * date : 2021-01-08
+	 * @param : questionStartId, status
+	 * @return : List<Map<String, Object(Map)>>
+	 */
+	@GetMapping(path = "/question-list")
+	public ResponseEntity<List<Map<String,Object>>> questionList(
+			@RequestParam(value = "status", required = false,defaultValue = "wait" ) String status, 
+			@RequestParam(value = "questionStartId", required = false, defaultValue = "2")int sId){
+		List<Map<String, Object>> list = new ArrayList<>();
+		List<Map<String, Object>> temp = new ArrayList<>();
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> maps = new HashMap<>();
+		System.out.println(status+":"+sId);
+		int id = sId;	
+		params.put("_switch","question_list");
+		params.put("_id", id-1);		
+		
+		System.out.println("param:"+params);
+		list = adminProcedureService.getArticleList(params);
+		System.out.println("list:"+list);
+		for(int i=0;i<list.size();i++) {
+			maps = new HashMap<>();
+			list = new ArrayList<>();
+			maps.put("id", list.get(i).get("id"));
+			maps.put("title",list.get(i).get("title"));
+			maps.put("content",list.get(i).get("content"));
+			temp.add(maps);
+		}
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
+		
+	}
+	/**
 	 * title : 56.기사신고확인(일단보류 사유 : 이해못함)
 	 * desc : 
 	 * author : 최윤수
@@ -322,10 +357,12 @@ public class AdminController {
 	 */
 	@PatchMapping(path = "/report/article/done")
 	public ResponseEntity<Map<String, Object>> articleReportCheck(@RequestBody Map<String, Object> body){
-		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> params = new HashMap<>();		
 		int articleReportId = Integer.valueOf((String)body.get("articleReportId"));
 		params.put("_articleReportId", articleReportId);
 		params.put("_switch", "article_report");
+		
+		
 		return new ResponseEntity<Map<String,Object>>(HttpStatus.RESET_CONTENT);//205
 	}
 }
