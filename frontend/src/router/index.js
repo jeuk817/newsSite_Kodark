@@ -32,11 +32,15 @@ const routes = [
     component: MyPage
   },
   {
+    path: '/en/users/my-page/:manage',
+    component: MyPage
+  },
+  {
     path: '/en/admin/admin-page',
     component: AdminPage
   },
   {
-    path: '/en/admin/admin-page/:manage',
+    path: '/en/admin/admin-page/*',
     component: AdminPage
   }
 ]

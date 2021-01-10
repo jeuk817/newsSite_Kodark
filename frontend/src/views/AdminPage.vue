@@ -3,7 +3,9 @@
     <MyPageHeader />
     <div class="adminPage">
       <IntroduceSideBar :sideMenu="sideMenu" />
-      
+      <template v-if="currentRoute === 'reporters/new'">
+        <CreateReporterForm />
+      </template>
     </div>
   </div>
 </template>
@@ -11,13 +13,16 @@
 <script>
 import MyPageHeader from '../components/headers/MyPageHeader'
 import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
+import CreateReporterForm from '../components/bodies/admins/CreateReporterForm'
 
 export default {
   components: {
     MyPageHeader,
-    IntroduceSideBar
+    IntroduceSideBar,
+    CreateReporterForm
   },
   computed: {
+    // side menu
     sideMenu() {
       const sideMenu = []
       sideMenu.push({ type: 'title', text: 'Admin' })
@@ -34,16 +39,40 @@ export default {
       sideMenu.push({ type: 'title', text: 'Question' })
       sideMenu.push({ type: 'sub', text: 'Question list', link: '/en/admin/admin-page/question' })
       return sideMenu
+    },
+    // 현재 라우트 반환
+    currentRoute () {
+      const routeArr = this.$route.fullPath.split('/')
+      const lastUrl = routeArr[routeArr.length - 1];
+      return lastUrl === 'new' ? `${routeArr[routeArr.length - 2]}/${lastUrl}` : lastUrl
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
 .adminPage {
   display: grid;
   grid-template-columns: 1fr 3fr;
   padding-top: 120px;
   padding-bottom: 120px;
+}
+.admin_title{
+    font-weight: 300;
+    font-size: 50px;
+    line-height: 56px;
+    margin-bottom: 24px;
+}
+.admin_subTitle{
+    border-bottom: 1px solid #bdbdbd;
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 9px;
+}
+.admin_content {
+  border: 1px solid red;
+  max-width: 600px;
+  margin-top: 35px;
+  margin-bottom: 60px;
 }
 </style>

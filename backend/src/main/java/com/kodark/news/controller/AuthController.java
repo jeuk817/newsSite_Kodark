@@ -116,7 +116,7 @@ public class AuthController {
 		
 		if (params.get("result_set").equals("success")) {
 			response.setHeader("Links", "</users/sign-up>; rel='self',"
-								+ "</ko/auth/signIn>; rel='next'");
+								+ "</en/auth/signIn>; rel='next'");
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 		} else if (params.get("result_set").equals("fail")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);// 401
@@ -206,7 +206,7 @@ public class AuthController {
 			@RequestParam(value = "error", required = false) String error, HttpServletResponse response)
 			throws IOException {
 		if (error != null && error.equals("access_denied")) {
-			response.sendRedirect("http://localhost:8081/ko/auth/signIn");
+			response.sendRedirect("http://localhost:8081/en/auth/signIn");
 			return;
 		}
 
@@ -228,7 +228,7 @@ public class AuthController {
 		Cookie jwt = util.makeJwtCookie("jwt", parameter);
 
 		response.addCookie(jwt);
-		response.sendRedirect("http://localhost:8081/ko/home");
+		response.sendRedirect("http://localhost:8081/en/home");
 	}
 
 	/*
@@ -250,7 +250,7 @@ public class AuthController {
 			@RequestParam(value = "error", required = false) String error, HttpServletResponse response)
 			throws IOException {
 		if (error != null && error.equals("access_denied")) {
-			response.sendRedirect("http://localhost:8081/ko/auth/signIn");
+			response.sendRedirect("http://localhost:8081/en/auth/signIn");
 			return;
 		}
 
@@ -273,6 +273,6 @@ public class AuthController {
 		Cookie jwt = util.makeJwtCookie("jwt", parameter);
 
 		response.addCookie(jwt);
-		response.sendRedirect("http://localhost:8081/ko/home");
+		response.sendRedirect("http://localhost:8081/en/home");
 	}
 }
