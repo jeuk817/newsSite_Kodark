@@ -4,10 +4,10 @@
       <div class="userDetailInfo">
         <div class="userDetailContainer">
             <p class="userInfoTitle">
-              Nick Name
+              nickName
             </p>
             <div class="userInfoContent">
-              <p>이푸름</p> 
+              <p>{{ nickName }}</p> 
             </div>
         </div>
         <div class="userDetailContainer">
@@ -15,7 +15,7 @@
               <p>Name</p>
             </div>
             <div class="userInfoContent">
-              <p>이푸름</p> 
+              <p>{{name}}</p> 
             </div>
         </div>
         <div class="userDetailContainer">
@@ -23,7 +23,7 @@
               <p>Local</p>
             </div>
             <div class="userInfoContent">
-              <p>Seoul</p> 
+              <p>{{local}}</p> 
             </div>
         </div>
         <div class="userDetailContainer">
@@ -31,7 +31,7 @@
               <p>Birth</p>
             </div>
             <div class="userInfoContent">
-              <p>1991-02-18</p> 
+              <p>{{birth}}</p> 
             </div>
         </div>
         <div class="userDetailContainer">
@@ -39,7 +39,7 @@
               <p>Gender</p>
             </div>
             <div class="userInfoContent">
-              <p>Male</p> 
+              <p>{{gender}}</p> 
             </div>
         </div>
         <div class="EditBtn">
@@ -147,15 +147,26 @@
                   value
               ></v-checkbox>
           </div>
-        <div class="submitBtn">
+        <div class="inputFromBtn">
+          <div class="CancleBtn">
             <v-btn
               depressed
               color="indigo"
-              @click="userDetailSubmit"
+              @click="InputHide"
             >
-              <span>SubMit</span>
+              <span>Cancle</span>
             </v-btn>
           </div>
+          <div class="submitBtn">
+              <v-btn
+                depressed
+                color="indigo"
+                @click="userDetailSubmit"
+              >
+                <span>SubMit</span>
+              </v-btn>
+            </div>
+        </div>
       </div>
   </div>
 
@@ -164,7 +175,11 @@
 <script>
 export default {
     data: () => ({
-      nickName: "test",
+      nickName: "",
+      name: "",
+      local: "",
+      birth: "",
+      gender: "",
       date: null,
       menu: false,
     }),
@@ -183,9 +198,27 @@ export default {
         userDetailInfo.style.display ="none";
         inputHide.style.visibility="visible";
         
+      },
+      InputHide () {
+        const userDetailInfo = document.querySelector('.userDetailInfo');
+        const inputHide = document.querySelector('.inputHide');
+        userDetailInfo.style.display ="block";
+        inputHide.style.visibility="hidden";
       }
     },
-  
+    async created () {
+    const {status, userDetail, links} = await this.$store.dispatch('users/getUserDetail');
+    console.log('created');    
+    console.log(status);
+    console.log(userDetail);
+    
+    this.nickName = userDetail.nickName;
+    this.name = userDetail.name;
+    this.local = userDetail.local;
+    this.birth = userDetail.birth;
+    this.gender = userDetail.gender;
+    
+    }
 }
 </script>
 
@@ -203,6 +236,8 @@ export default {
   width: 250px;
   height: 40px;
   border: 1px solid black;
+  border-radius: 5px;
+  background-color: #f7f7f5;
   /* margin-top: 10px; */
   /* flex-basis: 70%; */
 }
@@ -219,7 +254,8 @@ export default {
 
 .EditBtn span,
 .delBtn span,
-.submitBtn span{
+.submitBtn span,
+.CancleBtn span{
   color: white;
 }
 
@@ -228,12 +264,16 @@ export default {
   margin: 70px 10px 0 100px;
 }
 
-.delBtn, .submitBtn{
+.delBtn{
   margin: 70px 0 0 230px;
 }
 
-.submitBtn{
-
+.inputFromBtn{
+  margin: 100px 0 0 50px;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  justify-content: start;
+  align-content: start;
 }
 
 .inputHide{

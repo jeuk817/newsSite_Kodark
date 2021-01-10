@@ -6,12 +6,12 @@
     <div class="myPageContent">
       <IntroduceSideBar />
       <!-- <AdminSideBar /> -->
-      <!-- <ProfileEditBody /> -->
+      <ProfileEditBody />
       <!-- <MyPageBody /> -->
       <!-- <ArticleWriteBody /> -->
       <!-- <SubscribeListBody /> -->
       <!-- <Content /> -->
-      <AdminWaitArticleList />
+      <!-- <AdminWaitArticleList /> -->
     </div>
     <Footer />
   </div>

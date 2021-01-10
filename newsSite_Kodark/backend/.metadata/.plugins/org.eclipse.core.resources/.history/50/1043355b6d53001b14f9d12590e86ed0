@@ -217,14 +217,15 @@ public class UserController {
 		String NickName= (String) params.get("_nickName");
 		String name= (String) params.get("_name");
 		String local= (String) params.get("_local");
-		
 		Date beforeFormatBirth= (Date) params.get("_birth"); 
 		String pattern = "yyyy-MM-dd";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String birth = simpleDateFormat.format(beforeFormatBirth);
-		
+		System.out.println(birth);
+		System.out.println(birth.getClass().getName());
 		String gender= (String) params.get("_gender");
 		
+		System.out.println(NickName);
 		params.clear();
 		link1 = new HashMap<String, Object>();
 		link1.put("rel", "editUserDetail");

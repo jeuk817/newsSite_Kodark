@@ -39,6 +39,21 @@ const actions = {
     } catch(err) {
       return err.response.status
     }
+  },
+  async getUserDetail() {
+    try {
+      const res = await axios.get('/users/my-page/detail',  {
+        headers: {
+          'Content-Type': 'application/json'
+          }
+        })
+      const data = res.data
+      console.log(data);
+      const links = util.parseLinks(res.headers.links)
+      return {status: res.status, userDetail: data, links};
+    } catch(err) {
+      return {status: err.response.status}
+    }
   }
 }
 

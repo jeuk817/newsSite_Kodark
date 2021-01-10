@@ -1,7 +1,5 @@
 package com.kodark.news.controller;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -217,21 +215,17 @@ public class UserController {
 		String NickName= (String) params.get("_nickName");
 		String name= (String) params.get("_name");
 		String local= (String) params.get("_local");
-		
-		Date beforeFormatBirth= (Date) params.get("_birth"); 
-		String pattern = "yyyy-MM-dd";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		String birth = simpleDateFormat.format(beforeFormatBirth);
-		
+		Date birth= (Date) params.get("_birth");
 		String gender= (String) params.get("_gender");
 		
+		System.out.println(NickName);
 		params.clear();
 		link1 = new HashMap<String, Object>();
 		link1.put("rel", "editUserDetail");
 		link1.put("href", "/users/detail");
 		link1.put("method ", "put");
 		
-		params.put("nickName", NickName);
+		params.put("nackName", NickName);
 		params.put("name", name);
 		params.put("local", local);
 		params.put("birth", birth);

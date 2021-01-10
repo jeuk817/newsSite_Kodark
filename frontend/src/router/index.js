@@ -27,7 +27,7 @@ const routes = [
     component: IntroducePage
   },
   {
-    path: '/ko/users/my-page',
+    path: '/ko/users/my-page/detail',
     component: MyPage
   }
 ]
