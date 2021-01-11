@@ -22,10 +22,10 @@ const actions = {
           'Content-Type': 'multipart/form-data'
         }
       })
-      console.log(res)
-      return res.status
+      
+      return { status: res.status}
     } catch(err) {
-      return err.response.status
+      return { status: err.response.status }
     }
   },
 

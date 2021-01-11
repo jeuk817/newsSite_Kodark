@@ -29,9 +29,9 @@
         ></v-text-field>
       </div>
       <div class="information">
-        <div>New Password</div>
+        <div>Password</div>
         <v-text-field
-            ref="Password"
+            ref="password"
             label="Password"
             :append-icon="passwordForm.show ? 'mdi-eye' : 'mdi-eye-off'"
             :type="passwordForm.show ? 'text' : 'password'"
@@ -47,7 +47,7 @@
       <div class="information">
         <div class="emailInput__title">Confirm Password</div>
         <v-text-field
-            ref="newConfirmPassword"
+            ref="confirmPassword"
             label="Confirm Password"
             :append-icon="passwordForm.show2 ? 'mdi-eye' : 'mdi-eye-off'"
             :type="passwordForm.show2 ? 'text' : 'password'"
@@ -145,6 +145,25 @@
         </v-btn>
       </div>
     </div>
+    <v-snackbar
+      v-model="failCreate"
+      bottom="true"
+      color="error"
+      :timeout="failMsgTimeOut"
+    >
+      {{ failMsg }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          class="text-capitalize"
+          dark
+          text
+          v-bind="attrs"
+          @click="failCreate = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -167,7 +186,6 @@ export default {
         v => !!v || 'Password is required',
         v => (v.length >= 8 && /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(v)) || 'Use 8 or more characters with a mix of letters, numbers & symbols'
       ],
-      errorMessages: ''
     },
     userDetailForm: {
       imageFile: undefined,
@@ -180,7 +198,10 @@ export default {
       birth: new Date().toISOString().substr(0, 10),
       gender: 'M'
     },
-    creatingReporter: false
+    creatingReporter: false,
+    failCreate: false,
+    failMsg: '',
+    failMsgTimeOut: 10000
   }),
   methods: {
     confirmRule () {
@@ -188,7 +209,14 @@ export default {
       return this.passwordForm.password === this.passwordForm.confirmPassword
     },
     async createReporter() {
-      console.log('createReporter')
+      if(!this.emailForm.email || !this.userDetailForm.name || !this.userDetailForm.nickName || !this.userDetailForm.local || !this.userDetailForm.birth || !this.userDetailForm.gender) {
+        this.failMsg = 'All information is required'
+        return this.failCreate = true
+      }
+      if(!this.$refs.password.validate(true) || !this.$refs.confirmPassword.validate(true)) {
+        this.failMsg = 'Check your password'
+        return this.failCreate = true
+      }
       this.creatingReporter = true
       const email = this.emailForm.email
         , pwd = this.passwordForm.password
@@ -200,6 +228,16 @@ export default {
         , image = this.userDetailForm.imageFile // object
       const { status } = await this.$store.dispatch('admin/createReporter' ,
       { email, pwd, nickName, name, local, birth, gender, image})
+      if(status === 201) {
+        this.$router.push({ path: '/en/admin/admin-page/reporters' })
+      }
+      else if(status === 409)  {
+        this.failMsg = 'There are duplicate users.'
+        this.failCreate = true
+      }
+      else if(status === 401 || status === 403) {
+        this.$router.push({ path: '/en/auth/signIn' })
+      }
       this.creatingReporter = false
     },
     changeImage(imageFile) {
