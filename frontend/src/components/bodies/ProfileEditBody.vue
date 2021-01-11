@@ -4,9 +4,10 @@
       <div class="userDetailInfo">
         <div class="userDetailContainer">
             <p class="userInfoTitle">
-              nickName
+              NickName
             </p>
             <div class="userInfoContent">
+        
               <p>{{ nickName }}</p> 
             </div>
         </div>
@@ -208,16 +209,16 @@ export default {
     },
     async created () {
     const {status, userDetail, links} = await this.$store.dispatch('users/getUserDetail');
-    console.log('created');    
-    console.log(status);
-    console.log(userDetail);
-    
-    this.nickName = userDetail.nickName;
-    this.name = userDetail.name;
-    this.local = userDetail.local;
-    this.birth = userDetail.birth;
-    this.gender = userDetail.gender;
-    
+    if(status === 200){
+      this.nickName = userDetail.nickName;
+      this.name = userDetail.name;
+      this.local = userDetail.local;
+      this.birth = userDetail.birth;
+      this.gender = userDetail.gender;
+    }
+    if(status===401){
+      alert('Please Sign in your Account')
+    }
     }
 }
 </script>
@@ -235,7 +236,7 @@ export default {
 .userInfoContent{
   width: 250px;
   height: 40px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 5px;
   background-color: #f7f7f5;
   /* margin-top: 10px; */

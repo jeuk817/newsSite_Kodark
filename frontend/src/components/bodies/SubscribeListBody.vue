@@ -43,6 +43,12 @@
                 </template>
             </v-simple-table>
         </div>
+        <div class="text-center paging">
+          <v-pagination
+            v-model="page"
+            :length="6"
+          ></v-pagination>
+        </div>
     </div>
 </template>
 
@@ -61,38 +67,15 @@ export default {
             calories: 237,
           },
           {
-            name: 'Eclair',
-            calories: 262,
+            name: 'Ice cream sandwich',
+            calories: 237,
           },
           {
-            name: 'Cupcake',
-            calories: 305,
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
+            name: 'Ice cream sandwich',
+            calories: 237,
           },
         ],
+        page: 1,
       }
     },
 }
@@ -101,6 +84,10 @@ export default {
 <style scoped>
 .tableContainer{
     margin-top: 50px;
+}
+
+.paging{
+  margin: 60px 175px 0 0;
 }
 
 </style>

@@ -48,7 +48,6 @@ const actions = {
           }
         })
       const data = res.data
-      console.log(data);
       const links = util.parseLinks(res.headers.links)
       return {status: res.status, userDetail: data, links};
     } catch(err) {

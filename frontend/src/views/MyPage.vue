@@ -6,10 +6,10 @@
     <div class="myPageContent">
       <IntroduceSideBar />
       <!-- <AdminSideBar /> -->
-      <ProfileEditBody />
+      <!-- <ProfileEditBody /> -->
       <!-- <MyPageBody /> -->
       <!-- <ArticleWriteBody /> -->
-      <!-- <SubscribeListBody /> -->
+      <SubscribeListBody />
       <!-- <Content /> -->
       <!-- <AdminWaitArticleList /> -->
     </div>
@@ -38,6 +38,16 @@ export default {
     SubscribeListBody,
     AdminWaitArticleList,
     Footer
+  },
+  computed: {
+    
+    // 현재 라우트 반환
+    currentRoute () {
+      const routeArr = this.$route.fullPath.split('/')
+      console.log('efeefef')
+      console.log(routeArr)
+      return routeArr[routeArr.length - 1]
+    }
   }
 }
 </script>
