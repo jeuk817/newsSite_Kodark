@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -208,6 +209,119 @@ public class AdminController {
 		}
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
+	}
+	
+	/**
+	 * 댓글 블라인드 토글
+	 * 작성자 : 이종현 
+	 * 작성일 :2021-01-11
+	 */
+	@PatchMapping(path = "/report/comment")
+	public ResponseEntity<Map<String, Object>> toggleReport(
+			@RequestParam("commentId") int commentId, @RequestParam("delFlag") String delFlag){
+		Map<String, Object> params = null;
+		try {
+			params = new HashMap<String, Object>();
+			params.put("_switch","comment_report_toggle");
+			params.put("_commentId", commentId);
+			params.put("_delFlag", delFlag);
+			adminProcedureService.execuAdminProcedure(params);
+			if(params.get("result_set").equals("404")) {
+				return new ResponseEntity<Map<String,Object>>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String,Object>>(HttpStatus.OK);
+	}
+	
+	/**
+	 * 댓글 신고 확인
+	 * 작성자 : 이종현 
+	 * 작성일 :2021-01-11
+	 */
+	@GetMapping(path = "/report/comment/done")
+	public ResponseEntity<Map<String, Object>> reportCheck(@RequestParam("commentReportId") int commentReportId){
+		Map<String, Object> params = null;
+		try {
+			params = new HashMap<String, Object>();
+			params.put("_switch","comment_report_check");
+			params.put("_commentReportId", commentReportId);
+			adminProcedureService.execuAdminProcedure(params);
+			if(params.get("result_set").equals("404")) {
+				return new ResponseEntity<Map<String,Object>>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String,Object>>(HttpStatus.OK);
+	}
+	
+	/**
+	 * 신고 댓글 목록
+	 * 작성자 : 이종현 
+	 * 작성일 :2021-01-11
+	 */
+	@GetMapping(path = "/report/comment")
+	public ResponseEntity<List<Map<String, Object>>> reportList(
+			@RequestParam("commentStartId") int commentStartId, @RequestParam("doneFlag") String doneFlag){
+		List<Map<String, Object>> list = null;
+		List<Map<String, Object>> listTemp = null;
+		Map<String, Object> params = null;
+		Map<String, Object> map = null;
+		try {
+			list = new ArrayList<Map<String,Object>>();
+			listTemp = new ArrayList<Map<String,Object>>();
+			params = new HashMap<String, Object>();
+			params.put("_switch","comment_report_list");
+			params.put("_commentId", commentStartId);
+			params.put("_doneFlag", doneFlag);
+			list = adminProcedureService.execuAdminProcedureList(params);
+			
+			for(int i=0; i<list.size(); i++) {
+				map = new HashMap<String, Object>();
+				map.put("id", list.get(i).get("id"));
+				map.put("reason", list.get(i).get("reason"));
+				map.put("createdAt", list.get(i).get("createdAt"));
+				map.put("doneFlag", list.get(i).get("doneFlag"));				
+				
+				params = new HashMap<String, Object>();
+				params.put("id", list.get(i).get("userId"));
+				params.put("email", list.get(i).get("email"));
+				map.put("user", params);
+				
+				params = new HashMap<String, Object>();
+				params.put("id", list.get(i).get("commentId"));
+				params.put("content", list.get(i).get("content"));
+				params.put("delFlag", list.get(i).get("delFlag"));
+				
+				map.put("comment", params);
+				listTemp.add(map);	
+			}
+			
+			list = new ArrayList<Map<String,Object>>();
+			map = new HashMap<String, Object>();
+			
+			params = new HashMap<String, Object>();
+			params.put("rel", "blindComment");
+			params.put("href", "admin/report/comment="+commentStartId+"&delFlag=T");
+			params.put("method", "patch");
+			list.add(params);
+			
+			params = new HashMap<String, Object>();
+			params.put("rel", "blindComment");
+			params.put("href", "admin/report/comment="+commentStartId+"&delFlag=F");
+			params.put("method", "patch");
+			list.add(params);
+			
+			map.put("_links", list);
+			listTemp.add(map);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<List<Map<String, Object>>>(listTemp,HttpStatus.OK);
 	}
 
 }
