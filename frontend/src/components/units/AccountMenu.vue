@@ -22,12 +22,12 @@
           <v-list-item-content class="menuList">
             <div class="subtitle-2 black--text">{{ userData.email }}</div>
             <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
-              :to="'/ko' + links.myPage"
+              :to="'/en' + links.myPage"
             >
               My page
             </router-link>
             <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
-              :to="'/ko' + links.subscribedList"
+              :to="'/en' + links.subscribedList"
             >
               Subscription list
             </router-link>

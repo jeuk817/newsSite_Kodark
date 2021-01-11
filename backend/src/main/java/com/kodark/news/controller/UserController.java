@@ -1,6 +1,9 @@
 package com.kodark.news.controller;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -193,5 +196,58 @@ public class UserController {
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
+	/**
+	 * 회원정보
+	 * 작성 날짜 : 2021-01-10
+	 * 작성자 : 이푸름
+	 */
+	
+	@GetMapping(path = "/my-page/detail")
+	public ResponseEntity<Map<String, Object>> myPageDetail(HttpServletResponse response, HttpServletRequest request) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> link1;
+		
+//		request.getAttribute("id");
+		int id = 35;
+		params.put("_id", id);
+
+		params.put("_switch", "mypage_detail");
+		usersProcedureService.execuUsersProcedure(params);
+
+		String NickName= (String) params.get("_nickName");
+		String name= (String) params.get("_name");
+		String local= (String) params.get("_local");
+		
+		Date beforeFormatBirth= (Date) params.get("_birth"); 
+		String pattern = "yyyy-MM-dd";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String birth = simpleDateFormat.format(beforeFormatBirth);
+		
+		String gender= (String) params.get("_gender");
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		link1 = new HashMap<String, Object>();
+		link1.put("rel", "editUserDetail");
+		link1.put("href", "/users/detail");
+		link1.put("method ", "put");
+		
+		result.put("nickName", NickName);
+		result.put("name", name);
+		result.put("local", local);
+		result.put("birth", birth);
+		result.put("gender", gender);
+		result.put("_link", link1);
+		
+
+		response.setHeader("Links",
+						"</users/my-page>; 						rel=\"myPage\","
+						+ "</users/my-page/detail>;				rel=\"self\","
+						+ "</users/my-page/subscribed-list>;	rel=\"subscribedList\","
+						+ "</users/detail>;  					rel=\"editUserDetail\","
+						);
+
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);// 200
+	}
+	
 
 }

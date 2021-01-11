@@ -204,7 +204,7 @@ export default {
 }
 
 .verifyEmailForm .emailInput {
-    width: 320px
+    width: 320px;
 }
 
 .emailInput__pwd{
