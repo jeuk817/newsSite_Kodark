@@ -41,7 +41,7 @@ const actions = {
       return err.response.status
     }
   },
-
+ 
   async getUserDetail() {
     try {
       const res = await axios.get('/users/my-page/detail',  {
@@ -52,6 +52,28 @@ const actions = {
       const data = res.data
       const links = util.parseLinks(res.headers.links)
       return {status: res.status, userDetail: data, links};
+    } catch(err) {
+      return {status: err.response.status}
+    }
+  },
+  async updateDetail({}, {nickName, name, local, birth, gender, image} ) {
+    try {
+      console.log('updateDetail axios')
+      const formData = new FormData();
+      formData.append('nickName', nickName)
+      formData.append('name', name)
+      formData.append('local', local)
+      formData.append('birth', birth)
+      formData.append('gender', gender)
+      formData.append('image', image)
+
+      const res = await axios.put('/users/detail', formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      return {status: res.status};
     } catch(err) {
       return {status: err.response.status}
     }

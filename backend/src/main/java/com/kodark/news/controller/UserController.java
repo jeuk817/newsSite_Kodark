@@ -14,19 +14,25 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.kodark.news.dto.UserDto;
 import com.kodark.news.service.AuthProcedureService;
 import com.kodark.news.service.MailService;
 import com.kodark.news.service.UsersProceduerService;
 import com.kodark.news.utils.PasswordEncoderImpl;
+import com.kodark.news.utils.Util;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -37,15 +43,18 @@ public class UserController {
 	AuthProcedureService authProcedureService;
 	UsersProceduerService usersProcedureService;
 	PasswordEncoderImpl passwordEncoder;
+	Util util;
 
 	@Autowired
 	public UserController(Environment env, MailService mailService, AuthProcedureService authProcedureService,
-			UsersProceduerService usersProcedureService, PasswordEncoderImpl passwordEncoder) {
+			UsersProceduerService usersProcedureService, PasswordEncoderImpl passwordEncoder, Util util) {
+		System.out.println("constructor!!!!");
 		this.env = env;
 		this.mailService = mailService;
 		this.authProcedureService = authProcedureService;
 		this.usersProcedureService = usersProcedureService;
 		this.passwordEncoder = passwordEncoder;
+		this.util = util;
 	}
 
 	@GetMapping
@@ -261,15 +270,15 @@ public class UserController {
 
 		params.put("_switch", "mypage_detail");
 		usersProcedureService.execuUsersProcedure(params);
-
+		
 		String NickName= (String) params.get("_nickName");
 		String name= (String) params.get("_name");
 		String local= (String) params.get("_local");
-		
-		Date beforeFormatBirth= (Date) params.get("_birth"); 
-		String pattern = "yyyy-MM-dd";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		String birth = simpleDateFormat.format(beforeFormatBirth);
+		String birth = (String) params.get("_birth");
+//		Date beforeFormatBirth= (Date) params.get("_birth"); 
+//		String pattern = "yyyy-MM-dd";
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+//		String birth = simpleDateFormat.format(beforeFormatBirth);
 		
 		String gender= (String) params.get("_gender");
 		
@@ -297,5 +306,45 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);// 200
 	}
 	
+	/**
+	 * 회원정보수정 34번
+	 * 작성 날짜 : 2021-01-11
+	 * 작성자 : 이푸름
+	 */
+	
+	@PutMapping(path = "/detail",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity <UserDto> detailUpdate(
+			MultipartHttpServletRequest multiRequest, HttpServletRequest request) {
+		System.out.println("=====================================================");
+		System.out.println("detailUpdate");
+		
+		MultipartFile imageFile = multiRequest.getFile("image");
+		String fileName = util.saveImage(imageFile, request);
+		String name = request.getParameter("name");
+		String nickName = request.getParameter("nickName");
+		String local = request.getParameter("local");
+		String gender = request.getParameter("gender");
+		String birth = request.getParameter("birth");
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_name", name);
+		params.put("_nickName", nickName);
+		params.put("_local", local);
+		params.put("_gender", gender);
+		params.put("_birth", birth);
+		params.put("_image", fileName);
+		
+		int id = (int)request.getAttribute("id");
+		params.put("_id", id);
+		params.put("_switch", "user_update");
+		usersProcedureService.execuUsersProcedure(params);
+		System.out.println(params);
+		if (params.get("result_set").equals("200")) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
+		}else if (params.get("result_set").equals("404")) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
+		} else
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
+	}
 
 }
