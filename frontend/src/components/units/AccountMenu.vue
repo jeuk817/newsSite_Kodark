@@ -20,8 +20,10 @@
       <v-list>
         <v-list-item>
           <v-list-item-content
-          :class="userData.auth === 'user' ? 'userMenuList' : 'adminMenuList'">
+          :class="userData.auth === 'admin' ? 'adminMenuList' : 'userMenuList' ">
             <div class="subtitle-2 black--text">{{ userData.email }}</div>
+
+            <!-- user -->
             <template v-if="userData.auth === 'user'">
               <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
                 :to="'/en' + links.myPage"
@@ -35,19 +37,34 @@
               </router-link>
             </template>
 
+            <!-- reporter -->
+            <template v-if="userData.auth === 'reporter'">
+              <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
+                :to="'/en' + links.reporterInfo"
+              >
+                Reporter page
+              </router-link>
+              <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
+                :to="'/en' + links.reporterArticle"
+              >
+                Article Manage
+              </router-link>
+            </template>
+
+            <!-- admin -->
             <template v-if="userData.auth === 'admin'">
               <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
-                :to="'/en' + links.adminPage"
+                :to="'/en' + links.statistics"
               >
                 Admin page
               </router-link>
               <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
-                :to="'/en' + links.userManage"
+                :to="'/en' + links.userList"
               >
                 User Manage
               </router-link>
               <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
-                :to="'/en' + links.reporterManage"
+                :to="'/en' + links.reporterList"
               >
                 Reporter Manage
               </router-link>

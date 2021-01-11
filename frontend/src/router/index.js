@@ -36,11 +36,7 @@ const routes = [
     component: MyPage
   },
   {
-    path: '/en/admin/admin-page',
-    component: AdminPage
-  },
-  {
-    path: '/en/admin/admin-page/*',
+    path: '/en/admin/*',
     component: AdminPage
   }
 ]
