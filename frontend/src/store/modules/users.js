@@ -34,7 +34,7 @@ const actions = {
       const res = await axios.get('/users')
       const data = res.data
       const links = util.parseLinks(res.headers.links)
-      console.log(links)
+      
       commit('setAccount', { userData: data, links }, { root: true })
       return res.status
     } catch(err) {

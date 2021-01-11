@@ -70,7 +70,7 @@ export default {
     margin-bottom: 9px;
 }
 .admin_content {
-  border: 1px solid red;
+  /* border: 1px solid red; */
   max-width: 600px;
   margin-top: 35px;
   margin-bottom: 60px;
