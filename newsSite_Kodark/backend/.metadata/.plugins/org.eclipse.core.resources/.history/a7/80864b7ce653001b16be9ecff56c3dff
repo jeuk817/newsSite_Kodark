@@ -225,18 +225,18 @@ public class UserController {
 		
 		String gender= (String) params.get("_gender");
 		
-		Map<String, Object> result = new HashMap<String, Object>();
+		params.clear();
 		link1 = new HashMap<String, Object>();
 		link1.put("rel", "editUserDetail");
 		link1.put("href", "/users/detail");
 		link1.put("method ", "put");
 		
-		result.put("nickName", NickName);
-		result.put("name", name);
-		result.put("local", local);
-		result.put("birth", birth);
-		result.put("gender", gender);
-		result.put("_link", link1);
+		params.put("nickName", NickName);
+		params.put("name", name);
+		params.put("local", local);
+		params.put("birth", birth);
+		params.put("gender", gender);
+		params.put("_link", link1);
 		
 
 		response.setHeader("Links",
@@ -246,7 +246,7 @@ public class UserController {
 						+ "</users/detail>;  					rel=\"editUserDetail\","
 						);
 
-		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);// 200
+		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
 	}
 	
 

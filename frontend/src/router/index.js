@@ -11,23 +11,23 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/ko/home'
+    redirect: '/en/home'
   },
   {
-    path: '/ko/home',
+    path: '/en/home',
     name: 'Home',
     component: Home
   },
   {
-    path: '/ko/auth/:sign',
+    path: '/en/auth/:sign',
     component: AuthPage
   },
   {
-    path: '/ko/introduce',
+    path: '/en/introduce',
     component: IntroducePage
   },
   {
-    path: '/ko/users/my-page/detail',
+    path: '/en/users/my-page/detail',
     component: MyPage
   }
 ]

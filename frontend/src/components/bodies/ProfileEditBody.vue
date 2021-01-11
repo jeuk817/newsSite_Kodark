@@ -230,17 +230,12 @@ export default {
   display: flex;
   margin-top: 20px;
   position: relative;
-  
-  /* justfico */
 }
 .userInfoContent{
   width: 250px;
   height: 40px;
-  /* border: 1px solid black; */
   border-radius: 5px;
   background-color: #f7f7f5;
-  /* margin-top: 10px; */
-  /* flex-basis: 70%; */
 }
 
 .userInfoContent p{

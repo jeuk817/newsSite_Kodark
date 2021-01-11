@@ -8,13 +8,13 @@
   >
   <div class="headerContent">
     <div class="homeBtn">
-      <router-link to="/ko/home" class="">
+      <router-link to="/en/home" class="">
         <span><img class="teamLogo" width="25" src="../../assets/img/k.svg"></span>
         <span class="home">Home</span>
       </router-link>
     </div>
     <div class="logo">
-      <router-link to="/ko/home" class="">
+      <router-link to="/en/home" class="">
         <img class="teamLogo" width="200" src="../../assets/img/kodark.svg">
       </router-link>
     </div>
