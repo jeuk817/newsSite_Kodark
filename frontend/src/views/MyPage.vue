@@ -4,13 +4,12 @@
       <MyPageHeader/>
     </div>
     <div class="myPageContent">
-      <IntroduceSideBar />
+      <IntroduceSideBar :sideMenu="sideMenu" />
       <!-- <ProfileEditBody /> -->
-      <!-- MyPageBody -->
-      <SubscribeListBody />
+      <MyPageBody />
+      <!-- <SubscribeListBody /> -->
       <!-- <Content /> -->
     </div>
-    <Footer />
   </div>
 </template>
 
@@ -20,15 +19,25 @@ import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
 import MyPageBody from '../components/bodies/MyPageBody'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import SubscribeListBody from '../components/bodies/SubscribeListBody'
-import Footer from '../components/footer/Footer'
 export default {
+  data: () => ({
+    // sideMenu: []
+  }),
   components: {
     MyPageHeader,
     IntroduceSideBar,
-    // MyPageBody,
-    // ProfileEditBody,
+    MyPageBody,
+    ProfileEditBody,
     SubscribeListBody,
-    Footer
+  },
+  computed: {
+    sideMenu() {
+      const sideMenu = []
+      sideMenu.push({ type: 'sub', text: 'Account', link: '/en/users/my-page' })
+      sideMenu.push({ type: 'sub', text: 'Profile', link: '/en/users/my-page/profile' })
+      sideMenu.push({ type: 'sub', text: 'Subscription', link: '/en/users/my-page/subscription' })
+      return sideMenu
+    }
   }
 }
 </script>

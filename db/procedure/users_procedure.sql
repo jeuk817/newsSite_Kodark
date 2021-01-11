@@ -14,6 +14,8 @@ CREATE DEFINER=`jack`@`localhost` PROCEDURE `users_procedure`(
 )
 begin
 declare idCount int;
+declare tmp_pwd varchar(300);
+
 	if _switch = 'update_detail' then
 		select count(*) into idCount from users where id = _id;      
         
@@ -75,7 +77,19 @@ declare idCount int;
 		else
 			set result_set = '500';    
         end if;
-
+        
+	/***** 이메일 업데이트 *****/
+    elseif _switch = 'update_email' then
+		select count(*) into idCount from users where email = _email;
+        
+        if idCount > 0 then
+			set result_set = 'conflict';
+		else
+			update users set email = _email where id = _id;
+            set result_set = 'success';
+		end if;
+	
+    /***** 비밀번호 업데이트 *****/
 	elseif _switch = 'update_password' then 
 		select count(*) into idCount from users where  id = _id;   
 
@@ -107,7 +121,7 @@ declare idCount int;
         end if;
 
 	elseif _switch = 'user_info' then
-		select email, auth into _email, _auth from users where id = _id;
+		select email, auth, pwd into _email, _auth, _pwd from users where id = _id;
         
         if _email = null then
 			set result_set = 'not_found';
