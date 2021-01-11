@@ -3,6 +3,7 @@ package com.kodark.news.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,7 +236,7 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500		
 	}
 	/**
-	 * title : 신고기사목록
+	 * title : 53.신고기사목록
 	 * desc : 맵9개사용...
 	 * author : 최윤수
 	 * date : 2021-01-08
@@ -313,19 +314,161 @@ public class AdminController {
 	}
 	
 	/**
+	 * title : 49.문의글목록
+	 * desc : 문의글 리스트
+	 * author : 최윤수
+	 * date : 2021-01-10
+	 * @param : questionStartId, status
+	 * @return : List<Map<String, Object(Map)>>
+	 */
+	@GetMapping(path = "/question-list") //-넣으면 nullpoint error발생 -대신 /넣으면 잘 실행됨
+	public ResponseEntity<List<Map<String,Object>>> questionList(
+			@RequestParam(value = "status", required = false,defaultValue = "wait" ) String status, 
+			@RequestParam(value = "questionStartId", required = false, defaultValue = "2")int sId,
+			HttpServletResponse response
+			){
+		List<Map<String, Object>> list = new ArrayList<>();
+		List<Map<String, Object>> temp = new ArrayList<>();
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> maps = new HashMap<>();
+		Map<String, Object> userInfo = new HashMap<>();
+		 System.out.println(status+":"+sId);
+		int id = sId;	
+		params.put("_switch","question_list");
+		params.put("_id", id-1);		
+		try {
+			
+		
+		list = adminProcedureService.getArticleList(params);		
+		for(int i=0;i<list.size();i++) {
+			System.out.println("list:"+list.get(i));
+			maps = new HashMap<>();
+			temp = new ArrayList<>();			
+			userInfo = new HashMap<>();
+			maps.put("id", list.get(i).get("id"));
+			maps.put("title",list.get(i).get("title"));
+			maps.put("content",list.get(i).get("content"));
+			maps.put("answer",list.get(i).get("answer"));
+			int userId = (int)list.get(i).get("userId");
+			String userEmail = (String)list.get(i).get("userEmail");
+			userInfo.put("id", userId);
+			userInfo.put("email", userEmail);
+			maps.put("user", userInfo);
+			temp.add(maps);	
+			list.set(i, maps);
+			
+		}
+		
+		response.setHeader("Links", "</admin/question-list?questionStartId="+sId+"&status=\"all\">; rel=\"allQuestionList\","
+								  + "</admin/question-list?questionStartId="+sId+"&status=\"waiting\">; rel=\"waitingQuestionList\","
+								  + "</admin/question-list?questionStartId="+sId+"&status=\"done\">; rel=\"doneQuestionList\",");
+		} catch (Exception e) {
+			return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.INTERNAL_SERVER_ERROR);//500
+		}
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
+		
+	}
+	/**
 	 * title : 56.기사신고확인(일단보류 사유 : 이해못함)
 	 * desc : 
 	 * author : 최윤수
 	 * date : 2021-01-07
-	 * @param body
+	 * @param : body
 	 * @return
 	 */
 	@PatchMapping(path = "/report/article/done")
 	public ResponseEntity<Map<String, Object>> articleReportCheck(@RequestBody Map<String, Object> body){
-		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> params = new HashMap<>();		
 		int articleReportId = Integer.valueOf((String)body.get("articleReportId"));
 		params.put("_articleReportId", articleReportId);
 		params.put("_switch", "article_report");
+		
+		
 		return new ResponseEntity<Map<String,Object>>(HttpStatus.RESET_CONTENT);//205
+	}
+	
+	/**
+	 * title : 48. 회원정보 및 이메일 전송
+	 * desc : id, 정지사유, 기간(day)을 입력받아 DB에 저장하고 이메일을 발송(forbbiden에 isert되면 users테이블의 status도 변경되게)
+	 * author : 최윤수
+	 * date : 2021-01-11
+	 * @param : id, reason, period 
+	 */
+	@PostMapping(path = "/users/suspension")
+	public ResponseEntity<Map<String,Object>> suspension(@RequestBody Map<String, Object> body){
+		SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date today = new Date();
+		String startDate = fm.format(today);
+		Date someday = new Date();
+		Map<String,Object> params = new HashMap<>();
+		int id = Integer.valueOf((String) body.get("id"));
+		String reason = (String) body.get("reason");
+		int period = Integer.valueOf((String) body.get("period"));;
+		Mail mail = new Mail();
+		try {		
+			someday.setTime(today.getTime()+((long)period*24*60*60*1000));
+			String endDate = fm.format(someday);
+			params.put("_id", id);
+			params.put("_switch", "suspension");
+			params.put("_input", reason);
+			adminProcedureService.execuAdminProcedure(params);
+			System.out.println("param:"+params);
+			mail.setMailFrom(env.getProperty("email.username"));
+			String email = (String) params.get("_email");
+			System.out.println("email:"+email);
+			mail.setMailTo(email);
+			mail.setMailSubject("Kodark Times 이용정지안내");
+			mail.setMailContent("<h3>reason : </h3>"+reason+"<br><p>Period : "+startDate+" ~ "+endDate+"</p>");
+			mailService.sendMail(mail);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 500
+		}
+
+		return new ResponseEntity<>(HttpStatus.CREATED);//201
+	}
+	
+	/**
+	 * title : 47.회원정보리스트
+	 * desc : 관리자메뉴의 회원정보리스트(20개씩나오게)
+	 * author : 최윤수
+	 * date : 2021-01-11
+	 * @param : startIndex
+	 */
+	@GetMapping(path = "/users")
+	public ResponseEntity<List<Map<String,Object>>> userInfo(@RequestParam int startIndex){
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> temp1;
+		Map<String, Object> temp2;
+		Map<String, Object> temp3;
+		List<Map<String, Object>> list = new ArrayList<>();			
+		params.put("_switch", "user_info");
+		params.put("_id", startIndex-1);
+		try {	
+			list = adminProcedureService.getArticleList(params);
+			for (int i = 0; i < list.size(); i++) {			
+				temp1 = new HashMap<>();
+				temp2 = new HashMap<>();
+				temp3 = new HashMap<>();
+				temp1.put("id", list.get(i).get("id"));
+				temp1.put("email", list.get(i).get("email"));
+				temp1.put("delFlag", list.get(i).get("status"));
+				temp2.put("nickName", list.get(i).get("nick_name"));
+				temp2.put("name", list.get(i).get("name"));
+				temp2.put("local", list.get(i).get("local"));
+				temp2.put("birth", list.get(i).get("birth"));
+				temp2.put("gender", list.get(i).get("gender"));
+				temp2.put("image", list.get(i).get("image"));
+				temp1.put("detail", temp2);
+				temp3.put("rel", "suspensionUser,");
+				temp3.put("href", "'/admin/users/suspension,'");
+				temp3.put("method", "post");
+				temp1.put("_link", temp3);
+				list.set(i, temp1);			
+			}		
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
+		}		
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
 	}
 }

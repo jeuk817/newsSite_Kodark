@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -192,6 +193,64 @@ public class UserController {
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	/**
+	 * title : 37.구독취소
+	 * desc : 구독취소
+	 * author : 최윤수
+	 * date : 2021-01-11
+	 * @param : reporterId
+	 */
+	@DeleteMapping(path = "/subscription")
+	public ResponseEntity<String> cancelSubscription(@RequestParam int reporterId
+			//,HttpServletRequest request
+			){
+		Map<String, Object> params = new HashMap<>();		
+		//int id = (int) request.getAttribute("id");
+		int id = 4;//test용
+		params.put("_switch", "cancel_sub");
+		params.put("_id", id);
+		params.put("_reporter_id", reporterId);
+		try {
+			usersProcedureService.execuUsersProcedure(params);
+			System.out.println("params:"+params);
+			if(params.get("result_set").equals("404")) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
+		}		
+		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//205
+	}
+	/**
+	 * title : 36.newsletter toggle
+	 * desc :
+	 * author : 최윤수
+	 * date : 2021-01-11
+	 * @param : reporterId
+	 */
+	@PatchMapping(path = "/reporters/letter-accepted")
+	public ResponseEntity<String> newsletterToggle(@RequestParam int reporterId
+			//,HttpServletRequest request
+			){
+		Map<String, Object> params = new HashMap<>();		
+		System.out.println("start");
+		//int id = (int) request.getAttribute("id");
+		int id = 5;//test용
+		params.put("_switch", "toggle");
+		params.put("_id", id);
+		params.put("_reporter_id", reporterId);
+		try {
+			usersProcedureService.execuUsersProcedure(params);
+			System.out.println("params:"+params);
+			if(params.get("result_set").equals("404")) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
+		}		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 	}
 
 }
