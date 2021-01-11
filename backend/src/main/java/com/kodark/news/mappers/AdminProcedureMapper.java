@@ -3,6 +3,7 @@ package com.kodark.news.mappers;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
@@ -37,5 +38,12 @@ public interface AdminProcedureMapper {
 	@Select(value = "{CALL admin_getWaitArticle(#{_status})}")
 	@Options(statementType = StatementType.CALLABLE)
 	public List<Map<String, Object>> getWaitArticle(@Param("_status") String _status);
-
+	
+	@Insert("INSERT INTO users (email, pwd, auth) VALUES(#{_email}, #{_pwd}, 'reporter')")
+	@Options(useGeneratedKeys = true, keyProperty = "id")
+	public void insertReporter(Map<String, Object> params);
+	
+	@Insert("INSERT INTO user_detail (user_id, nick_name, name, local, birth, gender, image)"
+			+ " VALUES(#{id}, #{_nickName}, #{_name}, #{_local}, #{_birth}, #{_gender}, #{_image})")
+	public void insertReporterDetail(Map<String, Object> params);
 }

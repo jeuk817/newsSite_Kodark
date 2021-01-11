@@ -6,11 +6,13 @@
       <div class="information">
         <div>Profile image</div>
         <v-file-input
+        ref="profileImage"
         :rules="userDetailForm.imageRules"
         accept="image/png, image/jpeg, image/bmp"
         placeholder="Pick an image"
         prepend-icon="mdi-camera"
         label="Profile image"
+        @change="changeImage"
       ></v-file-input>
       </div>
       <div class="information">
@@ -168,6 +170,7 @@ export default {
       errorMessages: ''
     },
     userDetailForm: {
+      imageFile: undefined,
       imageRules: [
         value => !value || value.size < 2000000 || 'Image size should be less than 2 MB!',
       ],
@@ -184,10 +187,23 @@ export default {
       this.passwordForm.errorMessages = this.passwordForm.password === this.passwordForm.confirmPassword ? '' : "Those passwords didn't match"
       return this.passwordForm.password === this.passwordForm.confirmPassword
     },
-    createReporter() {
+    async createReporter() {
       console.log('createReporter')
       this.creatingReporter = true
+      const email = this.emailForm.email
+        , pwd = this.passwordForm.password
+        , nickName = this.userDetailForm.nickName
+        , name = this.userDetailForm.name
+        , local = this.userDetailForm.local
+        , birth = this.userDetailForm.birth // string
+        , gender = this.userDetailForm.gender
+        , image = this.userDetailForm.imageFile // object
+      const { status } = await this.$store.dispatch('admin/createReporter' ,
+      { email, pwd, nickName, name, local, birth, gender, image})
       this.creatingReporter = false
+    },
+    changeImage(imageFile) {
+      this.userDetailForm.imageFile = imageFile
     }
   }
 }
