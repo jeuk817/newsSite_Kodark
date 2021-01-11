@@ -9,7 +9,8 @@
       <!-- <ProfileEditBody /> -->
       <!-- <MyPageBody /> -->
       <!-- <ArticleWriteBody /> -->
-      <SubscribeListBody />
+      <!-- <SubscribeListBody /> -->
+      <AdminUserList />
       <!-- <Content /> -->
       <!-- <AdminWaitArticleList /> -->
     </div>
@@ -26,6 +27,7 @@ import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import SubscribeListBody from '../components/bodies/SubscribeListBody'
 import ArticleWriteBody from '../components/bodies/ArticleWriteBody'
 import AdminWaitArticleList from '../components/bodies/AdminWaitArticleList'
+import AdminUserList from '../components/bodies/AdminUserList'
 import Footer from '../components/footer/Footer'
 export default {
   components: {
@@ -37,6 +39,7 @@ export default {
     ProfileEditBody,
     SubscribeListBody,
     AdminWaitArticleList,
+    AdminUserList,
     Footer
   },
   computed: {
