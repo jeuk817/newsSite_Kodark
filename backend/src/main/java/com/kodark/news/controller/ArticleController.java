@@ -188,12 +188,17 @@ public class ArticleController {
 	public ResponseEntity<Map<String, Object>> mainNavi(HttpServletResponse response) {
 
 		response.setHeader("Links",
-				"</auth/sign-in>; 		rel=\"signIn\"," + "</>; 	   				rel=\"home\","
-						+ "</section/politics>;	rel=\"politics\"," + "</section/economy>;  	rel=\"economy\","
-						+ "</section/society>;  	rel=\"society\"," + "</section/tech>; 		rel=\"tech\","
-						+ "</section/world>;  	rel=\"world\"," + "</section/sports>;  	rel=\"sports\","
-						+ "</weather>;  			rel=\"weather\"," + "</help>;  				rel=\"help\","
-						+ "</introduce>;  		rel=\"introduce\"");
+				"</auth/sign-in>; 		rel=\"signIn\","
+				+ "</>;    				rel=\"home\","
+				+ "</section/politics>;	rel=\"politics\","
+				+ "</section/economy>; 	rel=\"economy\","
+				+ "</section/society>; 	rel=\"society\","
+				+ "</section/tech>;		rel=\"tech\","
+				+ "</section/world>;  	rel=\"world\","
+				+ "</section/sports>;  	rel=\"sports\","
+				+ "</weather>;  		rel=\"weather\","
+				+ "</help>; 			rel=\"help\","
+				+ "</introduce>;  		rel=\"introduce\"");
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 
@@ -320,6 +325,6 @@ public class ArticleController {
 		}
 		params.put("data", list);
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);// 200
-	}
+	}		
 
 }
