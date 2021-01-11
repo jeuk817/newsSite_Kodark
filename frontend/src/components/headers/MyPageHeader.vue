@@ -37,19 +37,9 @@ export default {
 
 .headerContent {
   display: grid;
-  grid-template-columns: 300px 1000px;
+  grid-template-columns: 3fr 4fr;
   justify-content: center;
   width: 100%;
-}
-
-.homeBtn img{
-  position: relative;
-  left: 80px;
-}
-.home{
-  position: relative;
-  left: 100px;
-  font-size: 16px;
 }
 
 .headerContent a{
@@ -63,9 +53,13 @@ export default {
   vertical-align: middle;
 }
 
-.teamLogo{
-  justify-self: left;
-  position: relative;
-  left: 300px;
+.homeBtn{
+  justify-self: center;
 }
+
+.home{
+  margin-left: 24px;
+}
+
+
 </style>

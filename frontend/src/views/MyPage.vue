@@ -5,10 +5,7 @@
     </div>
     <div class="myPageContent">
       <IntroduceSideBar :sideMenu="sideMenu" />
-      <!-- <ProfileEditBody /> -->
       <MyPageBody />
-      <!-- <SubscribeListBody /> -->
-      <!-- <Content /> -->
     </div>
   </div>
 </template>
@@ -16,9 +13,11 @@
 <script>
 import MyPageHeader from '../components/headers/MyPageHeader'
 import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
+import AdminSideBar from '../components/sidebars/AdminSideBar'
 import MyPageBody from '../components/bodies/MyPageBody'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import SubscribeListBody from '../components/bodies/SubscribeListBody'
+
 export default {
   data: () => ({
     // sideMenu: []
