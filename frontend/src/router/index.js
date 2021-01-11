@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import AuthPage from '../views/AuthPage'
 import IntroducePage from '../views/IntroducePage'
 import MyPage from '../views/MyPage'
+import AdminPage from '../views/AdminPage'
 
 
 Vue.use(VueRouter)
@@ -27,8 +28,20 @@ const routes = [
     component: IntroducePage
   },
   {
-    path: '/en/users/my-page/detail',
+    path: '/en/users/my-page',
     component: MyPage
+  },
+  {
+    path: '/en/users/my-page/:manage',
+    component: MyPage
+  },
+  {
+    path: '/en/admin/admin-page',
+    component: AdminPage
+  },
+  {
+    path: '/en/admin/admin-page/*',
+    component: AdminPage
   }
 ]
 

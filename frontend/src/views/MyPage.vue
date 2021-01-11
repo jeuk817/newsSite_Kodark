@@ -4,17 +4,9 @@
       <MyPageHeader/>
     </div>
     <div class="myPageContent">
-      <IntroduceSideBar />
-      <!-- <AdminSideBar /> -->
-      <!-- <ProfileEditBody /> -->
-      <!-- <MyPageBody /> -->
-      <!-- <ArticleWriteBody /> -->
-      <!-- <SubscribeListBody /> -->
-      <AdminUserList />
-      <!-- <Content /> -->
-      <!-- <AdminWaitArticleList /> -->
+      <IntroduceSideBar :sideMenu="sideMenu" />
+      <MyPageBody />
     </div>
-    <Footer />
   </div>
 </template>
 
@@ -25,31 +17,25 @@ import AdminSideBar from '../components/sidebars/AdminSideBar'
 import MyPageBody from '../components/bodies/MyPageBody'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import SubscribeListBody from '../components/bodies/SubscribeListBody'
-import ArticleWriteBody from '../components/bodies/ArticleWriteBody'
-import AdminWaitArticleList from '../components/bodies/AdminWaitArticleList'
-import AdminUserList from '../components/bodies/AdminUserList'
-import Footer from '../components/footer/Footer'
+
 export default {
+  data: () => ({
+    // sideMenu: []
+  }),
   components: {
     MyPageHeader,
     IntroduceSideBar,
-    ArticleWriteBody,
-    AdminSideBar,
     MyPageBody,
     ProfileEditBody,
     SubscribeListBody,
-    AdminWaitArticleList,
-    AdminUserList,
-    Footer
   },
   computed: {
-    
-    // 현재 라우트 반환
-    currentRoute () {
-      const routeArr = this.$route.fullPath.split('/')
-      console.log('efeefef')
-      console.log(routeArr)
-      return routeArr[routeArr.length - 1]
+    sideMenu() {
+      const sideMenu = []
+      sideMenu.push({ type: 'sub', text: 'Account', link: '/en/users/my-page' })
+      sideMenu.push({ type: 'sub', text: 'Profile', link: '/en/users/my-page/profile' })
+      sideMenu.push({ type: 'sub', text: 'Subscription', link: '/en/users/my-page/subscription' })
+      return sideMenu
     }
   }
 }

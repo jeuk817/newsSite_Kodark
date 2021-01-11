@@ -34,12 +34,14 @@ const actions = {
       const res = await axios.get('/users')
       const data = res.data
       const links = util.parseLinks(res.headers.links)
+      
       commit('setAccount', { userData: data, links }, { root: true })
       return res.status
     } catch(err) {
       return err.response.status
     }
   },
+
   async getUserDetail() {
     try {
       const res = await axios.get('/users/my-page/detail',  {
@@ -52,6 +54,34 @@ const actions = {
       return {status: res.status, userDetail: data, links};
     } catch(err) {
       return {status: err.response.status}
+    }
+  },
+
+  async changeEmail({}, { email, verifPwd }) {
+    try {
+      const res = await axios.patch('/users/email', { email, verifPwd }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async changePwd({}, { pwd, verifPwd }) {
+    try {
+      const res = await axios.patch('/users/pwd', { pwd, verifPwd }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
     }
   }
 }

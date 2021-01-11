@@ -10,4 +10,6 @@ public interface AdminProcedureService {
 	public List<Map<String, Object>> getWaitArticles(String _status);
 
 	public List<Map<String, Object>> getReporterList();
+	
+	public void createReporter(Map<String, Object> params);
 }

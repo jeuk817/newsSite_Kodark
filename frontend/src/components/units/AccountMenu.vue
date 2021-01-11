@@ -19,18 +19,39 @@
     <v-card>
       <v-list>
         <v-list-item>
-          <v-list-item-content class="menuList">
+          <v-list-item-content
+          :class="userData.auth === 'user' ? 'userMenuList' : 'adminMenuList'">
             <div class="subtitle-2 black--text">{{ userData.email }}</div>
-            <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
-              :to="'/en' + links.myPage"
-            >
-              My page
-            </router-link>
-            <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
-              :to="'/en' + links.subscribedList"
-            >
-              Subscription list
-            </router-link>
+            <template v-if="userData.auth === 'user'">
+              <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
+                :to="'/en' + links.myPage"
+              >
+                My page
+              </router-link>
+              <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
+                :to="'/en' + links.subscribedList"
+              >
+                Subscription list
+              </router-link>
+            </template>
+
+            <template v-if="userData.auth === 'admin'">
+              <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
+                :to="'/en' + links.adminPage"
+              >
+                Admin page
+              </router-link>
+              <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
+                :to="'/en' + links.userManage"
+              >
+                User Manage
+              </router-link>
+              <router-link class="subtitle-2 black--text font-weight-regular textDecoNone hoverAction"
+                :to="'/en' + links.reporterManage"
+              >
+                Reporter Manage
+              </router-link>
+            </template>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -61,11 +82,16 @@ export default {
 </script>
 
 <style scoped>
-.menuList {
-  /* border: 1px solid red; */
+.userMenuList {
   padding: 5px;
   display: grid;
   grid-template-rows: repeat(3, 40px);
+}
+
+.adminMenuList {
+  padding: 5px;
+  display: grid;
+  grid-template-rows: repeat(4, 40px);
 }
 
 .textDecoNone {

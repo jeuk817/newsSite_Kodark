@@ -57,14 +57,24 @@ public class UserController {
 		usersProcedureService.execuUsersProcedure(params);
 		String resultSet = (String) params.get("result_set");
 		if (resultSet.equals("success")) {
+			String auth = (String)params.get("_auth");
 			Map<String, Object> map = new HashMap<>();
 			map.put("email", params.get("_email"));
-			map.put("auth", params.get("_auth"));
-
-			response.setHeader("Links",
-					"</users/my-page>; rel=\"myPage\"" + ", </users/my-page/detail>; rel=\"userDetail\""
-							+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
-							+ ", </users/sign-out>; rel=\"signOut\"");
+			map.put("auth", auth);
+			
+			if(auth.equals("user")) {
+				response.setHeader("Links",
+						"</users/my-page>; rel=\"myPage\""
+								+ ", </users/my-page/detail>; rel=\"userDetail\""
+								+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
+								+ ", </users/sign-out>; rel=\"signOut\"");
+			} else if(auth.equals("admin")) {
+				response.setHeader("Links",
+						"</admin/admin-page>; rel=\"adminPage\""
+								+ ", </admin/admin-page/users>; rel=\"userManage\""
+								+ ", </admin/admin-page/reporters>; rel=\"reporterManage\""
+								+ ", </users/sign-out>; rel=\"signOut\"");
+			}
 			return new ResponseEntity<>(map, HttpStatus.OK);// 200
 		} else if (resultSet.equals("not_found")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
@@ -144,25 +154,64 @@ public class UserController {
 		params.put("_pwd", encodedPwd);
 		authProcedureService.execuAuthProcedure(params);
 
-		response.setHeader("Links", "</users/sign-up>; rel=\"self\"," + "</ko/auth/signIn>; rel=\"next\"");
+		response.setHeader("Links", "</users/sign-up>; rel=\"self\"," + "</en/auth/signIn>; rel=\"next\"");
 		if (params.get("result_set").equals("success"))
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		else
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 
 	}
+	
+	@PatchMapping(path = "/email")
+	public ResponseEntity<String> emailUpdate(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+		int id = (int)request.getAttribute("id");
+		String verifPwd = (String) body.get("verifPwd");
+		String email = (String) body.get("email");
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "user_info");
+		params.put("_id", id);
+		usersProcedureService.execuUsersProcedure(params);
+		String encodedPwd = (String) params.get("_pwd");
+		
+		if(encodedPwd != null && !passwordEncoder.matches(verifPwd, encodedPwd))
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+		
+		params.put("_switch", "update_email");
+		params.put("_id", id);
+		params.put("_email", email);
+		usersProcedureService.execuUsersProcedure(params);
+		String resultSet = (String)params.get("result_set");
+		
+		if(resultSet.equals("success")) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+		} else if(resultSet.equals("conflict")) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT); // 409
+		} else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
+		}
+	}
+	
 
 	// 비밀번호 수정
 	@PatchMapping(path = "/pwd")
-	public ResponseEntity<String> pwdUpdate(@RequestBody Map<String, Object> body) {
+	public ResponseEntity<String> pwdUpdate(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+		int id = (int)request.getAttribute("id");
 		String pwd = (String) body.get("pwd");
-		String email = (String) body.get("email");
-		int id = Integer.valueOf((String) body.get("id"));
+		String verifPwd = (String) body.get("verifPwd");
+		
 		Map<String, Object> params = new HashMap<>();
-		params.put("_switch", "update_password");
-		params.put("_pwd", pwd);
+		params.put("_switch", "user_info");
 		params.put("_id", id);
-		params.put("_email", email);
+		usersProcedureService.execuUsersProcedure(params);
+		String encodedPwd = (String) params.get("_pwd");
+		
+		if(encodedPwd != null && !passwordEncoder.matches(verifPwd, encodedPwd))
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
+		
+		pwd = passwordEncoder.encode(pwd);
+		params.put("_switch", "update_password");
+		params.put("_id", id);
+		params.put("_pwd", pwd);
 		usersProcedureService.execuUsersProcedure(params);
 
 		if (params.get("result_set").equals("204")) {

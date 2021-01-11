@@ -234,7 +234,7 @@ export default {
     moveRoute () {
       this.wasCreated = false
       this.$router.push({ path: this.nextLink })
-      // this.$router.push({ path: '/ko/auth/signIn' })
+      // this.$router.push({ path: '/en/auth/signIn' })
     }
   }
 }

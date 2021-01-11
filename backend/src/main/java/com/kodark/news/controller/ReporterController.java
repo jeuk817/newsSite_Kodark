@@ -216,7 +216,7 @@ public class ReporterController {
 			link3 = new HashMap<String, Object>();
 
 			link1.put("rel", "editArticleForm");
-			link1.put("href", "/ko/reporters/article");
+			link1.put("href", "/en/reporters/article");
 			link1.put("method ", "get");
 			linkList.add(link1);
 
@@ -235,11 +235,11 @@ public class ReporterController {
 		}
 
 		response.setHeader("Links",
-				"</ko/reporters/article>; 					rel=\"editArticleForm\","
+				"</en/reporters/article>; 					rel=\"editArticleForm\","
 						+ "</reporters/article?status=\"deleted\">; 	rel=\"blindArticle\","
 						+ "</reporters/article?articleId\">; rel=\"deleteArticle\","
 						+ "</reporters/article/statics\"> ;  rel=\"articlestatics\","
-						+ "</ko/article?articleId\">; rel=\"article\",");
+						+ "</en/article?articleId\">; rel=\"article\",");
 
 		if (reportersProcedureService.getPubAndWaitArtlcles(_status).get(1) == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
