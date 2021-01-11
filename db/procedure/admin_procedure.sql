@@ -1,6 +1,7 @@
 CREATE DEFINER=`root`@`localhost` PROCEDURE `admin_procedure`(
    in _switch varchar(20)
     , in _id int
+    , in _input varchar(5000)
     , inout _email varchar(50)    
     , inout _pwd varchar(300)
     , inout _nickName varchar(20)
@@ -68,16 +69,30 @@ declare authCheck char(8);
         join article as a on a.id = ar.article_id
         join users as u on u.id = ar.user_id
         where done_flag = 'F';
+    -- 49.문의글 목록    
 	elseif _switch = 'question_list' then
-		select q.id,q.user_id,q.title,q.content
+	 	select q.id,q.user_id,q.title,q.content
         ,(select u.id from users u where u.id = q.user_id)userId
         ,(select u.email from users u where u.id = q.user_id)userEmail
+        ,aw.question_id , aw.content as answer
         from question q 
         join users u on u.id = q.user_id
+        left outer join answer aw on aw.question_id = q.id 
         order by q.id asc
         limit 10 offset _id
         ;
-		
-		
+	-- 48. 회원정지 및 이메일전송
+    elseif _switch = 'suspension' then
+		select email into _email from users where id = _id;
+        insert into forbbiden(user_id, status, reason, end_date) values(_id,'suspend',_input,  date_add(current_timestamp(),interval 3 day));
+	-- 47. 회원정보리스트
+    elseif _switch = 'user_info' then
+		select u.id,u.email,u.status ,ud.nick_name, ud.name,ud.local,date_format(ud.birth,'%Y-%m-%d')birth,ud.gender,ud.image
+        from users u
+        left outer join user_detail ud on ud.user_id = u.id
+        where u.auth = 'user'
+        limit 20 offset _id
+       ;
+        
 	end if;
 END
