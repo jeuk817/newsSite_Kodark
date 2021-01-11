@@ -31,5 +31,9 @@ public class ReportersProcedureDao {
 	public List<Map<String, Object>> getPubAndWaitArtlcles(String status) {
 		return reportersProcedureMapper.getPubAndWaitArtlcles(status);
 	}
+	
+	public List<Map<String, Object>> reportersArticleList(Map<String, Object> params) {
+		return reportersProcedureMapper.reportersArticleList(params);
+	}
 
 }

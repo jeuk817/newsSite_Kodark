@@ -188,9 +188,9 @@ public class ReporterController {
 	}
 
 	/**
-	 * 발행/발행대기 기사 
-	 * 작성자 : 이푸름 
-	 * 작성일 : 2021-01-06
+	 * title : 65.발행/발행대기 기사 
+	 * author : 이푸름 
+	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/article")
 	public ResponseEntity<List<Map<String, Object>>> pubAndWaitArtlcles(@RequestParam("status") String status,
@@ -252,6 +252,7 @@ public class ReporterController {
 		}
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200
 	}
+	
 
 	
 }
