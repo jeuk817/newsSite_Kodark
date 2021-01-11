@@ -136,17 +136,10 @@
 
           <div class="inputContainer gender">
             <div class="inputTitle" style="margin-right: 76px; line-height: 65px">Gender</div>
-              <v-checkbox
-                  input-value="true"
-                  label="Male"
-                  value
-                  class="maleCheck"
-              ></v-checkbox>
-                <v-checkbox
-                  input-value="true"
-                  label="Female"
-                  value
-              ></v-checkbox>
+            <v-radio-group v-model="gender" row>
+              <v-radio label="Male" value="M"></v-radio>
+              <v-radio label="Female" value="F" color="red"></v-radio>
+            </v-radio-group>
           </div>
         <div class="inputFromBtn">
           <div class="CancleBtn">
@@ -180,7 +173,7 @@ export default {
       name: "",
       local: "",
       birth: "",
-      gender: "",
+      gender: "M",
       date: null,
       menu: false,
     }),

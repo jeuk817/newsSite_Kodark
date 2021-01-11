@@ -74,11 +74,11 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 		
 		registry.addInterceptor(jwtInterceptor)
 			.addPathPatterns("/users")
-			.addPathPatterns("/users/*")
+			.addPathPatterns("/users/**")
 			.addPathPatterns("/reporter")
-			.addPathPatterns("/reporter/*")
+			.addPathPatterns("/reporter/**")
 			.addPathPatterns("/admin")
-			.addPathPatterns("/admin/*")
+			.addPathPatterns("/admin/**")
 			.excludePathPatterns("/users/sign-up");
 		
 	}

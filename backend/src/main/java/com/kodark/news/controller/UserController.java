@@ -256,8 +256,7 @@ public class UserController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> link1;
 		
-//		request.getAttribute("id");
-		int id = 35;
+		int id = (int)request.getAttribute("id");
 		params.put("_id", id);
 
 		params.put("_switch", "mypage_detail");

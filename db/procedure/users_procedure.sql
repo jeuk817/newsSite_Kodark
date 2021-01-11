@@ -41,23 +41,18 @@ declare tmp_pwd varchar(300);
 		select email, auth into _email, _auth from users where id = _id;
 
 	elseif _switch = 'mypage_detail' then
-		select count(*) into idCount from users where  id = _id;   
+      select count(*) into idCount from users where  id = _id;   
 
-		if idCount > 0 then
-        
-			if _email is null then
-				set result_set = '404';
-            else    
-				select * from user_detail where id = _id;
-				set _image = image, _nickName = nickName, _name = name, _local = local, _birth = birth, _gender = gender;
-				set result_set = '200';
-            end if;
+      if idCount > 0 then
+         select nick_name, name, local, DATE_FORMAT(birth, '%Y-%m-%d %H:%i:%S') as birth, gender into _nickName, _name,  _local,  _birth, _gender from user_detail where user_id = _id;
             
-		elseif idCount < 0 or idCount = 0 then 
-			set result_set = '401';
-		else
-			set result_set = '500';
-		end if;
+         set result_set = '200';
+            
+      elseif idCount < 0 or idCount = 0 then 
+         set result_set = '401';
+      else
+         set result_set = '500';
+      end if;
         
 	elseif _switch = 'delete' then
 		select count(*) into idCount from users where  id = _id;   
@@ -88,8 +83,7 @@ declare tmp_pwd varchar(300);
 			update users set email = _email where id = _id;
             set result_set = 'success';
 		end if;
-	
-    /***** 비밀번호 업데이트 *****/
+        
 	elseif _switch = 'update_password' then 
 		select count(*) into idCount from users where  id = _id;   
 

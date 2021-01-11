@@ -1,11 +1,17 @@
 <template>
   <div class="myPage">
-    <div class="myPageHeader">
-      <MyPageHeader/>
-    </div>
+    <MyPageHeader/>
     <div class="myPageContent">
       <IntroduceSideBar :sideMenu="sideMenu" />
-      <MyPageBody />
+      <template v-if="currentRoute === 'my-page'">
+        <MyPageBody />
+      </template>
+      <template v-if="currentRoute === 'profile'">
+        <ProfileEditBody />
+      </template>
+      <template v-if="currentRoute === 'subscribed-list'">
+        <SubscribeListBody />
+      </template>
     </div>
   </div>
 </template>
@@ -34,8 +40,12 @@ export default {
       const sideMenu = []
       sideMenu.push({ type: 'sub', text: 'Account', link: '/en/users/my-page' })
       sideMenu.push({ type: 'sub', text: 'Profile', link: '/en/users/my-page/profile' })
-      sideMenu.push({ type: 'sub', text: 'Subscription', link: '/en/users/my-page/subscription' })
+      sideMenu.push({ type: 'sub', text: 'Subscription', link: '/en/users/my-page/subscribed-list' })
       return sideMenu
+    },
+    currentRoute () {
+      const routeArr = this.$route.fullPath.split('/')
+      return routeArr[routeArr.length - 1]
     }
   }
 }

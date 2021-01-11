@@ -52,11 +52,11 @@ public class ExceptionHandler {
 		return new ResponseEntity<>(HttpStatus.CONFLICT); // 409
 	}
 	
-	@org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
-	protected ResponseEntity<Map<String, Object>> handleUndefinedException(Exception e) {
-		if(logger.isWarnEnabled())
-			logger.warn(e.getMessage());
-		
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
-	}
+//	@org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
+//	protected ResponseEntity<Map<String, Object>> handleUndefinedException(Exception e) {
+//		if(logger.isWarnEnabled())
+//			logger.error(e.getMessage());
+//		
+//		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
+//	}
 }

@@ -2,9 +2,6 @@
   <div class="home">
     <HomeHeader />
     <HelloWorld />
-    <!-- <layout1 /> -->
-    <layout2 />
-    <Footer />
     <HelloWorld />
   </div>
 </template>
@@ -14,6 +11,7 @@ import HomeHeader from '../components/headers/HomeHeader'
 import HelloWorld from '../components/HelloWorld'
 import layout1 from '../components/test/layout1'
 import layout2 from '../components/test/layout1'
+import Footer from '../components/footer/Footer'
 
 export default {
   name: 'Home',
