@@ -22,7 +22,6 @@ public class ArticleProcedureDao {
 		return articleProcedureMapper.getArticleDetail(params);
 	}
 
-	// 이종현(기사감정표현 가져오기)
 	public List<Map<String, Object>> getEmotionInfo(int _articleId) {
 		return articleProcedureMapper.getEmotionInfo(_articleId);
 	}
@@ -31,7 +30,7 @@ public class ArticleProcedureDao {
 		return articleProcedureMapper.getCommentReply(_articleId, _commentId);
 	}
 
-	public List<CategoryDto> categoryInfo() {
+	public List<Map<String, Object>> categoryInfo() {
 		return articleProcedureMapper.getCategory();
 	}
 

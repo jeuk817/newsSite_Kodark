@@ -53,7 +53,7 @@ public interface ArticleProcedureMapper {
 			@Param("_commentId") int _commentId);
 
 	@Select("select * from category")
-	public List<CategoryDto> getCategory();
+	public List<Map<String, Object>> getCategory();
 
 	@Select(value = "{CALL hotNews_procedure()}")
 	@Options(statementType = StatementType.CALLABLE)

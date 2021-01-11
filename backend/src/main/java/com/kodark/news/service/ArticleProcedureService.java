@@ -15,7 +15,7 @@ public interface ArticleProcedureService {
 
 	public List<Map<String, Object>> getCommentReply(int articleId, int commentId);
 
-	public List<CategoryDto> categoryInfo();
+	public List<Map<String, Object>> categoryInfo();
 
 	public List<Map<String, Object>> hotNews();
 

@@ -17,8 +17,8 @@ public class ArticleProcedureServiceImpl implements ArticleProcedureService {
 	private ArticleProcedureDao articleProcedureDao;
 
 	@Override
-	public List<CategoryDto> categoryInfo() {
-		List<CategoryDto> category = articleProcedureDao.categoryInfo();
+	public List<Map<String, Object>> categoryInfo() {
+		List<Map<String, Object>> category = articleProcedureDao.categoryInfo();
 		return category;
 	}
 

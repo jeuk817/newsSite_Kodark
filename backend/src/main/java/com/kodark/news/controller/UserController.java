@@ -1,6 +1,8 @@
 package com.kodark.news.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,12 @@ public class UserController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	/**
+	 * title : 로그인 정보
+	 * desc :  
+	 * author : 류제욱 
+	 * date :
+	 */
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> userInfo(HttpServletRequest request, HttpServletResponse response) {
 		int id = (int) request.getAttribute("id");
@@ -59,21 +67,20 @@ public class UserController {
 			map.put("auth", params.get("_auth"));
 
 			response.setHeader("Links",
-					"</users/my-page>; rel=\"myPage\"" + ", </users/my-page/detail>; rel=\"userDetail\""
+					"</users/my-page>; rel=\"myPage\""
+							+ ", </users/my-page/detail>; rel=\"userDetail\""
 							+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
 							+ ", </users/sign-out>; rel=\"signOut\"");
 			return new ResponseEntity<>(map, HttpStatus.OK);// 200
-		} else if (resultSet.equals("not_found")) {
+		} else
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
-		} else {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
-		}
 	}
 
 	/**
-	 * 마이페이지 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-07
+	 * title : 마이페이지(28)
+	 * desc : 401번 비로그인 에러... 로직은 맞지 않을까?
+	 * author : 최현지 
+	 * date : 2021-01-07
 	 */
 	@GetMapping(path = "/my-page")
 	public ResponseEntity<Map<String, Object>> myPage(HttpServletResponse response, HttpServletRequest request) {
@@ -83,8 +90,8 @@ public class UserController {
 		Map<String, Object> link2;
 		Map<String, Object> link3;
 
-		request.getAttribute("id");
-		int id = 2;
+		//int id = (int)request.getAttribute("id");
+		int id =2;
 		params.put("_id", id);
 
 		params.put("_switch", "my_page");
@@ -92,7 +99,6 @@ public class UserController {
 
 		String email = (String) params.get("_email");
 		String auth = (String) params.get("_auth");
-		params.clear();
 
 		params.put("email", email);
 		params.put("auth", auth);
@@ -126,7 +132,57 @@ public class UserController {
 						+ "</auth/verify>;  					rel=\"validation\","
 						+ "</users>; 							rel=\"deleteUser\"");
 
-		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
+		
+		if (params.get("result_set").equals("200")) {
+				return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
+		}else {
+			return new ResponseEntity<Map<String, Object>>(params, HttpStatus.NOT_FOUND);// 404
+		}
+	}
+	
+	/**
+	 * title : 회원정보(33)
+	 * desc : **birth date 포멧 처리 아직 못함!
+	 * author : 최현지 
+	 * date : 2021-01-08
+	 */
+	@GetMapping(path = "/my-page/detail")
+	public ResponseEntity<Map<String, Object>> myPageDetail(HttpServletRequest request, HttpServletResponse response) {		
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> link = new HashMap<String, Object>();
+		Map<String, Object> temp = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int user_id = 1;
+
+		params.put("_switch", "mypage_detail");
+		params.put("_id", user_id);
+		
+		//System.out.println("params~~~~~~~~~~ " + params);
+		
+		map = usersProcedureService.mypageDetail(params);
+		
+		link.put("rel", "editUserDetail");
+		link.put("href", "/users/detail");
+		link.put("method ", "put");
+		
+		temp.put("image", map.get("image"));
+		temp.put("nickName", map.get("nick_name"));
+		temp.put("name", map.get("name"));
+		temp.put("local", map.get("local"));
+		temp.put("birth", map.get("birth"));
+		temp.put("gender", map.get("gender"));
+		temp.put("_link", link);
+		
+		response.setHeader("Links",
+						"</users/my-page>;					rel=\"myPage\""
+						+ ", </users/my-page/detail>;		rel=\"userDetail\""
+						+ ", </users/my-page/subscribed-list>;rel=\"subscribedList\""
+						+ ", </users/sign-out>;				rel=\"signOut\"");
+	
+		return new ResponseEntity<>(temp, HttpStatus.OK);// 200
+
+			
 	}
 
 	// 회원가입
@@ -141,7 +197,9 @@ public class UserController {
 		params.put("_pwd", encodedPwd);
 		authProcedureService.execuAuthProcedure(params);
 
-		response.setHeader("Links", "</users/sign-up>; rel=\"self\"," + "</ko/auth/signIn>; rel=\"next\"");
+		response.setHeader("Links",
+						"</users/sign-up>; rel=\"self\","
+						+ "</ko/auth/signIn>; rel=\"next\"");
 		if (params.get("result_set").equals("success"))
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		else
@@ -193,5 +251,5 @@ public class UserController {
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-
+	
 }
