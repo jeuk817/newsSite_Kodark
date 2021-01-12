@@ -16,6 +16,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `users_procedure`(
 begin
 declare emailCheck int;
 declare idCount int;
+
+-- 회원정보 수정(34)--------------------------------------------
    if _switch = 'update_detail' then
       select count(*) into idCount from users where id = _id;        
       if idCount > 0 then
@@ -31,25 +33,8 @@ declare idCount int;
          set result_set = '401';
         else 
          set result_set = '500';
-      end if; 
-    elseif _switch = 'mypage' then
-      select count(*) into idCount from users where  id = _id;   
-       
-      if idCount > 0 then
-         if _email is null then
-            set result_set = '404';
-            else    
-            select email, auth from users where id = _id;
-            set _email = email;
-            set _auth = auth;
-            set result_set = '200';
-            end if;    
-      elseif idCount < 0 or idCount = 0 then 
-         set result_set = '401';
-      else 
-         set result_set = '500';    
-        end if;
-
+      end if;
+      
 -- 회원정보(33)--------------------------------------------
     elseif _switch = 'mypage_detail' then
 	select count(*) into idCount from users where id = _id;   
@@ -67,50 +52,56 @@ declare idCount int;
 		else 
 			 set result_set = '500';
       end if;
-      
-     elseif _switch = 'delete' then
-      select count(*) into idCount from users where  id = _id;   
-        
+
+-- 회원 탈퇴(32) --------------------------------------------------
+	elseif _switch = 'delete' then
+	select count(*) into idCount from users where  id = _id;   
+	select count(email) into emailCheck from users where id = _id;
       if idCount > 0 then
-         if _email is null then
+         if emailCheck = 0 then
             set result_set = '404';
          else    
             update users
-            set status = 'stop';
-            set result_set = '200';
+            set status = 'stop', email = null where id = _id;
+            set result_set = '204';
             end if;    
       elseif idCount < 0 or idCount = 0 then 
          set result_set = '401';
       else 
          set result_set = '500';    
-        end if;
-   elseif _switch = 'update_password' then 
-      select count(*) into idCount from users where id = _id;   
+	end if;
         
-      if idCount > 0 then
-         if _email is null then
-            set result_set = '404';
-            else    
+-- 비밀번호 수정 -------------------------------------------------
+	elseif _switch = 'update_password' then 
+	select count(*) into idCount from users where id = _id;   
+        
+	if idCount > 0 then
+		if _email is null then
+			set result_set = '404';
+		else    
             update users
             set pwd = _pwd;
             set result_set = '200';
-            end if;    
-      elseif idCount < 0 or idCount = 0 then 
+		end if;    
+	elseif idCount < 0 or idCount = 0 then 
          set result_set = '401';
-      else 
+	else 
          set result_set = '500';    
-        end if;
-     elseif _switch = 'signin_info' then
-      select count(*) into idCount from users where  id = _id;   
+    end if;
+
+	elseif _switch = 'signin_info' then
+    select count(*) into idCount from users where  id = _id;   
         
-      if idCount > 0 then           
-         set result_set = '200';
-      else 
-         set result_set = '401';
+		if idCount > 0 then           
+			set result_set = '200';
+		else 
+			set result_set = '401';
+		  
+		end if;
+    
+	end if;
       
-        end if;
-      end if;
-      
+-- 마이페이지 -----------------------------------------------------
 	if _switch = 'my_page' then
 		select email into _email from users where id = _id;
 		select auth into _auth from users where id = _id; 
