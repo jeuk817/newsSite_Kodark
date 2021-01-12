@@ -101,7 +101,7 @@
             <div class="inputContent">
               <v-text-field
                 ref="local"
-                label="Local"
+                label="local"
                 v-model="userDetailForm.local"
                 height="40px"
                 outlined
@@ -190,6 +190,25 @@
             </div>
         </div>
       </div>
+      <v-snackbar
+      v-model="failCreate"
+      bottom="true"
+      color="error"
+      :timeout="failMsgTimeOut"
+    >
+      {{ failMsg }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          class="text-capitalize"
+          dark
+          text
+          v-bind="attrs"
+          @click="failCreate = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 
 </template>
@@ -197,12 +216,12 @@
 <script>
 export default {
     data: () => ({
-    nickName:'',
-    name:'',
-    local:'',
-    birth:'',
-    gender:'',
-     userDetailForm: {
+      name: '',
+      nickName: '',
+      local: '',
+      birth: '',
+      gender: '',
+    userDetailForm: {
       imageFile: undefined,
       imageRules: [
         value => !value || value.size < 2000000 || 'Image size should be less than 2 MB!',
@@ -211,8 +230,12 @@ export default {
       nickName: '',
       local: '',
       birth: new Date().toISOString().substr(0, 10),
-      gender: 'M'
+      gender: ''
     },
+    failCreate: false,
+    failMsg: '',
+    failMsgTimeOut: 10000
+  
     }),
     watch: {
       menu (val) {
@@ -236,32 +259,46 @@ export default {
         userDetailInfo.style.display ="block";
         inputHide.style.visibility="hidden";
       },
-      userDetailSubmit () {
+      async userDetailSubmit () {
+        if(!this.userDetailForm.name || !this.userDetailForm.nickName || !this.userDetailForm.local || !this.userDetailForm.birth || !this.userDetailForm.gender) {
+        this.failMsg = 'All information is required'
+        return this.failCreate = true
+        }
         const nickName = this.userDetailForm.nickName
         , name = this.userDetailForm.name
         , local = this.userDetailForm.local
         , birth = this.userDetailForm.birth // string
         , gender = this.userDetailForm.gender
         , image = this.userDetailForm.imageFile // object
-        this.$store.dispatch('users/updateDetail', 
+        console.log(image)
+        console.log(nickName)
+        const {status} = await this.$store.dispatch('users/updateDetail', 
         { nickName, name, local, birth, gender, image})
+        console.log(status)
+        if(status === 204){
+          this.$router.push({path: '/en/users/my-page'})
+        }
+        else if(status === 401) {
+          this.$router.push({ path: '/en/auth/signIn' })
+        }
       },
-      changeImage() {
+      changeImage(imageFile) {
         this.userDetailForm.imageFile = imageFile;
       }
     },
     async created () {
-    const {status, userDetail, links} = await this.$store.dispatch('users/getUserDetail');
-    if(status === 200){
-      this.nickName = userDetail.nickName;
-      this.name = userDetail.name;
-      this.local = userDetail.local;
-      this.birth = userDetail.birth;
-      this.gender = userDetail.gender;
-    }
-    if(status===401){
-      alert('Please Sign in your Account')
-    }
+      const {status, userDetail, links} = await this.$store.dispatch('users/getUserDetail');
+      if(status === 200){
+        this.nickName = userDetail.nickName;
+        this.name = userDetail.name;
+        this.local = userDetail.local;
+        this.birth = userDetail.birth;
+        this.gender = userDetail.gender;
+      }
+      if(status===401){
+        this.failMsg = ('Please Sign in your Account')
+        this.failCreate = true
+      }
     }
 }
 </script>

@@ -67,6 +67,7 @@ public class AdminController {
 		List<Map<String, Object>> list = null;
 		try {
 			list = adminProcedureService.getReporterList();
+			System.out.println(list);
 		} catch (Exception e) {
 			if (list.isEmpty()) {
 				return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.NO_CONTENT);

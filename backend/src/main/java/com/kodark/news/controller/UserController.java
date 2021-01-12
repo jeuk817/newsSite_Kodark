@@ -1,6 +1,7 @@
 package com.kodark.news.controller;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -312,12 +313,11 @@ public class UserController {
 	 * 작성자 : 이푸름
 	 */
 	
-	@PutMapping(path = "/detail",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity <UserDto> detailUpdate(
-			MultipartHttpServletRequest multiRequest, HttpServletRequest request) {
+	@PostMapping(path = "/detail", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity <String> detailUpdate(MultipartHttpServletRequest multiRequest, HttpServletRequest request, HttpServletResponse response) throws ParseException{
 		System.out.println("=====================================================");
 		System.out.println("detailUpdate");
-		
+		System.out.println(request.getAttribute("id"));
 		MultipartFile imageFile = multiRequest.getFile("image");
 		String fileName = util.saveImage(imageFile, request);
 		String name = request.getParameter("name");
@@ -338,11 +338,17 @@ public class UserController {
 		params.put("_id", id);
 		params.put("_switch", "user_update");
 		usersProcedureService.execuUsersProcedure(params);
+		response.setHeader("Links",
+				 	"</users/my-page/detail>;	rel=\"next\","
+		);
+		
+		
+		
 		System.out.println(params);
 		if (params.get("result_set").equals("200")) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
-		}else if (params.get("result_set").equals("404")) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
+		}else if (params.get("result_set").equals("401")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);// 401
 		} else
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 	}

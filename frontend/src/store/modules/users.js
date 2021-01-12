@@ -66,11 +66,12 @@ const actions = {
       formData.append('birth', birth)
       formData.append('gender', gender)
       formData.append('image', image)
-
-      const res = await axios.put('/users/detail', formData,
+      console.log(image);
+      console.log(formData);
+      const res = await axios.post('/users/detail', formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'application/multipart/form-data'
         }
       })
       return {status: res.status};

@@ -6,6 +6,9 @@
       <template v-if="currentRoute === 'reporters/new'">
         <CreateReporterForm />
       </template>
+      <template v-if="currentRoute === 'reporters'">
+        <ReportList />
+      </template>
     </div>
   </div>
 </template>
@@ -14,12 +17,14 @@
 import MyPageHeader from '../components/headers/MyPageHeader'
 import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
 import CreateReporterForm from '../components/bodies/admins/CreateReporterForm'
+import ReportList from '../components/bodies/admins/ReportList'
 
 export default {
   components: {
     MyPageHeader,
     IntroduceSideBar,
-    CreateReporterForm
+    CreateReporterForm,
+    ReportList
   },
   computed: {
     // side menu
