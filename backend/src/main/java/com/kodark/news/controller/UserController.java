@@ -1,8 +1,6 @@
 package com.kodark.news.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,10 +74,37 @@ public class UserController {
 		} else
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
 	}
+	
+
+	/**
+	 * title : 회원 탈퇴(33)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-12
+	 */
+	@DeleteMapping
+	public ResponseEntity<Map<String, Object>> delete(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params= new HashMap<String, Object>();
+		int id = (int)request.getAttribute("id");
+		//int id = 2;
+		
+		params.put("_switch", "delete");
+		params.put("_id", id);
+
+		usersProcedureService.execuUsersProcedure(params);
+		
+		response.setHeader("Links", "</users/my-page>; rel=\"self\"," + "</>; rel=\"next\"");
+				
+		if(params.get("result_set").equals("204")){
+			return  new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+		}else{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
+		}
+	}
 
 	/**
 	 * title : 마이페이지(28)
-	 * desc : 401번 비로그인 에러... 로직은 맞지 않을까?
+	 * desc : 
 	 * author : 최현지 
 	 * date : 2021-01-07
 	 */
@@ -90,8 +116,8 @@ public class UserController {
 		Map<String, Object> link2;
 		Map<String, Object> link3;
 
-		//int id = (int)request.getAttribute("id");
-		int id =2;
+		int id = (int)request.getAttribute("id");
+		//int id =2;
 		params.put("_id", id);
 
 		params.put("_switch", "my_page");
@@ -142,7 +168,7 @@ public class UserController {
 	
 	/**
 	 * title : 회원정보(33)
-	 * desc : **birth date 포멧 처리 아직 못함!
+	 * desc : 
 	 * author : 최현지 
 	 * date : 2021-01-08
 	 */
@@ -153,8 +179,9 @@ public class UserController {
 		Map<String, Object> temp = new HashMap<String, Object>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		int user_id = 1;
-
+		//int user_id = 1;
+		int user_id = (int) request.getAttribute("id");
+		
 		params.put("_switch", "mypage_detail");
 		params.put("_id", user_id);
 		

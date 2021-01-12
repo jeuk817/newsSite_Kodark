@@ -84,8 +84,10 @@ public class HelpController {
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object>link; 
 		
+		int id = (int) request.getAttribute("id");
+				
 		params.put("_switch", "question_list");
-		params.put("_user_id", 1);
+		params.put("_user_id", id);
 		list = helpProcedureService.execuHelpProcedure(params);
 		
 		System.out.println("params~~~~~~~~~  " + params);
