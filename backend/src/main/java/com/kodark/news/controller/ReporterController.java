@@ -130,11 +130,12 @@ public class ReporterController {
 	public ResponseEntity<String> articleBlind(@RequestBody Map<String, Object> body) {
 		int articleId = Integer.valueOf((String) body.get("articleId"));
 		int reporterId = Integer.valueOf((String) body.get("reporterId"));
+		String status = (String)body.get("status");
 		Map<String, Object> params = new HashMap<>();
 
 		params.put("_article_id", articleId);
 		params.put("_reporter_id", reporterId);
-		params.put("result_set", "blind");
+		params.put("result_set", status);
 		try {
 			reportersProcedureService.execuReportersProcedure(params);
 		} catch (Exception e) {
@@ -188,9 +189,9 @@ public class ReporterController {
 	}
 
 	/**
-	 * 발행/발행대기 기사 
-	 * 작성자 : 이푸름 
-	 * 작성일 : 2021-01-06
+	 * title : 65.발행/발행대기 기사 
+	 * author : 이푸름 
+	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/article")
 	public ResponseEntity<List<Map<String, Object>>> pubAndWaitArtlcles(@RequestParam("status") String status,
@@ -252,6 +253,7 @@ public class ReporterController {
 		}
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200
 	}
+	
 
 	
 }

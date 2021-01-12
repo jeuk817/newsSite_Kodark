@@ -17,16 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kodark.news.dto.CategoryDto;
 import com.kodark.news.service.ArticleProcedureService;
+import com.kodark.news.service.ReportersProcedureService;
 
 @RestController
 @RequestMapping(path = "/article")
 public class ArticleController {
 	
 	private ArticleProcedureService articleProcedureService;
+	private ReportersProcedureService reportersProcedureService;
 
 	@Autowired
-	public ArticleController(ArticleProcedureService articleProcedureService) {
+	public ArticleController(ArticleProcedureService articleProcedureService,ReportersProcedureService reportersProcedureService) {
 		this.articleProcedureService = articleProcedureService;
+		this.reportersProcedureService = reportersProcedureService;
 	}
 	
 	 /**
@@ -254,8 +257,7 @@ public class ArticleController {
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> temp = new HashMap<>();
 		Map<String, Object> link = new HashMap<>();
-		List<Map<String, Object>> list = new ArrayList<>();
-		// StringBuffer sb = new StringBuffer();
+		List<Map<String, Object>> list = new ArrayList<>();		
 		params.put("_category", category);
 		try {
 			list = articleProcedureService.execuLatestProcedure(params);
@@ -265,17 +267,14 @@ public class ArticleController {
 				link = new HashMap<>();
 				link.put("rel", "article");
 				link.put("href", "/article?articleId=" + list.get(i).get("id"));
-				link.put("method", "get");
-				// sb.append("rel :\"article\", href :
-				// \"article?articleId="+list.get(i).get("id")+"\",method : \"get\"");
+				link.put("method", "get");			
 				temp.put("id", list.get(i).get("id"));
 				temp.put("title", list.get(i).get("title"));
 				temp.put("content", list.get(i).get("content"));
 				temp.put("image", list.get(i).get("image"));
 				temp.put("imgDec", list.get(i).get("imgDec"));
 				temp.put("_link", link);
-				list.set(i, temp);
-				// sb.delete(0, sb.length());
+				list.set(i, temp);			
 			}
 			params.put("data", list);
 
@@ -319,5 +318,49 @@ public class ArticleController {
 		params.put("data", list);
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);// 200
 	}
+	/**
+	 * title : 38.구독기자의 기사목록
+	 * desc : 
+	 * author : 최윤수
+	 * date : 2021-01-11
+	 * @param : reporterId
+	 */
+	@GetMapping(path = "/reporters")
+	public ResponseEntity<Map<String, Object>> reportersArticleList(@RequestParam int reporterId){
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> params2 = new HashMap<>();
+		Map<String, Object> info = new HashMap<>();
+		Map<String, Object> reporter = new HashMap<>();
+		Map<String, Object> articles;
+		List<Map<String,Object>>list = new ArrayList<>();		
+		params.put("_reporter_id", reporterId);
+		params.put("result_set", "get_list");
+		params.put("_id", reporterId);
+		try {	
+			params2 = reportersProcedureService.getReporterInfo(params);				
+			System.out.println("params:"+params2.toString());
+			reporter.put("id", params2.get("id"));
+			reporter.put("email", params2.get("email"));
+			reporter.put("nickName", params2.get("nick_name"));
+			reporter.put("name", params2.get("name"));
+			reporter.put("image", params2.get("image"));
+			info.put("reporter", reporter);
+			list = reportersProcedureService.reportersArticleList(params);
+			for(int i=0;i<list.size();i++) {
+				articles = new HashMap<>();
+				articles.put("title", list.get(i).get("title"));
+				articles.put("subTitle", list.get(i).get("sub_title"));
+				articles.put("image", list.get(i).get("image"));
+				articles.put("imgDec", list.get(i).get("description"));
+				articles.put("link", "/article?="+list.get(i).get("id"));
+				list.set(i, articles);
+			}
+			info.put("articles", list);
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);//500
+		}
+		return new ResponseEntity<Map<String,Object>>(info,HttpStatus.OK);//200
+	}
+
 
 }

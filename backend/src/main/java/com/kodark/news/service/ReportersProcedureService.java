@@ -11,5 +11,7 @@ public interface ReportersProcedureService {
 
 	// 기자프로필
 	public Map<String, Object> getReporterInfo(Map<String, Object> params);
+	
+	public List<Map<String, Object>> reportersArticleList(Map<String, Object> params);
 
 }
