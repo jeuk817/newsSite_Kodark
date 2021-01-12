@@ -9,6 +9,9 @@
       <template v-if="currentRoute === 'reporters'">
         <ReportList />
       </template>
+      <template v-if="currentRoute === 'article/new'">
+        <WaitArticleList />
+      </template>
     </div>
   </div>
 </template>
@@ -18,13 +21,15 @@ import MyPageHeader from '../components/headers/MyPageHeader'
 import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
 import CreateReporterForm from '../components/bodies/admins/CreateReporterForm'
 import ReportList from '../components/bodies/admins/ReportList'
+import WaitArticleList from '../components/bodies/admins/WaitArticleList'
 
 export default {
   components: {
     MyPageHeader,
     IntroduceSideBar,
     CreateReporterForm,
-    ReportList
+    ReportList,
+    WaitArticleList
   },
   computed: {
     // side menu

@@ -135,7 +135,7 @@ public class AdminController {
 		if (adminProcedureService.getWaitArticles(_status).get(1) == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
 		} else if (adminProcedureService.getWaitArticles(_status).get(1) != null) {
-			return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 201;
+			return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200;
 		} else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}

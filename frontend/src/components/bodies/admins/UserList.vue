@@ -1,5 +1,5 @@
 <template>
-  <div class="AdminUserListComponent">
+  <div class="UserListComponent">
       <h1 class="title">User List</h1>
       <v-simple-table
     >

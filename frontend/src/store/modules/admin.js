@@ -42,6 +42,26 @@ const actions = {
     }catch(err){
       return {status: err.response.status}
     }
+  },
+  async getWaitArticles () {
+    try{
+      const res = await axios.get('/admin/article',{
+        params: {
+          status: 'wait'
+        }
+      } 
+      ,{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = res.data
+      console.log(data)
+      console.log(res.status)
+      return {data, status: res.status}
+    }catch(err){
+      return {status: err.response.status}
+    }
   }
 }
 
