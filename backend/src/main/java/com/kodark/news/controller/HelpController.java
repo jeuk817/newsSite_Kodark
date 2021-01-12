@@ -112,11 +112,12 @@ public class HelpController {
 			temp.put("id", list.get(i).get("id"));
 			temp.put("title",  list.get(i).get("title"));
 			temp.put("createdAt",  list.get(i).get("created_at"));
-			temp.put("accepted", list.get(i).get("accepted"));
+			temp.put("doneFlag", list.get(i).get("done_flag"));
 			temp.put("_link", link);
 			
 			list.set(i, temp);
 		}
+		
 		System.out.println("list~~~~~~~~~~~~~ " + list);
 		response.setHeader("Links",	"</help/question>; rel=\"questionPage\"");
 		
