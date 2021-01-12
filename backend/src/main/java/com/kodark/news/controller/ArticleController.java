@@ -230,7 +230,7 @@ public class ArticleController {
 
 				temp.put("id", list.get(i).get("id"));
 				temp.put("title", list.get(i).get("title"));
-				temp.put("content", list.get(i).get("content"));
+				temp.put("subTitle", list.get(i).get("sub_title"));
 				temp.put("image", list.get(i).get("image"));
 				temp.put("imgDec", list.get(i).get("imgDec"));
 				temp.put("_link", link);

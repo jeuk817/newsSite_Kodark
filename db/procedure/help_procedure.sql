@@ -5,7 +5,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `help_procedure`(
     , in _title varchar(200)
     , in _content varchar(2000)
     , in _createdAt timestamp
-    , in _accepted tinyint	-- sql에서 쓰이는 boolean 타입. 0 아니면 1의 값을 가짐
+    , in _doneFlag char(1)
     , out result_set varchar(10)
 )
 BEGIN
@@ -20,7 +20,7 @@ declare idCount int;
 if _switch = 'question_list' then
 	select count(*) into idCount from users where id = _user_id;  
 	if idCount > 0 then
-		select id, title, date_format(created_at, '%Y-%m-%d %H:%i:%S') as 'created_at', accepted from question
+		select id, title, date_format(created_at, '%Y-%m-%d %H:%i:%S') as 'created_at', done_flag from question
 		where user_id = (select id from users where id = _user_id);
 		set result_set = '200';
 	else
