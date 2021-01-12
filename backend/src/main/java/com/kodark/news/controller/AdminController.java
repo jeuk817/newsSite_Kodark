@@ -285,19 +285,19 @@ public class AdminController {
 				temp2.put("email", list.get(i).get("reporterEmail"));
 				map.put("reporter", temp2);			
 				temp3.put("rel", "blindArticle");
-				temp3.put("href", "\"/admin/report/article?articleId="+articleId+"&status=unpublish\"");
+				temp3.put("href", "/admin/report/article?articleId="+articleId+"&status=blind");
 				temp3.put("method", "patch");
 				templist.add(temp3);
 				temp4.put("rel", "openArticle");
-				temp4.put("href", "\"/admin/report/article?articleId="+articleId+"&status=publish\"");
+				temp4.put("href", "/admin/report/article?articleId="+articleId+"&status=publish");
 				temp4.put("method", "patch");
 				templist.add(temp4);
 				temp5.put("rel", "sendEmailToReporter");
-				temp5.put("href", "\"/admin/reporters/"+list.get(i).get("reporterEmail"));
+				temp5.put("href", "/admin/reporters/"+list.get(i).get("reporterEmail"));
 				temp5.put("method", "post");
 				templist.add(temp5);
 				temp6.put("rel", "articleReportDone");
-				temp6.put("href", "\"/admin/report/article/done?articleId="+articleId+"\"");
+				temp6.put("href", "/admin/report/article/done?articleId="+articleId+"");
 				temp6.put("method", "patch");
 				templist.add(temp6);
 				map.put("_links",templist);		
@@ -323,7 +323,7 @@ public class AdminController {
 	 */
 	@GetMapping(path = "/question-list") //-넣으면 nullpoint error발생 -대신 /넣으면 잘 실행됨
 	public ResponseEntity<List<Map<String,Object>>> questionList(
-			@RequestParam(value = "status", required = false,defaultValue = "wait" ) String status, 
+			@RequestParam(value = "status", required = false) String status, 
 			@RequestParam(value = "questionStartId", required = false, defaultValue = "2")int sId,
 			HttpServletResponse response
 			){
@@ -348,6 +348,7 @@ public class AdminController {
 			maps.put("id", list.get(i).get("id"));
 			maps.put("title",list.get(i).get("title"));
 			maps.put("content",list.get(i).get("content"));
+			maps.put("doneFlag",list.get(i).get("done_flag"));
 			maps.put("answer",list.get(i).get("answer"));
 			int userId = (int)list.get(i).get("userId");
 			String userEmail = (String)list.get(i).get("userEmail");
@@ -368,25 +369,6 @@ public class AdminController {
 		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
 		
 	}
-	/**
-	 * title : 56.기사신고확인(일단보류 사유 : 이해못함)
-	 * desc : 
-	 * author : 최윤수
-	 * date : 2021-01-07
-	 * @param : body
-	 * @return
-	 */
-	@PatchMapping(path = "/report/article/done")
-	public ResponseEntity<Map<String, Object>> articleReportCheck(@RequestBody Map<String, Object> body){
-		Map<String, Object> params = new HashMap<>();		
-		int articleReportId = Integer.valueOf((String)body.get("articleReportId"));
-		params.put("_articleReportId", articleReportId);
-		params.put("_switch", "article_report");
-		
-		
-		return new ResponseEntity<Map<String,Object>>(HttpStatus.RESET_CONTENT);//205
-	}
-	
 	/**
 	 * title : 48. 회원정보 및 이메일 전송
 	 * desc : id, 정지사유, 기간(day)을 입력받아 DB에 저장하고 이메일을 발송(forbbiden에 isert되면 users테이블의 status도 변경되게)
@@ -470,5 +452,25 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}		
 		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
+	}
+	/**
+	 * title : 56.기사신고확인
+	 * desc : 
+	 * author : 최윤수
+	 * date : 2021-01-12
+	 * @param : articleReportId
+	 */
+	@PatchMapping(path = "/report/article/done")
+	public ResponseEntity<String> reportConfirm(@RequestParam int articleReportId){
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "confirm");
+		params.put("_id", articleReportId);
+		adminProcedureService.execuAdminProcedure(params);
+		if(params.get("result_set").equals("404")){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
+		}else if(params.get("result_set").equals("205")) {
+			return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//205
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 	}
 }

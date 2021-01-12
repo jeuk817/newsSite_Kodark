@@ -1,5 +1,6 @@
 package com.kodark.news.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class UsersProceduerServiceImpl implements UsersProceduerService {
 	@Override
 	public Map<String, Object> myPage(Map<String, Object> params) {
 		return usersProcedureDao.myPage(params);
+	}
+
+	@Override
+	public List<Map<String, Object>> subList(Map<String, Object> params) {		
+		return usersProcedureDao.subList(params);
 	}
 
 }

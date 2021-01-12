@@ -349,7 +349,7 @@ public class ArticleController {
 			for(int i=0;i<list.size();i++) {
 				articles = new HashMap<>();
 				articles.put("title", list.get(i).get("title"));
-				articles.put("content", list.get(i).get("content"));
+				articles.put("subTitle", list.get(i).get("sub_title"));
 				articles.put("image", list.get(i).get("image"));
 				articles.put("imgDec", list.get(i).get("description"));
 				articles.put("link", "/article?="+list.get(i).get("id"));
