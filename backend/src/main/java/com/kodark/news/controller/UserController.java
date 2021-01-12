@@ -252,5 +252,93 @@ public class UserController {
 		}		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 	}
-
+	
+	/**
+	 * title : 35.구독목록
+	 * desc : 
+	 * author : 최윤수
+	 * date : 2021-01-11
+	 * 
+	 */
+	@GetMapping(path = "/my-page/subscribed-list")
+	public ResponseEntity<List<Map<String,Object>>> subscribeList(HttpServletResponse response){
+		int id = 6;	//test
+		List<Map<String,Object>>list = new ArrayList<>();
+		List<Map<String,Object>>link;
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> map1;
+		Map<String, Object> map2;	
+		Map<String, Object> map3;	
+		Map<String, Object> map4;
+		params.put("_switch", "sub_list");
+		params.put("_id", id);				
+		list = usersProcedureService.subList(params);
+		if(params.get("result_set").equals("404")) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
+		}else if(params.get("result_set").equals("200")){
+			try {
+				for(int i=0;i<list.size();i++) {
+					link = new ArrayList<>();
+					map1 = new HashMap<>();
+					map2 = new HashMap<>();
+					map3 = new HashMap<>();	
+					map4 = new HashMap<>();
+					map1.put("id", list.get(i).get("reporter_id"));
+					map1.put("email", list.get(i).get("email"));
+					map1.put("nickName", list.get(i).get("nick_name"));
+					map1.put("name", list.get(i).get("name"));
+					map1.put("image", list.get(i).get("image"));
+					map1.put("letterAccepted", list.get(i).get("letter_accepted"));
+					map2.put("rel", "reporterArticles");
+					map2.put("href", "/users/reporter/article");
+					map2.put("method", "get");
+					map3.put("rel", "letterAccept");
+					map3.put("href", "/users/reporters/letter-accepted");
+					map3.put("method", "patch");
+					map4.put("rel", "deleteSubscription");
+					map4.put("href", "/users/subscription");
+					map4.put("method", "delete");
+					link.add(map2);
+					link.add(map3);
+					link.add(map4);
+					map1.put("_links", link);
+					list.set(i, map1);						
+				}
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.OK);//500
+			}
+		}	
+		response.setHeader("links",	  "</users/my-page>; rel=\"myPage\",\r\n"
+									+ "</users/my-page/detail>; rel=\"userDetail\",\r\n"
+									+ "</users/my-page/subscribed-list>; rel=\"self\",\r\n"
+									+ "</users/detail>; rel=\"editUserDetail\",\r\n"
+									+ "</users/reporters/article>; rel=\"reporterArticles\",\r\n"
+									+ "</users/reporters/letter-accepted>; rel=\"letterAccept\",\r\n"
+									+ "</users/subscription>; rel=\"deleteSubscription\"");	
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
+	}
+	
+	/**
+	 * title : 26.기자구독하기
+	 * desc : 
+	 * author : 최윤수
+	 * date :2021-01-12
+	 * @param : userId
+	 */
+	@PostMapping(path = "/subscription")
+	public ResponseEntity<String> subscription(@RequestBody Map<String, Object> body){
+		int reporterId =Integer.valueOf((String)body.get("id"));//기자아이디
+		int id = 4; //userId httpservletrequest
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "subs");
+		params.put("_id", id);
+		params.put("_reporter_id", reporterId);
+		usersProcedureService.execuUsersProcedure(params);
+		if(params.get("result_set").equals("409")) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);//409
+		}else if(params.get("result_set").equals("201")) {
+			return new ResponseEntity<>(HttpStatus.CREATED);//201
+		}else
+			return new ResponseEntity<>(HttpStatus.CREATED);//500		
+	}
 }
