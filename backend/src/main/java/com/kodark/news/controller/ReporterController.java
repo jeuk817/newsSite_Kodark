@@ -130,11 +130,12 @@ public class ReporterController {
 	public ResponseEntity<String> articleBlind(@RequestBody Map<String, Object> body) {
 		int articleId = Integer.valueOf((String) body.get("articleId"));
 		int reporterId = Integer.valueOf((String) body.get("reporterId"));
+		String status = (String)body.get("status");
 		Map<String, Object> params = new HashMap<>();
 
 		params.put("_article_id", articleId);
 		params.put("_reporter_id", reporterId);
-		params.put("result_set", "blind");
+		params.put("result_set", status);
 		try {
 			reportersProcedureService.execuReportersProcedure(params);
 		} catch (Exception e) {
