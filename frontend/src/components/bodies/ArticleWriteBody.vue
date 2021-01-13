@@ -44,16 +44,20 @@
             ></v-select>
         </div>
 
-        <div class="formContainer">
-            
+        <div class="editorContainer">
+            <TiptapEditor />
         </div>
-
 
     </div>
 </template>
 
 <script>
+import TiptapEditor from '../units/TiptapEditor'
+
 export default {
+    components: {
+        TiptapEditor
+    },
      data: () => ({
       category: ['Foo', 'Bar', 'Fizz', 'Buzz']
 
@@ -90,5 +94,8 @@ export default {
     border: 1px solid black;
 }
 
+.editorContainer {
+    width: 100%;
+}
 
 </style>

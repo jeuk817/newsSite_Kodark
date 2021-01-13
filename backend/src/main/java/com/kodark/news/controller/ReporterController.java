@@ -5,22 +5,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.kodark.news.service.ReportersProcedureService;
 import com.kodark.news.service.StatisticsService;
+import com.kodark.news.utils.Util;
 
 @RestController
 @RequestMapping(path = "/reporters")
@@ -28,13 +34,15 @@ public class ReporterController {
 
 	private ReportersProcedureService reportersProcedureService;
 	private StatisticsService statisticsService;
+	private Util util;
 
 	@Autowired
 	public ReporterController(ReportersProcedureService reportersProcedureService,
-			StatisticsService statisticsService) {
+			StatisticsService statisticsService, Util util) {
 
 		this.reportersProcedureService = reportersProcedureService;
 		this.statisticsService = statisticsService;
+		this.util = util;
 	}
 
 	/**
@@ -245,6 +253,25 @@ public class ReporterController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
 		}
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200
+	}
+	
+	/**
+	 * title : 이미지 업로드(기사작성) 
+	 * author : 류제욱 
+	 * date : 2020-01-13
+	 * @param 
+	 * @return
+	 */
+	@PostMapping(path = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Map<String, Object>> createReporter(
+			MultipartHttpServletRequest multiRequest, HttpServletRequest request) {
+		
+		MultipartFile imageFile = multiRequest.getFile("image");
+		String fileName = util.saveImage(imageFile, request);
+		Map<String, Object> map = new HashMap<>();
+		map.put("imageUrl", fileName);
+		
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 
 }
