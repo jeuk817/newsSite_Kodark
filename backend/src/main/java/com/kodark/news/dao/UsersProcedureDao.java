@@ -17,6 +17,10 @@ public class UsersProcedureDao {
 	public void execuUsersProcedure(Map<String, Object> params) {
 		usersProcedureMapper.usersProcedure(params);
 	}
+	
+	public List<Map<String, Object>> execuUsersProcedureList(Map<String, Object> params) {
+		return usersProcedureMapper.usersProcedureList(params);
+	}
 
 	public Map<String,Object> execuCommentMapProcedure(Map<String, Object> params) {
 		return usersProcedureMapper.execuCommentMapProcedure(params);

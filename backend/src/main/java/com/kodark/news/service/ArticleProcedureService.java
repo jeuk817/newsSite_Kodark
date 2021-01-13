@@ -8,12 +8,12 @@ import com.kodark.news.dto.CategoryDto;
 public interface ArticleProcedureService {
 
 	public void execuArticleProcedure(Map<String, Object> params);
-
+	
+	public Map<String, Object> excuArticleProcedureMap(Map<String, Object> params);
+	
+	public List<Map<String, Object>> excuArticleProcedureList(Map<String, Object> params);
+	
 	public List<Map<String, Object>> getArticleDetail(Map<String, Object> params);
-
-	public List<Map<String, Object>> getEmotionInfo(int articleId);
-
-	public List<Map<String, Object>> getCommentReply(int articleId, int commentId);
 
 	public List<CategoryDto> categoryInfo();
 

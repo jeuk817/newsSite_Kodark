@@ -115,7 +115,7 @@ public class HelpController {
 	 * date : 2021-01-11
 	 */
 	@GetMapping(path = "/question")
-	public ResponseEntity<Map<String, Object>> getQuestion(@RequestParam int questionId){
+	public ResponseEntity<Map<String, Object>> getQuestion(@RequestParam int questionId, HttpServletResponse response){
 		Map<String, Object> params = null;
 		Map<String, Object> map = null;
 		try {
@@ -124,6 +124,8 @@ public class HelpController {
 			params.put("_switch", "question_info");
 			params.put("_id", questionId);
 			map = helpProcedureService.execuHelpProcedureMap(params);
+			
+			response.setHeader("Links", "</help/question>;rel=\"questionPage\"");
 		} catch (Exception e) {
 			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -136,7 +138,7 @@ public class HelpController {
 	 * date : 2021-01-11
 	 */
 	@PostMapping(path = "/question")
-	public ResponseEntity<Map<String, Object>> writeQuestion(@RequestBody Map<String, Object> body){
+	public ResponseEntity<Map<String, Object>> writeQuestion(@RequestBody Map<String, Object> body, HttpServletResponse response){
 		Map<String, Object> params = null;
 		try {
 			params = new HashMap<String, Object>();
@@ -145,6 +147,8 @@ public class HelpController {
 			params.put("_title", body.get("title"));
 			params.put("_content", body.get("content"));
 			helpProcedureService.execuHelpProcedureMap(params);
+			
+			response.setHeader("Links", "</help/question-list>;rel=\"myQuestionList\"");
 		} catch (Exception e) {
 			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

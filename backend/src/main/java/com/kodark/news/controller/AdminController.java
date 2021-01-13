@@ -54,8 +54,11 @@ public class AdminController {
 	@GetMapping(path = "/reporters")
 	public ResponseEntity<List<Map<String, Object>>> getReportersList() {
 		List<Map<String, Object>> list = null;
+		Map<String, Object> params = null;
 		try {
-			list = adminProcedureService.getReporterList();
+			params = new HashMap<String, Object>();
+			params.put("_switch", "admin_reporters_list");
+			list = adminProcedureService.execuAdminProcedureList(params);
 		} catch (Exception e) {
 			if (list.isEmpty()) {
 				return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.NO_CONTENT);
@@ -322,6 +325,68 @@ public class AdminController {
 			return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<List<Map<String, Object>>>(listTemp,HttpStatus.OK);
+	}
+	/**
+	 * 대기중 기사 상세
+	 * 작성자 : 이종현 
+	 * 작성일 :2021-01-13
+	 */
+	@GetMapping(path = "/article/detail")
+	public ResponseEntity<Map<String, Object>> getArticleDetail(
+			@RequestParam("articleId") int articleId, @RequestParam("status") String status, HttpServletResponse response){
+		List<Map<String, Object>> list = null;
+		Map<String, Object> params = null;
+		Map<String, Object> map = null;
+		Map<String, Object> temp = null;
+		Map<String, Object> mapAll = null;
+		try {
+			params = new HashMap<String, Object>();
+			temp = new HashMap<String, Object>();
+			mapAll = new HashMap<String, Object>();
+			params.put("_switch", "article_wait_detail");
+			params.put("_id", articleId);
+			params.put("_status", status);
+			map = adminProcedureService.execuAdminProcedureMap(params);
+			params.put("_switch", "article_wait_detail_image");
+			list = adminProcedureService.execuAdminProcedureList(params);
+			
+			temp.put("id", map.get("id"));
+			temp.put("category", map.get("category"));
+			temp.put("title", map.get("title"));
+			temp.put("subTitle", map.get("sub_title"));
+			temp.put("content", map.get("content"));
+			temp.put("image", list);
+			mapAll.put("article", temp);
+			
+			temp = new HashMap<String, Object>();
+			temp.put("id", map.get("userId"));
+			temp.put("name", map.get("name"));
+			temp.put("email", map.get("email"));
+			mapAll.put("user", temp);
+			
+			list = new ArrayList<Map<String,Object>>();
+			map = new HashMap<String, Object>();
+			map.put("rel", "publish");
+			map.put("href", "/admin/article="+articleId+"/status=publish");
+			map.put("method", "publish");
+			list.add(map);
+			map = new HashMap<String, Object>();
+			map.put("rel", "sendEmailToReporter");
+			map.put("href", "/admin/reporters/email");
+			map.put("method", "post");
+			list.add(map);
+			mapAll.put("_links", list);
+			
+			response.setHeader("links", "</admin/article?status=publish>;"
+										+"rel=\"publish\","
+										+"</admin/reporters/email>;"
+										+"rel=\"sendEmailToReporter\"");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String,Object>>(mapAll,HttpStatus.OK);
 	}
 
 }
