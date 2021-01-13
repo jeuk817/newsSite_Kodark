@@ -276,12 +276,14 @@ public class UserController {
 		String name= (String) params.get("_name");
 		String local= (String) params.get("_local");
 		String birth = (String) params.get("_birth");
+	
+		String formatBirth = birth.substring(0, 10);
+		String gender= (String) params.get("_gender");
+		String image = (String) params.get("_image");
 //		Date beforeFormatBirth= (Date) params.get("_birth"); 
 //		String pattern = "yyyy-MM-dd";
 //		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 //		String birth = simpleDateFormat.format(beforeFormatBirth);
-		
-		String gender= (String) params.get("_gender");
 		
 		Map<String, Object> result = new HashMap<String, Object>();
 		link1 = new HashMap<String, Object>();
@@ -292,8 +294,9 @@ public class UserController {
 		result.put("nickName", NickName);
 		result.put("name", name);
 		result.put("local", local);
-		result.put("birth", birth);
+		result.put("birth", formatBirth);
 		result.put("gender", gender);
+		result.put("image", image);
 		result.put("_link", link1);
 		
 
@@ -349,8 +352,11 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 		}else if (params.get("result_set").equals("401")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);// 401
-		} else
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
+		}else if(params.get("result_set").equals("409")) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);// 409
+		}else {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}// 500
 	}
 
 }

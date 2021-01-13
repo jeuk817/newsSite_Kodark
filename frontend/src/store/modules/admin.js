@@ -56,8 +56,6 @@ const actions = {
         }
       })
       const data = res.data
-      console.log(data)
-      console.log(res.status)
       return {data, status: res.status}
     }catch(err){
       return {status: err.response.status}

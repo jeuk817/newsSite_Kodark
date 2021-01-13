@@ -9,6 +9,9 @@
     <thead>
       <tr>
         <th class="text-left">
+          Article Title
+        </th>
+        <th class="text-left">
           Reporter Name
         </th>
         <th class="text-left">
@@ -17,9 +20,6 @@
         <th class="text-left">
           Article ID
         </th>
-        <th class="text-left">
-          Article Title
-        </th>
       </tr>
     </thead>
     <tbody>
@@ -27,19 +27,11 @@
         v-for="item in waitArticles"
         :key="item.id"
       >
+        <td>{{item.title}}</td>
         <td>{{item.name}}</td>
         <td>{{item.email}}</td>
         <td>{{item.id}}</td>
-        <td>{{item.title}}</td>
-
       </tr>
-      <!-- <tr
-        v-for="reporter in reporters"
-        :key="reporter.name"
-      >
-        <td>{{reporter.name}}</td>
-        <td>{{reporter.email}}</td>
-      </tr> -->
     </tbody>
   </template>
   </v-simple-table>
@@ -52,18 +44,13 @@ export default {
     waitArticles: []
   }),
   async created () {
-    console.log("created")
     const { status, data } = await this.$store.dispatch('admin/getWaitArticles');
     if(status === 200) {
-      console.log(data)
-      console.log(this.waitArticles)
       for(let i=0; i<data.length; i++){
         const waitArticleItem = new Object();
         waitArticleItem = Object.assign({},data[i].article,data[i].reporter);
         this.waitArticles.push(waitArticleItem)
       }
-      console.log(this.waitArticles)
-   
     }
       
     if(status === 404){

@@ -43,6 +43,14 @@
               <p>{{gender}}</p> 
             </div>
         </div>
+        <div class="userDetailContainer">
+            <div class="userInfoTitle">
+              <p>Image</p>
+            </div>
+            <div class="userInfoContent image">
+              <p>{{image}}</p> 
+            </div>
+        </div>
         <div class="EditBtn">
           <v-btn
             depressed
@@ -62,6 +70,8 @@
             </v-btn>
         </div>
       </div>
+
+      <!-- Detail Form start -->
       <div class="editInputContainer inputHide">
         <div class="inputContainer">
             <div class="inputTitle" style="margin-right: 20px">
@@ -168,6 +178,7 @@
             ></v-file-input>
             </div>
           </div>
+          
 
         <div class="inputFromBtn">
           <div class="CancleBtn">
@@ -221,6 +232,7 @@ export default {
       local: '',
       birth: '',
       gender: '',
+      image: '',
     userDetailForm: {
       imageFile: undefined,
       imageRules: [
@@ -280,6 +292,9 @@ export default {
         }
         else if(status === 401) {
           this.$router.push({ path: '/en/auth/signIn' })
+        }else if(status === 409){
+          this.failMsg = 'NickName is already in use'
+          this.failCreate = true
         }
       },
       changeImage(imageFile) {
@@ -294,6 +309,7 @@ export default {
         this.local = userDetail.local;
         this.birth = userDetail.birth;
         this.gender = userDetail.gender;
+        this.image = userDetail.image;
       }
       if(status===401){
         this.failMsg = ('Please Sign in your Account')
@@ -314,6 +330,13 @@ export default {
 .userInfoContent{
   width: 250px;
   height: 40px;
+  border-radius: 5px;
+  background-color: #f7f7f5;
+}
+
+.image{
+  width: 280px;
+  height: 70px;
   border-radius: 5px;
   background-color: #f7f7f5;
 }

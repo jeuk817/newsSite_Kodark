@@ -3,8 +3,6 @@
     <h1 class="title">Waiting Article Lists</h1>
     <div class="topNav">
       <span>기사</span>
-      <span>승인</span>
-      <span>취소</span>
     </div>
     <ul class="articleItemList">
       <li class="articleItem">
@@ -18,14 +16,6 @@
             <h6 class="reporterName">이종현기자</h6>
           </div>
         </div>
-        <div class="btns">
-          <span class="material-icons">
-            check
-          </span>
-          <span class="material-icons">
-            clear
-          </span>
-        </div>
       </li>
       <li class="articleItem">
         <div class="article">
@@ -37,14 +27,6 @@
               rum quae aliquam autem?</h5>
             <h6 class="reporterName">이종현기자</h6>
           </div>
-        </div>
-        <div class="btns">
-          <span class="material-icons">
-            check
-          </span>
-          <span class="material-icons">
-            clear
-          </span>
         </div>
       </li>
     </ul>
