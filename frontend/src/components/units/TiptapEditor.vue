@@ -93,7 +93,69 @@
         </template>
       </v-toolbar>
     </EditorMenuBar>
-    <EditorContent :editor="editor" />
+    <EditorContent :editor="editor" class="editorContent" />
+    <v-dialog
+      v-model="inputImageInfo"
+      max-width="800"
+      persistent
+    >
+      <!-- @click:outside="moveRoute" -->
+      <v-card>
+        <v-card-title class="headline">Enter the information of this image</v-card-title>
+
+        <div class="imageInfo">
+          <v-img
+            width="100%"
+            :src="targetImageUrl"
+          ></v-img>
+          <span class="optionTitle">Source</span>
+          <div>
+              <v-text-field
+              ref="source"
+              label="Source"
+              height="40px"
+              full-width
+              outlined
+              required
+              dense=true
+              v-model="source"
+              >
+              </v-text-field>
+          </div>
+          <span class="optionTitle">Description</span>
+          <div>
+              <v-text-field
+              ref="description"
+              label="Description"
+              height="40px"
+              full-width
+              outlined
+              required
+              dense=true
+              v-model="description"
+              >
+              </v-text-field>
+          </div>
+        </div>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="green darken-1"
+            text
+          >
+            <!-- @click="moveRoute" -->
+            Save
+          </v-btn>
+          <v-btn
+            color="red darken-1"
+            text
+          >
+            <!-- @click="moveRoute" -->
+            Cancel
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -111,21 +173,21 @@ export default {
     imageRules: [
       value => !value || value.size < 2000000 || 'Image size should be less than 2 MB!',
     ],
-    imageUrl: ''
+    inputImageInfo: false,
+    targetImageUrl: 'https://picsum.photos/1920/1080?random',
+    source: '',
+    description: ''
   }),
   methods: {
     async changeImage(command) {
       const image = document.getElementById('imgUpload').files[0]
       const {status, imageUrl} = await this.$store.dispatch('reporters/uploadImage' , { image })
-      console.log('~~~~~~~~~~~~~~~~~~~~~~~')
-      console.log(command)
+
       if(status === 200) {
+        // this.targetImageUrl = imageUrl
+        // this.inputImageInfo = true
         command({ src: imageUrl, class: 'imageClass' })
       }
-    },
-    inputEvent(event) {
-      console.log('inputEvent')
-      console.log(event)
     }
   },
   mounted() {
@@ -148,21 +210,21 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-img {
-  height: 100px;
-  width: 100px;
-  object-fit: cover;
+<style scoped>
+.imageInfo {
+  width: 80%;
+  margin: 10px auto;
 }
 </style>
 
 <style>
-.displayNone {
-  display: none;
-}
 .editor img {
   width: 80%;
   display: block;
   margin: 10px auto;
+}
+
+.editorContent > div {
+  min-height: 800px;
 }
 </style>
