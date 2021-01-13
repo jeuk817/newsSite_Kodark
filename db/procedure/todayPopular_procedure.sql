@@ -1,5 +1,4 @@
-CREATE DEFINER=`jack`@`localhost` PROCEDURE `todayPopular_procedure`(
-)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `todayPopular_procedure`()
 BEGIN
 -- Today Popular (top5)      
 	select a.title, a.hit, u.email, d.name

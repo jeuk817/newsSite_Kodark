@@ -1,5 +1,6 @@
-CREATE DEFINER=`jack`@`localhost` PROCEDURE `comment_procedure`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `comment_procedure`(
 in _article_id int
+,in _start_id int
 )
 BEGIN
 select
@@ -17,5 +18,6 @@ select
     join users as u on c.user_id = u.id
     join user_detail as ud on u.id = ud.user_id
 	where c.article_id = _article_id
+    limit 15 offset _start_id
     ;
-END
+    END
