@@ -73,8 +73,8 @@ public class HelpController {
 	
 
 	/**
-	 * title : 내문의글
-	 * desc : DB에 created_at(DATETIME), accepted(boolean) 컬럼 추가
+	 * title : 내 문의글(41)
+	 * desc :
 	 * author : 최현지
 	 * date : 2021-01-11
 	 */
@@ -85,7 +85,8 @@ public class HelpController {
 		Map<String, Object>link; 
 		
 		int id = (int) request.getAttribute("id");
-				
+		//int id = 1;
+		
 		params.put("_switch", "question_list");
 		params.put("_user_id", id);
 		list = helpProcedureService.execuHelpProcedure(params);
@@ -94,11 +95,12 @@ public class HelpController {
 		
 		
 			/*
-			 * int user_id = 1; int id = (int)list.get(i).get("id"); String title = (String)
-			 * list.get(i).get("title"); String content = (String)
-			 * list.get(i).get("content"); Date createdAt =
-			 * (Date)list.get(i).get("creatded_at"); int accepted =
-			 * (int)list.get(i).get("accepted");
+			 * int user_id = 1;
+			 * int id = (int)list.get(i).get("id");
+			 * String title = (String)list.get(i).get("title");
+			 * String content = (String)list.get(i).get("content");
+			 * Date createdAt = (Date)list.get(i).get("creatded_at");
+			 * int accepted = (int)list.get(i).get("accepted");
 			 */
 		
 		for(int i=0; i<list.size(); i++) {

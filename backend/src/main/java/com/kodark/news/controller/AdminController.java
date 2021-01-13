@@ -73,10 +73,14 @@ public class AdminController {
 	public ResponseEntity<Map<String, Object>> mainPage() {
 		List<Map<String, Object>> list = new ArrayList<>();
 		Map<String, Object> params = new HashMap<>();
+		
 		params.put("_id", 1);
 		statisticsService.execuStatisticsProcedure(params);
+		
 		list = statisticsService.execuTodayPopularProcedure();
+		
 		params.put("todayPopular", list);
+		
 		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
 	}
 
@@ -169,7 +173,12 @@ public class AdminController {
 
 	}
 
-	// 관리자 네비정보
+	/**
+	 * title : 관리자 네비정보(46)
+	 * desc :
+	 * author : 최현지 
+	 * date :2021-01-07
+	 */
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> adminNavi(HttpServletResponse response) {
 

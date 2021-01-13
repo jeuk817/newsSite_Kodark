@@ -218,7 +218,8 @@ public class ArticleController {
 		List<Map<String, Object>> list = new ArrayList<>();
 
 		try {
-			list = articleProcedureService.hotNews();
+			params.put("_switch", "popular");
+			list = articleProcedureService.execuArticleProcedure_2(params);
 
 			for (int i = 0; i < list.size(); i++) {
 				temp = new HashMap<>();
@@ -234,7 +235,7 @@ public class ArticleController {
 				temp.put("image", list.get(i).get("image"));
 				temp.put("imgDec", list.get(i).get("imgDec"));
 				temp.put("_link", link);
-
+				System.out.println("temp~~~~~" + temp);
 				list.set(i, temp);
 			}
 
@@ -282,8 +283,8 @@ public class ArticleController {
 				temp.put("imgDec", list.get(i).get("imgDec"));
 				temp.put("_link", link);
 				list.set(i, temp);
-				// sb.delete(0, sb.length());
 			}
+			
 			params.put("data", list);
 
 			response.setHeader("Links", "rel : \"article\"," + "href : \"/article?articleId\"," + "method : \"get\"");
@@ -301,7 +302,12 @@ public class ArticleController {
 	 */
 	@GetMapping(path = "/category")
 	public ResponseEntity<List<Map<String, Object>>> categoryInfo() {
-		List<Map<String, Object>> categoryInfo = articleProcedureService.categoryInfo();
+		Map<String, Object> params = new HashMap<String, Object>();
+		List<Map<String, Object>> categoryInfo = new ArrayList<Map<String,Object>>();
+		
+		params.put("_switch","category_info");
+		categoryInfo = articleProcedureService.execuArticleProcedure_2(params);
+		
 		return new ResponseEntity<List<Map<String, Object>>>(categoryInfo, HttpStatus.OK);// 200
 	}
 
