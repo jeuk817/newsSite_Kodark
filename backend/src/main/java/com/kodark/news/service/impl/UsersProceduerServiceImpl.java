@@ -18,7 +18,11 @@ public class UsersProceduerServiceImpl implements UsersProceduerService {
 	@Override
 	public void execuUsersProcedure(Map<String, Object> params) {
 		usersProcedureDao.execuUsersProcedure(params);
-
+	}
+	
+	@Override
+	public List<Map<String, Object>> execuUsersProcedureList(Map<String, Object> params) {
+		return usersProcedureDao.execuUsersProcedureList(params);
 	}
 
 	@Override
@@ -35,5 +39,6 @@ public class UsersProceduerServiceImpl implements UsersProceduerService {
 	public Map<String, Object> myPage(Map<String, Object> params) {
 		return usersProcedureDao.myPage(params);
 	}
+
 
 }
