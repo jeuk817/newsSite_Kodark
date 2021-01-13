@@ -1,167 +1,133 @@
 <template>
   <div class="editor">
     <EditorMenuBar :editor="editor" v-slot="{ commands, isActive }">
-      <v-toolbar dense>
-        <!-- <v-overflow-btn
-          :items="dropdown_font"
-          label="Select font"
-          hide-details
-          class="pa-0"
-        ></v-overflow-btn> -->
-
-        <template v-if="$vuetify.breakpoint.mdAndUp">
-          <!-- <v-divider vertical></v-divider>
-
-          <v-overflow-btn
-            :items="dropdown_edit"
-            editable
-            label="Select size"
-            hide-details
-            class="pa-0"
-            overflow
-          ></v-overflow-btn>
-
-          <v-divider vertical></v-divider>
-
-          <v-spacer></v-spacer> -->
-
-          <v-btn-toggle
-            v-model="toggle_multiple"
-            color="primary"
-            dense
-            group
-            multiple
+      <v-toolbar style="margin: 5px 0;" dense>
+        <v-btn-toggle
+          color="primary"
+          dense
+          group
+        >
+          <v-btn
+            :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+            @click="commands.heading({ level: 1 })"
           >
-            <v-btn
-            :class="{ 'is-active': isActive.bold() }"
-            @click="commands.bold" text>
-              <v-icon>mdi-format-bold</v-icon>
-            </v-btn>
-
-            <v-btn
-            :class="{ 'is-active': isActive.italic() }"
-            @click="commands.italic" text>
-              <v-icon>mdi-format-italic</v-icon>
-            </v-btn>
-
-            <v-btn
-            :class="{ 'is-active': isActive.underline() }"
-            @click="commands.underline" text>
-              <v-icon>mdi-format-underline</v-icon>
-            </v-btn>
-
-            
-          </v-btn-toggle>
-
-          <!-- image -->
-          <v-btn text>
-            <v-file-input
-            id="imgUpload"
-            hide-input
-            :rules="imageRules"
-            accept="image/png, image/jpeg, image/bmp"
-            prepend-icon="image"
-            @change="changeImage(commands.image)"
-            >
-            </v-file-input>
+            H1
           </v-btn>
 
-          <div class="mx-4"></div>
-
-          <v-btn-toggle
-            v-model="toggle_exclusive"
-            color="primary"
-            dense
-            group
+          <v-btn
+            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+            @click="commands.heading({ level: 2 })"
           >
-            <v-btn :value="1" text>
-              <v-icon>mdi-format-align-left</v-icon>
-            </v-btn>
+            H2
+          </v-btn>
 
-            <v-btn :value="2" text>
-              <v-icon>mdi-format-align-center</v-icon>
-            </v-btn>
+          <v-btn
+            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+            @click="commands.heading({ level: 3 })"
+          >
+            H3
+          </v-btn>
+        </v-btn-toggle>
 
-            <v-btn :value="3" text>
-              <v-icon>mdi-format-align-right</v-icon>
-            </v-btn>
+        <v-btn-toggle
+          v-model="toggle_multiple"
+          color="primary"
+          dense
+          group
+          multiple
+        >
+          <v-btn
+          :class="{ 'is-active': isActive.bold() }"
+          @click="commands.bold" text>
+            <v-icon>mdi-format-bold</v-icon>
+          </v-btn>
 
-            <v-btn :value="4" text>
-              <v-icon>mdi-format-align-justify</v-icon>
-            </v-btn>
-          </v-btn-toggle>
-        </template>
+          <v-btn
+          :class="{ 'is-active': isActive.italic() }"
+          @click="commands.italic" text>
+            <v-icon>mdi-format-italic</v-icon>
+          </v-btn>
+
+          <v-btn
+          :class="{ 'is-active': isActive.underline() }"
+          @click="commands.underline" text>
+            <v-icon>mdi-format-underline</v-icon>
+          </v-btn>
+
+        </v-btn-toggle>
+
+        
+        <v-btn text>
+          <v-file-input
+          id="imgUpload"
+          hide-input
+          :rules="imageRules"
+          accept="image/png, image/jpeg, image/bmp"
+          prepend-icon="image"
+          @change="changeImage(commands.image)"
+          >
+          </v-file-input>
+        </v-btn>
+
+        <v-btn-toggle
+          color="primary"
+          dense
+          group
+        >
+          <v-btn
+            :class="{ 'is-active': isActive.bullet_list() }"
+            @click="commands.bullet_list"
+          >
+            <v-icon>format_list_bulleted</v-icon>
+          </v-btn>
+
+          <v-btn
+            :class="{ 'is-active': isActive.ordered_list() }"
+            @click="commands.ordered_list"
+          >
+            <v-icon>format_list_numbered</v-icon>
+          </v-btn>
+
+          <v-btn
+            :class="{ 'is-active': isActive.blockquote() }"
+            @click="commands.blockquote"
+          >
+            <v-icon>format_quote</v-icon>
+          </v-btn>
+
+          <v-btn
+            @click="commands.horizontal_rule"
+          >
+            <v-icon>horizontal_rule</v-icon>
+          </v-btn>
+
+          <v-btn
+            @click="commands.undo"
+          >
+            <v-icon>undo</v-icon>
+          </v-btn>
+
+          <v-btn
+            @click="commands.redo"
+          >
+            <v-icon>redo</v-icon>
+          </v-btn>
+        </v-btn-toggle>
+        <v-btn
+            @click="getData"
+          >
+          <v-icon>redo</v-icon>
+        </v-btn>
       </v-toolbar>
     </EditorMenuBar>
     <EditorContent :editor="editor" class="editorContent" />
-    <v-dialog
-      v-model="inputImageInfo"
-      max-width="800"
-      persistent
-    >
-      <!-- @click:outside="moveRoute" -->
-      <v-card>
-        <v-card-title class="headline">Enter the information of this image</v-card-title>
-
-        <div class="imageInfo">
-          <v-img
-            width="100%"
-            :src="targetImageUrl"
-          ></v-img>
-          <span class="optionTitle">Source</span>
-          <div>
-              <v-text-field
-              ref="source"
-              label="Source"
-              height="40px"
-              full-width
-              outlined
-              required
-              dense=true
-              v-model="source"
-              >
-              </v-text-field>
-          </div>
-          <span class="optionTitle">Description</span>
-          <div>
-              <v-text-field
-              ref="description"
-              label="Description"
-              height="40px"
-              full-width
-              outlined
-              required
-              dense=true
-              v-model="description"
-              >
-              </v-text-field>
-          </div>
-        </div>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="green darken-1"
-            text
-          >
-            <!-- @click="moveRoute" -->
-            Save
-          </v-btn>
-          <v-btn
-            color="red darken-1"
-            text
-          >
-            <!-- @click="moveRoute" -->
-            Cancel
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
-import { Bold, Italic, Link, HardBreak, Heading, Image, Underline } from 'tiptap-extensions'
+import { Bold, Italic, Heading, Image, Underline,
+  Blockquote, BulletList, OrderedList, ListItem, HorizontalRule, History } from 'tiptap-extensions'
 
 export default {
   components: {
@@ -174,9 +140,7 @@ export default {
       value => !value || value.size < 2000000 || 'Image size should be less than 2 MB!',
     ],
     inputImageInfo: false,
-    targetImageUrl: 'https://picsum.photos/1920/1080?random',
-    source: '',
-    description: ''
+    targetImageUrl: 'https://picsum.photos/1920/1080?random'
   }),
   methods: {
     async changeImage(command) {
@@ -184,25 +148,31 @@ export default {
       const {status, imageUrl} = await this.$store.dispatch('reporters/uploadImage' , { image })
 
       if(status === 200) {
-        // this.targetImageUrl = imageUrl
-        // this.inputImageInfo = true
         command({ src: imageUrl, class: 'imageClass' })
       }
+    },
+    getData() {
+      console.log(this.editor.getHTML())
     }
   },
   mounted() {
     this.editor = new Editor({
-      content: '<p>This is just a boring paragraph</p>',
+      content: '',
       extensions: [
         new Bold(),
         new Italic(),
-        new Link(),
-        new HardBreak(),
         new Heading({ levels: [1, 2, 3] }),
         new Image(),
         new Underline(),
+        new BulletList(),
+        new OrderedList(),
+        new Blockquote(),
+        new ListItem(),
+        new HorizontalRule(),
+        new History(),
       ]
     })
+    this.$emit('giveEditor', this.editor)
   },
   beforeDestroy() {
     this.editor.destroy()
@@ -224,7 +194,12 @@ export default {
   margin: 10px auto;
 }
 
+.editor p {
+  margin: 0;
+}
+
 .editorContent > div {
+  border: 1px solid black;
   min-height: 800px;
 }
 </style>

@@ -36,11 +36,12 @@
         <div class="category">
             <span>Section</span>
             <v-select
-            :items="category"
-            label="Category"
-            solo
-            height="40px"
-            dense="true"
+                :items="categories"
+                label="Category"
+                solo
+                height="40px"
+                dense="true"
+                v-model="category"
             ></v-select>
         </div>
         <div class="mainImageContainer">
@@ -61,7 +62,7 @@
         </div>
 
         <div class="editorContainer">
-            <TiptapEditor />
+            <TiptapEditor @giveEditor="getEditor" />
         </div>
         <v-dialog
         v-model="mainImageForm.show"
@@ -140,7 +141,8 @@ export default {
         TiptapEditor
     },
     data: () => ({
-        category: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+        categories: ['Politics', 'Economy', 'Society', 'IT', 'Science', 'World', 'Sports'],
+        category: 'Politics',
         imageRules: [
             value => !value || value.size < 2000000 || 'Image size should be less than 2 MB!',
         ],
@@ -151,7 +153,8 @@ export default {
             imageUrl: '',
             source: '',
             description: ''
-        }
+        },
+        editor: null
     }),
     methods: {
         selectImage() {
@@ -163,6 +166,11 @@ export default {
             if(status === 200) {
                 this.mainImageForm.imageUrl = imageUrl
             }
+        },
+        getEditor(editor) {
+            console.log('getEditor')
+            console.log(editor)
+            this.editor = editor
         }
     }
 }           
