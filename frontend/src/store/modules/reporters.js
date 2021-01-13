@@ -27,6 +27,20 @@ const actions = {
     } catch(err) {
       return { status: err.response.status }
     }
+  },
+
+  async newPost({}, { title, subTitle, categoryId, mainImage, content }) {
+    try {
+      const res = await axios.post('/reporters/new-post', { title, subTitle, categoryId, mainImage, content }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
   }
 
 }

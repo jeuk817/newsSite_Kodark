@@ -6,6 +6,8 @@
             <v-btn
             color="indigo"
             dark
+            @click="postArticle"
+            :loading="postingArticle"
             >
                 Post
             </v-btn>
@@ -23,6 +25,8 @@
                 outlined
                 required
                 dense=true
+                v-model="title"
+                :rules="titleRules"
                 >
                 </v-text-field>
             </div>
@@ -38,12 +42,14 @@
                 outlined
                 required
                 dense=true
+                v-model="subTitle"
+                :rules="subTitleRules"
                 >
                 </v-text-field>
             </div>
         </div>
         <div class="category">
-            <span>Section</span>
+            <span>Category</span>
             <v-select
                 :items="categoryNames"
                 label="Category"
@@ -75,9 +81,8 @@
         </div>
         <v-dialog
         v-model="mainImageForm.show"
-        max-width="800"
+        max-width="700"
         >
-        <!-- @click:outside="moveRoute" -->
         <v-card>
             <v-card-title class="headline">Main Image</v-card-title>
 
@@ -102,6 +107,7 @@
                     required
                     dense=true
                     v-model="mainImageForm.source"
+                    :rules="mainImageForm.infoRules"
                     >
                     </v-text-field>
                 </div>
@@ -116,6 +122,7 @@
                     required
                     dense=true
                     v-model="mainImageForm.description"
+                    :rules="mainImageForm.infoRules"
                     >
                     </v-text-field>
                 </div>
@@ -150,8 +157,17 @@ export default {
         TiptapEditor
     },
     data: () => ({
+        title: '',
+        titleRules: [
+            v => !!v || 'Title is required',
+            v => v.length <= 100 || 'Use 100 or less characters'
+        ],
+        subTitle: '',
+        subTitleRules: [
+            v => !!v || 'Sub title is required',
+            v => v.length <= 250 || 'Use 100 or less characters'
+        ],
         categories: [],
-        // categoryNames: ['Politics', 'Economy', 'Society', 'IT', 'Science', 'World', 'Sports'],
         categoryNames: [],
         category: '',
         imageRules: [
@@ -163,11 +179,44 @@ export default {
             // imageUrl: 'https://picsum.photos/1920/1080?random',
             imageUrl: '',
             source: '',
+            infoRules: [
+                v => !!v || 'This information is required',
+                v => v.length <= 100 || 'Use 100 or less characters'
+            ],
             description: ''
         },
-        editor: null
+        editor: null,
+        postingArticle: false
     }),
     methods: {
+        async postArticle() {
+            if(!this.$refs.title.validate(true) || !this.$refs.subTitle.validate(true)) return
+            if(!this.mainImageForm.imageUrl || !this.mainImageForm.source || !this.mainImageForm.description) return this.mainImageForm.show = true
+            this.postingArticle = true;
+            
+            let categoryId = {}
+            for(let i = 0; i < this.categoryNames.length; i++) {
+                if(this.category === this.categoryNames[i]) {
+                    categoryId = this.categories[i].id
+                }
+            }
+
+            const { status } = await this.$store.dispatch('reporters/newPost' , {
+                title: this.title,
+                subTitle: this.subTitle,
+                categoryId,
+                mainImage: this.mainImageForm.imageUrl,
+                content: this.editor.getHTML()
+            })
+
+            if(status === 201) {
+                this.$router.push({ path: '/en/reporters/article' })
+            }
+            else if(status === 401 || status === 403) {
+                this.$router.push({ path: '/en/auth/signIn' })
+            }
+            this.postingArticle = false;
+        },
         selectImage() {
             document.getElementById('mainImage').click()
         },
@@ -176,6 +225,8 @@ export default {
 
             if(status === 200) {
                 this.mainImageForm.imageUrl = imageUrl
+                const splitedUrl = imageUrl.split('/')
+                this.mainImageForm.fileName = splitedUrl[splitedUrl.length - 1]
             }
         },
         getEditor(editor) {
@@ -227,10 +278,6 @@ export default {
 
 .articleTitle {
     padding-top: 15px;
-}
-
-.category {
-
 }
 
 .formContainer{

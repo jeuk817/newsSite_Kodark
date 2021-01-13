@@ -113,11 +113,6 @@
             <v-icon>redo</v-icon>
           </v-btn>
         </v-btn-toggle>
-        <v-btn
-            @click="getData"
-          >
-          <v-icon>redo</v-icon>
-        </v-btn>
       </v-toolbar>
     </EditorMenuBar>
     <EditorContent :editor="editor" class="editorContent" />
@@ -150,9 +145,6 @@ export default {
       if(status === 200) {
         command({ src: imageUrl, class: 'imageClass' })
       }
-    },
-    getData() {
-      console.log(this.editor.getHTML())
     }
   },
   mounted() {
