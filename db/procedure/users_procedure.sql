@@ -137,6 +137,29 @@ declare letterCheck char(1);
             set result_set = '204';
 		else
 			set result_set = '404';
-		end if;		
+		end if;
+	-- 35. 구독목록
+    elseif _switch = 'sub_list' then
+		select count(*) into idCount from users where id = _id;
+        if idCount > 0 then
+			select 
+			s.reporter_id, s.user_id, s.letter_accepted , ud.nick_name
+			,(select email from users u where u.id = s.reporter_id)email, ud.image 
+			from subscriber s
+			left outer join users u on u.id = s.user_id
+			left outer join user_detail ud on ud.user_id = s.reporter_id
+			where u.id = _id;
+            set result_set = '200';
+		else
+			set result_set = '404';
+		end if;
+	elseif _switch = 'subs' then
+		select count(*) into idCount from subscriber where user_id = _id and reporter_id = _reporter_id;
+        if idCount > 0 then
+			set result_set = '409';
+		else		
+			insert into subscriber(reporter_id,user_id) values(_reporter_id,_id);
+            set result_set = '201';
+		end if;				
     end if;
 END

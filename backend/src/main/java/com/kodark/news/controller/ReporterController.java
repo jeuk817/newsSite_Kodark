@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,10 +91,8 @@ public class ReporterController {
 	 * @return : gender(num), age(num)
 	 */
 	@GetMapping(path = "/article/statistics")
-	public ResponseEntity<Map<String, Object>> statistics(
-			@RequestParam(value = "articleId", required = false, defaultValue = "2") String articleId) {
-		int id = Integer.parseInt(articleId);
-		id = 2;
+	public ResponseEntity<Map<String, Object>> statistics(@RequestParam(value = "articleId") int articleId) {
+		int id = articleId;		
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> gender = new HashMap<>();
 		Map<String, Object> age = new HashMap<>();
@@ -127,9 +126,9 @@ public class ReporterController {
 	 * @param : articleId
 	 */
 	@PatchMapping(path = "/article")
-	public ResponseEntity<String> articleBlind(@RequestBody Map<String, Object> body) {
+	public ResponseEntity<String> articleBlind(@RequestBody Map<String, Object> body,HttpServletRequest request) {
 		int articleId = Integer.valueOf((String) body.get("articleId"));
-		int reporterId = Integer.valueOf((String) body.get("reporterId"));
+		int reporterId = 4;//request.getAttribute("id");
 		String status = (String)body.get("status");
 		Map<String, Object> params = new HashMap<>();
 
@@ -152,13 +151,13 @@ public class ReporterController {
 	 * @param : articleId
 	 */
 	@DeleteMapping(path = "/article")
-	public ResponseEntity<String> articleDelete(@RequestParam(value = "articleId") String param) {
+	public ResponseEntity<String> articleDelete(@RequestParam(value = "articleId") String param,HttpServletRequest request) {
 		int articleId = Integer.parseInt(param);
-		int reporterId = 1;
+		int reporterId = 4; //request.getAttribute("id");
 		Map<String, Object> params = new HashMap<>();
 		params.put("_article_id", articleId);
 		params.put("_reporter_id", reporterId);
-		params.put("result_set", "delete");
+		params.put("result_set", "unpublish");
 		try {
 			reportersProcedureService.execuReportersProcedure(params);
 		} catch (Exception e) {
@@ -172,7 +171,7 @@ public class ReporterController {
 	 * author : 최윤수 
 	 * date : 2021-01-07
 	 */
-	@PutMapping(path = "/new-post")
+//	@PutMapping(path = "/new-post")
 	public ResponseEntity<String> articleModify(@RequestBody Map<String, Object> body) {
 		int reporterId = Integer.valueOf((String) body.get("reporterId"));
 		int categoryId = Integer.valueOf((String) body.get("categoryId"));
