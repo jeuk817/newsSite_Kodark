@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -173,9 +174,34 @@ public class UserController {
 		} else
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 	}
-
+	
 	/**
-	 * 대댓글 
+	 * 댓글 입력
+	 * 작성 날짜 : 2021-01-12 
+	 * 작성자 : 이종현
+	 */
+	@PostMapping(path = "/comment")
+	public ResponseEntity<Map<String, Object>> writeComment(@RequestParam("articleId") int articleId,
+			@RequestBody Map<String, Object> body) {
+		Map<String, Object> params = null;
+		try {
+			params = new HashMap<String, Object>();
+			params.put("_switch", "comment_write");
+			params.put("_id", articleId);
+			params.put("_email", body.get("email"));
+			params.put("_content", body.get("content"));
+
+			usersProcedureService.execuCommentMapProcedure(params);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.OK);
+	}
+	
+	/**
+	 * 대댓글 입력
 	 * 작성 날짜 : 2021-01-08 
 	 * 작성자 : 이종현
 	 */
@@ -186,7 +212,7 @@ public class UserController {
 		try {
 			params = new HashMap<String, Object>();
 			params.put("_switch", "comment_reply");
-			params.put("_commentId", commentId);
+			params.put("_id", commentId);
 			params.put("_email", body.get("email"));
 			params.put("_content", body.get("content"));
 
@@ -212,7 +238,7 @@ public class UserController {
 			
 			params = new HashMap<String, Object>();
 			params.put("_switch", "comment_report");
-			params.put("_commentId", commentId);
+			params.put("_id", commentId);
 			params.put("_email", body.get("email"));
 			params.put("_reason", body.get("reason"));
 			usersProcedureService.execuCommentMapProcedure(params);
@@ -239,7 +265,7 @@ public class UserController {
 			list = new ArrayList<Map<String,Object>>();
 			params = new HashMap<String, Object>();
 			params.put("_switch", "comment_reputation");
-			params.put("_commentId", commentId);
+			params.put("_id", commentId);
 			params.put("_email", body.get("email"));
 			params.put("_reputation", body.get("reputation"));
 		
@@ -276,7 +302,7 @@ public class UserController {
 			map.put("email", temp.get("email"));
 			map.put("nickName", temp.get("nick_name"));
 			map.put("local", temp.get("local"));
-			params.clear();
+			params = new HashMap<String, Object>();
 			params.put("_switch", "comment_info_list");
 			params.put("_userId", userId);
 			list = usersProcedureService.execuCommentListProcedure(params);
@@ -290,5 +316,31 @@ public class UserController {
 		return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
 	}
 	
+	/**
+	 * 감정 표현 선택
+	 * 설명 : 기사글의 감정표현을 선택시 articleTB의 값을 업데이트를 하고 업데이트된 결과값을 반환한다.
+	 * 작성 날짜 : 2021-01-12
+	 * 작성자 : 이종현
+	 */
+	@PutMapping(path = "/emotion")
+	public ResponseEntity<List<Map<String, Object>>> chooseEmotion(
+			@RequestParam("articleId") int articleId, @RequestParam("emotion") String emotion){
+		List<Map<String, Object>> list = null;
+		Map<String, Object> params = null;
+		
+		try {
+			list = new ArrayList<Map<String,Object>>();
+			params = new HashMap<String, Object>();
+			params.put("_switch","choose_emotion");
+			params.put("_id", articleId);
+			params.put("_userId", 3); //임시 이메일
+			params.put("_emotion", emotion);
+			list = usersProcedureService.execuUsersProcedureList(params);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
+	}
 
 }

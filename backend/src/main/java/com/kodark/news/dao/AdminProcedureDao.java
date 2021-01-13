@@ -18,17 +18,16 @@ public class AdminProcedureDao {
 		adminProcedureMapper.adminProcedure(params);
 	}
 	
+	public Map<String, Object> execuAdminProcedureMap(Map<String, Object> params) {
+		return adminProcedureMapper.adminProcedureMap(params);
+	}
+	
 	public List<Map<String, Object>> execuAdminProcedureList(Map<String, Object> params) {
 		return adminProcedureMapper.adminProcedureList(params);
 	}
 
 	public List<Map<String, Object>> getWaitArticles(String _status) {
 		return adminProcedureMapper.getWaitArticle(_status);
-	}
-
-	// 기자목록(rest_API 57_line)
-	public List<Map<String, Object>> getReporterList() {
-		return adminProcedureMapper.getReporterList();
 	}
 
 }

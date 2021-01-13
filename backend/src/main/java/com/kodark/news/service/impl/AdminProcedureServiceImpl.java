@@ -21,6 +21,11 @@ public class AdminProcedureServiceImpl implements AdminProcedureService {
 	}
 	
 	@Override
+	public Map<String, Object> execuAdminProcedureMap(Map<String, Object> params) {
+		return adminProcedureDao.execuAdminProcedureMap(params);
+	}
+	
+	@Override
 	public List<Map<String, Object>> execuAdminProcedureList(Map<String, Object> params) {
 		return adminProcedureDao.execuAdminProcedureList(params);
 	}
@@ -30,9 +35,5 @@ public class AdminProcedureServiceImpl implements AdminProcedureService {
 		return adminProcedureDao.getWaitArticles(_status);
 	}
 
-	// ���ڸ��
-	@Override
-	public List<Map<String, Object>> getReporterList() {
-		return adminProcedureDao.getReporterList();
-	}
+
 }
