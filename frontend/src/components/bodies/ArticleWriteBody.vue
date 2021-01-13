@@ -1,7 +1,16 @@
 <template>
     <div class="writeArticle">
         <h1 class="title">Post Article</h1>
-        <h2 class="subTitle">Post form</h2>
+        <div class="subTitleAndBtn">
+            <h2 class="subTitle">Post form</h2>
+            <v-btn
+            color="indigo"
+            dark
+            >
+                Post
+            </v-btn>
+        </div>
+        <v-divider></v-divider>
 
         <div class="articleTitle">
             <span>Title</span>
@@ -36,7 +45,7 @@
         <div class="category">
             <span>Section</span>
             <v-select
-                :items="categories"
+                :items="categoryNames"
                 label="Category"
                 solo
                 height="40px"
@@ -141,8 +150,10 @@ export default {
         TiptapEditor
     },
     data: () => ({
-        categories: ['Politics', 'Economy', 'Society', 'IT', 'Science', 'World', 'Sports'],
-        category: 'Politics',
+        categories: [],
+        // categoryNames: ['Politics', 'Economy', 'Society', 'IT', 'Science', 'World', 'Sports'],
+        categoryNames: [],
+        category: '',
         imageRules: [
             value => !value || value.size < 2000000 || 'Image size should be less than 2 MB!',
         ],
@@ -172,6 +183,19 @@ export default {
             console.log(editor)
             this.editor = editor
         }
+    },
+    async created() {
+        const { status, categories } = await this.$store.dispatch('article/getCategory')
+        
+        if(status === 200) {
+            const categoryNames = []
+            categories.forEach(category => {
+                categoryNames.push(category.name)
+            });
+            this.categories = categories
+            this.categoryNames = categoryNames
+            this.category = this.categoryNames[0]
+        }
     }
 }           
 </script>
@@ -184,12 +208,22 @@ export default {
     line-height: 56px;
     margin-bottom: 24px;
 }
+
+.subTitleAndBtn {
+    height: 50px;
+    display: grid;
+    grid-template-columns: 100px 100px;
+    justify-content: space-between;
+    align-content: center;
+}
+
 .subTitle{
-    border-bottom: 1px solid #bdbdbd;
     font-weight: 700;
     font-size: 17px;
-    margin-bottom: 9px;
+    display: grid;
+    align-items: center;
 }
+
 
 .articleTitle {
     padding-top: 15px;
