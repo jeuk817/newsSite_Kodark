@@ -1,5 +1,5 @@
-CREATE DEFINER=`jack`@`localhost` PROCEDURE `articleStatistics_procedure`(
-	in _article_id int
+CREATE DEFINER=`root`@`localhost` PROCEDURE `articleStatistics_procedure`(
+in _article_id int
 )
 BEGIN
  select m.id articleId, maleNum, ifnull(femaleNum,0) femaleNum, ifnull(age10,0)age10,ifnull(age20,0)age20, ifnull(age30,0)age30, ifnull(age40,0)age40, ifnull(elseAge,0)elseAge from  

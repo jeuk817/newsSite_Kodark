@@ -61,15 +61,17 @@ public interface ArticleProcedureMapper {
 
 	@Select(value = "{CALL latest_procedure("
 			+ "#{_category, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public List<Map<String, Object>> latestProcedure(Map<String, Object> params);
 
 	@Select(value = "{CALL comment_procedure("
 			+ "#{_article_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
+			+ ",#{_start_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
-	public List<Map<String, Object>> commentProcedure(int i);
+	public List<Map<String, Object>> commentProcedure(Map<String, Object> params);
 
 	@Select(value = "{CALL article_procedure("
 			+ "#{_article_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"

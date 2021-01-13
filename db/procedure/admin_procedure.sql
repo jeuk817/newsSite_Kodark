@@ -1,6 +1,7 @@
 CREATE DEFINER=`root`@`localhost` PROCEDURE `admin_procedure`(
    in _switch varchar(20)
     , in _id int
+    , in _period int
     , in _input varchar(5000)
     , inout _email varchar(50)    
     , inout _pwd varchar(300)
@@ -71,20 +72,40 @@ declare authCheck char(8);
         where done_flag = 'F';
     -- 49.문의글 목록    
 	elseif _switch = 'question_list' then
-	 	select q.id,q.user_id,q.title,q.content
-        ,(select u.id from users u where u.id = q.user_id)userId
-        ,(select u.email from users u where u.id = q.user_id)userEmail
-        ,aw.question_id , aw.content as answer
-        from question q 
-        join users u on u.id = q.user_id
-        left outer join answer aw on aw.question_id = q.id 
-        order by q.id asc
-        limit 10 offset _id
-        ;
+		if _gender is null then
+			select q.id,q.user_id,q.title,q.content,q.done_flag
+			,(select u.id from users u where u.id = q.user_id)userId
+			,(select u.email from users u where u.id = q.user_id)userEmail
+			,aw.question_id , aw.content as answer
+			from question q 
+			join users u on u.id = q.user_id
+			left outer join answer aw on aw.question_id = q.id 
+			order by q.id asc
+			limit 10 offset _id
+			;
+		else 
+        	select q.id,q.user_id,q.title,q.content,q.done_flag
+			,(select u.id from users u where u.id = q.user_id)userId
+			,(select u.email from users u where u.id = q.user_id)userEmail
+			,aw.question_id , aw.content as answer
+			from question q 
+			join users u on u.id = q.user_id
+			left outer join answer aw on aw.question_id = q.id
+            where q.done_flag = _gender
+			order by q.id asc
+			limit 10 offset _id
+			;
+		end if;
+		
 	-- 48. 회원정지 및 이메일전송
     elseif _switch = 'suspension' then
 		select email into _email from users where id = _id;
-        insert into forbbiden(user_id, status, reason, end_date) values(_id,'suspend',_input,  date_add(current_timestamp(),interval 3 day));
+        select count(*) into idCount from forbidden where user_id = _id;
+        if idCount > 0 then
+			update forbidden set reason=_input, end_date = date_add(current_timestamp(),interval _period day) where user_id = _id;
+        else
+			insert into forbidden(user_id, status, reason, end_date) values(_id,'suspend',_input,  date_add(current_timestamp(),interval _period day));
+		end if;		
 	-- 47. 회원정보리스트
     elseif _switch = 'user_info' then
 		select u.id,u.email,u.status ,ud.nick_name, ud.name,ud.local,date_format(ud.birth,'%Y-%m-%d')birth,ud.gender,ud.image
@@ -93,6 +114,14 @@ declare authCheck char(8);
         where u.auth = 'user'
         limit 20 offset _id
        ;
-        
+	-- 56. 기사신고 확인
+	elseif _switch = 'confirm' then
+		select count(*) into idCount from article_report where id = _id;
+        if idCount > 0 then
+			update article_report set done_flag = 'T' where id = _id;
+			set result_set = '205';
+		else
+			set result_set = '404';
+		end if;
 	end if;
 END

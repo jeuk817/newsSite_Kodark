@@ -1,4 +1,4 @@
-CREATE DEFINER=`jack`@`localhost` PROCEDURE `auth_procedure`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `auth_procedure`(
 	in _switch varchar(20)
 	, inout _email varchar(50)
 	, inout _auth_string varchar(6)
@@ -53,7 +53,7 @@ set _id = -1;
 			set result_set = 'success';
 		end if;
         
-	elseif _switch = 'oauth' then
+	elseif _switch = 'google_oauth' then
 		select id, auth into _id, _auth from users where email = _email;
         
         if _id = -1 then
