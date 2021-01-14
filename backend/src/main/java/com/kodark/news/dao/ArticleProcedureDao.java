@@ -14,8 +14,8 @@ public class ArticleProcedureDao {
 	@Autowired
 	ArticleProcedureMapper articleProcedureMapper;
 
-	public void excuArticleProcedure(Map<String, Object> params) {
-		articleProcedureMapper.articleProcedure(params);
+	public List<Map<String, Object>> excuArticleProcedure(Map<String, Object> params) {
+		return articleProcedureMapper.articleProcedure(params);
 	}
 
 	public List<Map<String, Object>> getArticleDetail(Map<String, Object> params) {
@@ -44,7 +44,8 @@ public class ArticleProcedureDao {
 	}
 
 	public List<Map<String, Object>> commentProcedure(Map<String, Object> params) {
-		return articleProcedureMapper.commentProcedure(params);
+		return articleProcedureMapper.articleProcedure(params);
+
 	}
 
 }

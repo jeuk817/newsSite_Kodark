@@ -67,26 +67,18 @@ public class AdminController {
 	}
 
 	/**
-	 * title :45.관리자메인
-	 * desc : 관리자메인페이지에서 통계를 표시 
-	 * author : 최윤수 
-	 * date : 2021-01-06
+	 * 관리자메인 
+	 * 작성자 : 최윤수 
+	 * 작성일 : 2021-01-06
 	 */
 	@GetMapping(path = "/statistics")
 	public ResponseEntity<Map<String, Object>> mainPage() {
 		List<Map<String, Object>> list = new ArrayList<>();
 		Map<String, Object> params = new HashMap<>();
-		params.put("_id", 1);		
+		params.put("_id", 1);
 		statisticsService.execuStatisticsProcedure(params);
-		try {
-			list = statisticsService.execuTodayPopularProcedure();
-			params.put("todayPopular", list);
-			params.remove("_id");
-			params.remove("result_set");
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500(DB error)
-		}
-		
+		list = statisticsService.execuTodayPopularProcedure();
+		params.put("todayPopular", list);
 		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
 	}
 
@@ -197,10 +189,9 @@ public class AdminController {
 	}
 
 	/**
-	 * title : 55.기자에게 이메일보내기 
+	 * title : 기자에게 이메일보내기 
 	 * author : 최윤수 
 	 * date :2021-01-07
-	 * @param : email, title, content
 	 */
 	@PostMapping(path = "/reporters/email")
 	public ResponseEntity<Map<String, Object>> sendMailToReporter(@RequestBody Map<String, Object> body) {
@@ -221,14 +212,15 @@ public class AdminController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 	}
 	 /**
-	 * title : 54.기사블라인드 토글(null : 발행대기, publish:발행중, blind : 블라인드상태)
+	 * title : 54.기사블라인드 토글
 	 * desc :  블라인드처리 on/off
 	 * author : 최윤수
 	 * date : 2021-01-08
 	 * @param : articleId,status	 
 	 */
 	@PatchMapping(path = "/report/article")
-	public ResponseEntity<Map<String, Object>> articleBlind(@RequestBody Map<String, Object> body){		
+	public ResponseEntity<Map<String, Object>> articleBlind(@RequestBody Map<String, Object> body){
+		System.out.println("aaa:"+body);
 		Map<String, Object> params = new HashMap<>();
 		int articleId = Integer.valueOf((String)body.get("articleId"));
 		String status = (String)body.get("status");
@@ -251,7 +243,7 @@ public class AdminController {
 	 * @return : List<Map<String,Object>> 
 	 */
 	@GetMapping(path = "/report/article")
-	public ResponseEntity<List<Map<String, Object>>> articleReportList(HttpServletResponse response){
+	public ResponseEntity<List<Map<String, Object>>> articleReportList(){
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> temp = new HashMap<>();
 		Map<String, Object> temp1 = new HashMap<>();
@@ -301,7 +293,7 @@ public class AdminController {
 				temp4.put("method", "patch");
 				templist.add(temp4);
 				temp5.put("rel", "sendEmailToReporter");
-				temp5.put("href", "/admin/reporters/"+list.get(i).get("reporterEmail")+"");
+				temp5.put("href", "/admin/reporters/"+list.get(i).get("reporterEmail"));
 				temp5.put("method", "post");
 				templist.add(temp5);
 				temp6.put("rel", "articleReportDone");
@@ -310,9 +302,7 @@ public class AdminController {
 				templist.add(temp6);
 				map.put("_links",templist);		
 				list.set(i, map);
-				response.setHeader("links",   "</admin/report/article?articleId&delFlag>; rel=\"blindArticle\",\r\n"
-											+ "</admin/reporters/email>; rel=\"sendEmailToReporter\",\r\n"
-											+ "</admin/report/article/done?articleId>; rel=\"articleReportDone\"");
+				
 			}
 			
 
@@ -334,42 +324,45 @@ public class AdminController {
 	@GetMapping(path = "/question-list") //-넣으면 nullpoint error발생 -대신 /넣으면 잘 실행됨
 	public ResponseEntity<List<Map<String,Object>>> questionList(
 			@RequestParam(value = "status", required = false) String status, 
-			@RequestParam(value = "questionStartId", required = false, defaultValue = "2")int questionStartId,
+			@RequestParam(value = "questionStartId", required = false, defaultValue = "2")int sId,
 			HttpServletResponse response
 			){
 		List<Map<String, Object>> list = new ArrayList<>();
 		List<Map<String, Object>> temp = new ArrayList<>();
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> maps = new HashMap<>();
-		Map<String, Object> userInfo = new HashMap<>();	
-		int id = questionStartId;
-		String statusCheck = (status.equals("ALL")?null:status.equals("waiting")? "F":"T" );
-		System.out.println("status:"+statusCheck);
+		Map<String, Object> userInfo = new HashMap<>();
+		 System.out.println(status+":"+sId);
+		int id = sId;	
 		params.put("_switch","question_list");
-		params.put("_id", id-1);
-		params.put("_gender", statusCheck);
-		try {		
-			list = adminProcedureService.getArticleList(params);		
-			for(int i=0;i<list.size();i++) {				
-				maps = new HashMap<>();
-				temp = new ArrayList<>();			
-				userInfo = new HashMap<>();
-				maps.put("id", list.get(i).get("id"));
-				maps.put("title",list.get(i).get("title"));
-				maps.put("content",list.get(i).get("content"));
-				maps.put("doneFlag",list.get(i).get("done_flag"));
-				maps.put("answer",list.get(i).get("answer"));
-				int userId = (int)list.get(i).get("userId");
-				String userEmail = (String)list.get(i).get("userEmail");
-				userInfo.put("id", userId);
-				userInfo.put("email", userEmail);
-				maps.put("user", userInfo);
-				temp.add(maps);	
-				list.set(i, maps);			
-		}		
-		response.setHeader("Links", "</admin/question-list?questionStartId="+questionStartId+"&status=\"all\">; rel=\"allQuestionList\","
-								  + "</admin/question-list?questionStartId="+questionStartId+"&status=\"waiting\">; rel=\"waitingQuestionList\","
-								  + "</admin/question-list?questionStartId="+questionStartId+"&status=\"done\">; rel=\"doneQuestionList\",");
+		params.put("_id", id-1);		
+		try {
+			
+		
+		list = adminProcedureService.getArticleList(params);		
+		for(int i=0;i<list.size();i++) {
+			System.out.println("list:"+list.get(i));
+			maps = new HashMap<>();
+			temp = new ArrayList<>();			
+			userInfo = new HashMap<>();
+			maps.put("id", list.get(i).get("id"));
+			maps.put("title",list.get(i).get("title"));
+			maps.put("content",list.get(i).get("content"));
+			maps.put("doneFlag",list.get(i).get("done_flag"));
+			maps.put("answer",list.get(i).get("answer"));
+			int userId = (int)list.get(i).get("userId");
+			String userEmail = (String)list.get(i).get("userEmail");
+			userInfo.put("id", userId);
+			userInfo.put("email", userEmail);
+			maps.put("user", userInfo);
+			temp.add(maps);	
+			list.set(i, maps);
+			
+		}
+		
+		response.setHeader("Links", "</admin/question-list?questionStartId="+sId+"&status=\"all\">; rel=\"allQuestionList\","
+								  + "</admin/question-list?questionStartId="+sId+"&status=\"waiting\">; rel=\"waitingQuestionList\","
+								  + "</admin/question-list?questionStartId="+sId+"&status=\"done\">; rel=\"doneQuestionList\",");
 		} catch (Exception e) {
 			return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
@@ -377,8 +370,8 @@ public class AdminController {
 		
 	}
 	/**
-	 * title : 48. 회원정지 및 이메일 전송
-	 * desc : id, 정지사유, 기간(day)을 입력받아 DB에 저장하고 이메일을 발송(forbidden에 insert되면 users테이블의 status도 변경되게)
+	 * title : 48. 회원정보 및 이메일 전송
+	 * desc : id, 정지사유, 기간(day)을 입력받아 DB에 저장하고 이메일을 발송(forbbiden에 isert되면 users테이블의 status도 변경되게)
 	 * author : 최윤수
 	 * date : 2021-01-11
 	 * @param : id, reason, period 
@@ -400,7 +393,6 @@ public class AdminController {
 			params.put("_id", id);
 			params.put("_switch", "suspension");
 			params.put("_input", reason);
-			params.put("_period", period);
 			adminProcedureService.execuAdminProcedure(params);
 			System.out.println("param:"+params);
 			mail.setMailFrom(env.getProperty("email.username"));
@@ -426,7 +418,7 @@ public class AdminController {
 	 * @param : startIndex
 	 */
 	@GetMapping(path = "/users")
-	public ResponseEntity<List<Map<String,Object>>> userInfo(@RequestParam int startIndex, HttpServletResponse response){
+	public ResponseEntity<List<Map<String,Object>>> userInfo(@RequestParam int startIndex){
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> temp1;
 		Map<String, Object> temp2;
@@ -454,8 +446,7 @@ public class AdminController {
 				temp3.put("href", "'/admin/users/suspension,'");
 				temp3.put("method", "post");
 				temp1.put("_link", temp3);
-				list.set(i, temp1);
-				response.setHeader("links", "</admin/users/suspension>; rel=\"suspensionUser\"");
+				list.set(i, temp1);			
 			}		
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
