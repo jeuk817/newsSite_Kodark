@@ -11,15 +11,22 @@ import org.apache.ibatis.mapping.StatementType;
 
 @Mapper
 public interface ReportersProcedureMapper {
-
+   
 	@Select(value = "{CALL reporter_procedure("
-			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
-			+ ",#{_email, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ")}")
+		+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+		+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
+		+ ",#{_reporter_id, mode=INOUT, jdbcType=INTEGER, javaType=java.lang.Integer }"
+		+ ",#{_category_id, mode=INOUT, jdbcType=INTEGER, javaType=java.lang.Integer }"
+		+ ",#{_title, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String }"
+		+ ",#{_sub_title, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String }"
+		+ ",#{_content, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String }"
+		+ ",#{_main_image_url, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String }"
+		+ ",#{_main_image_source, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String }"
+		+ ",#{_main_image_description, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String }"
+		+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+		+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
-	public void reportersProcedure(Map<String, Object> params);
+	public List<Map<String, Object>> reportersProcedure(Map<String, Object> params);
 
 	@Select(value = "{CALL reporter_getPubAndWaitArtlcles(#{_status})}")
 	public List<Map<String, Object>> getPubAndWaitArtlcles(@Param("_status") String status);

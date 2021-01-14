@@ -5,7 +5,9 @@ import java.util.Map;
 
 public interface ReportersProcedureService {
 
-	public void execuReportersProcedure(Map<String, Object> params);
+	public List<Map<String, Object>> execuReportersProcedure(Map<String, Object> params);
+	
+	public void execuReportersBlindProcedure(Map<String, Object> params);
 
 	public List<Map<String, Object>> getPubAndWaitArtlcles(String status);
 

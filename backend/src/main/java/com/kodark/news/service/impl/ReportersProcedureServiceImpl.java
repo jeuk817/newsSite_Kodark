@@ -16,7 +16,12 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
 	private ReportersProcedureDao reportersProcedureDao;
 
 	@Override
-	public void execuReportersProcedure(Map<String, Object> params) {
+	public List<Map<String, Object>> execuReportersProcedure(Map<String, Object> params) {
+		return reportersProcedureDao.execuReportersProcedure(params);
+	}
+	
+	@Override
+	public void execuReportersBlindProcedure(Map<String, Object> params) {
 		reportersProcedureDao.reportersBlindProcedure(params);
 	}
 

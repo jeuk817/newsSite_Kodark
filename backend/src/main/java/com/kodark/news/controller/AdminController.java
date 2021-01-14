@@ -148,7 +148,7 @@ public class AdminController {
 	 * 수정: 류제욱 2021-01-11
 	 */
 	@PostMapping(path = "/reporters", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<UserDto> createReporter(
+	public ResponseEntity<String> createReporter(
 			MultipartHttpServletRequest multiRequest, HttpServletRequest request) throws ParseException {
 		
 		MultipartFile imageFile = multiRequest.getFile("image");

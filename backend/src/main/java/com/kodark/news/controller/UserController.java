@@ -78,11 +78,18 @@ public class UserController {
 								+ ", </users/my-page/detail>; rel=\"userDetail\""
 								+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
 								+ ", </users/sign-out>; rel=\"signOut\"");
-			} else if(auth.equals("admin")) {
+			}
+			else if(auth.equals("reporter")) {
 				response.setHeader("Links",
-						"</admin/admin-page>; rel=\"adminPage\""
-								+ ", </admin/admin-page/users>; rel=\"userManage\""
-								+ ", </admin/admin-page/reporters>; rel=\"reporterManage\""
+						"</reporters>; rel=\"reporterInfo\""
+								+ ", </reporters/article>; rel=\"reporterArticle\""
+								+ ", </users/sign-out>; rel=\"signOut\"");
+			}
+			else if(auth.equals("admin")) {
+				response.setHeader("Links",
+						"</admin/statistics>; rel=\"statistics\""
+								+ ", </admin/users>; rel=\"userList\""
+								+ ", </admin/reporters>; rel=\"reporterList\""
 								+ ", </users/sign-out>; rel=\"signOut\"");
 			}
 			return new ResponseEntity<>(map, HttpStatus.OK);// 200
