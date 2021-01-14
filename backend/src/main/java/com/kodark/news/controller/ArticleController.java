@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,6 @@ public class ArticleController {
 		Map<String, Object> temp;
 		List<Map<String,Object>>list = new ArrayList<>();
 		Map<String, Object> reporter = new HashMap<>();;
-		
-
 		
 		int _articleId = Integer.parseInt(articleId);
 		params.put("_articleId", _articleId);
@@ -179,39 +178,51 @@ public class ArticleController {
 	}
 
 	/**
-	 * 메인네비 정보 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-06
+	 * title : 메인네비 정보(14) 
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> mainNavi(HttpServletResponse response) {
 
 		response.setHeader("Links",
-				"</auth/sign-in>; 		rel=\"signIn\"," + "</>; 	   				rel=\"home\","
-						+ "</section/politics>;	rel=\"politics\"," + "</section/economy>;  	rel=\"economy\","
-						+ "</section/society>;  	rel=\"society\"," + "</section/tech>; 		rel=\"tech\","
-						+ "</section/world>;  	rel=\"world\"," + "</section/sports>;  	rel=\"sports\","
-						+ "</weather>;  			rel=\"weather\"," + "</help>;  				rel=\"help\","
-						+ "</introduce>;  		rel=\"introduce\"");
+				"</auth/sign-in>; 		rel=\"signIn\","
+				+ "</>;    				rel=\"home\","
+				+ "</section/politics>;	rel=\"politics\","
+				+ "</section/economy>; 	rel=\"economy\","
+				+ "</section/society>; 	rel=\"society\","
+				+ "</section/tech>;		rel=\"tech\","
+				+ "</section/world>;  	rel=\"world\","
+				+ "</section/sports>;  	rel=\"sports\","
+				+ "</weather>;  		rel=\"weather\","
+				+ "</help>; 			rel=\"help\","
+				+ "</introduce>;  		rel=\"introduce\"");
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 
 	}
 
 	/**
-	 * 핫 뉴스 (popular) 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-07
+	 * title : 핫 뉴스(6)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-07
 	 */
 	@GetMapping(path = "/popular")
-	public ResponseEntity<Map<String, Object>> hotNews(HttpServletResponse response) {
-		Map<String, Object> params = new HashMap<>();
+	public ResponseEntity<Map<String, Object>> hotNews(@RequestParam String category){
+		Map<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> temp;
 		Map<String, Object> link;
 		List<Map<String, Object>> list = new ArrayList<>();
 
 		try {
-			list = articleProcedureService.hotNews();
+			params.put("_switch", "popular");
+			params.put("_category", category);
+			
+			System.out.println("프로시저 전 param~~~~~~~~~ "+ params );
+			list = articleProcedureService.execuArticleProcedure_2(params);
+			System.out.println("프로시저 후 params~~~~~~ " + params);
 
 			for (int i = 0; i < list.size(); i++) {
 				temp = new HashMap<>();
@@ -223,23 +234,24 @@ public class ArticleController {
 
 				temp.put("id", list.get(i).get("id"));
 				temp.put("title", list.get(i).get("title"));
-				temp.put("content", list.get(i).get("content"));
+				temp.put("subTitle", list.get(i).get("sub_title"));
 				temp.put("image", list.get(i).get("image"));
 				temp.put("imgDec", list.get(i).get("imgDec"));
 				temp.put("_link", link);
-
+				System.out.println("temp~~~~~" + temp);
 				list.set(i, temp);
 			}
-
-			params.put("category", "all");
+			params = new HashMap<String, Object>();
+			params.put("category", category);
 			params.put("type", "popular");
 			params.put("data", list);
-			response.setHeader("Links", "rel : \"article\"," + "href : \"/article?articleId\"," + "method : \"get\"");
+			
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Map<String, Object>>(params, HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
-		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
+		return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);// 200
 	}
 
 	/**
@@ -275,8 +287,8 @@ public class ArticleController {
 				temp.put("imgDec", list.get(i).get("imgDec"));
 				temp.put("_link", link);
 				list.set(i, temp);
-				// sb.delete(0, sb.length());
 			}
+			
 			params.put("data", list);
 
 			response.setHeader("Links", "rel : \"article\"," + "href : \"/article?articleId\"," + "method : \"get\"");
@@ -287,15 +299,20 @@ public class ArticleController {
 	}
 
 	/**
-	 * 카테고리 정보 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-06
+	 * title : 카테고리 정보(63)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-06
 	 */
-	// 카테고리 정보
 	@GetMapping(path = "/category")
-	public ResponseEntity<List<CategoryDto>> categoryInfo() {
-		List<CategoryDto> categoryInfo = articleProcedureService.categoryInfo();
-		return new ResponseEntity<List<CategoryDto>>(categoryInfo, HttpStatus.OK);// 200
+	public ResponseEntity<List<Map<String, Object>>> categoryInfo() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		List<Map<String, Object>> categoryInfo = new ArrayList<Map<String,Object>>();
+		
+		params.put("_switch","category_info");
+		categoryInfo = articleProcedureService.execuArticleProcedure_2(params);
+		
+		return new ResponseEntity<List<Map<String, Object>>>(categoryInfo, HttpStatus.OK);// 200
 	}
 
 	/**
@@ -318,6 +335,6 @@ public class ArticleController {
 		}
 		params.put("data", list);
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);// 200
-	}
+	}		
 
 }

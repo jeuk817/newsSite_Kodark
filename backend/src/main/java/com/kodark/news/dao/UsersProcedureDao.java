@@ -25,4 +25,8 @@ public class UsersProcedureDao {
 		return usersProcedureMapper.getMyPage(params);
 
 	}
+
+	public Map<String, Object> myPageDetail(Map<String, Object> params) {
+		return usersProcedureMapper.getMyPageDetail(params);
+	}
 }

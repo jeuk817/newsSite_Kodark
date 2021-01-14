@@ -14,7 +14,7 @@ public class ArticleProcedureDao {
 	@Autowired
 	ArticleProcedureMapper articleProcedureMapper;
 
-	public void excuArticleProcedure(Map<String, Object> params) {
+	public void execuArticleProcedure(Map<String, Object> params) {
 		articleProcedureMapper.articleProcedure(params);
 	}
 
@@ -22,7 +22,6 @@ public class ArticleProcedureDao {
 		return articleProcedureMapper.getArticleDetail(params);
 	}
 
-	// 이종현(기사감정표현 가져오기)
 	public List<Map<String, Object>> getEmotionInfo(int _articleId) {
 		return articleProcedureMapper.getEmotionInfo(_articleId);
 	}
@@ -31,12 +30,8 @@ public class ArticleProcedureDao {
 		return articleProcedureMapper.getCommentReply(_articleId, _commentId);
 	}
 
-	public List<CategoryDto> categoryInfo() {
-		return articleProcedureMapper.getCategory();
-	}
-
-	public List<Map<String, Object>> hotNews() {
-		return articleProcedureMapper.getHotNews();
+	public List<Map<String, Object>> execuArticleProcedure_2(Map<String, Object> params) {
+		return articleProcedureMapper.articleProcedure_2(params);
 	}
 
 	public List<Map<String, Object>> latestProcedure(Map<String, Object> params) {

@@ -21,6 +21,13 @@ public class UsersProceduerServiceImpl implements UsersProceduerService {
 	}
 
 	@Override
+	public Map<String, Object> mypageDetail(Map<String, Object> params) {
+		return usersProcedureDao.myPageDetail(params);
+
+	}
+
+	
+	@Override
 	public String writeCommentReply(Map<String, Object> params) {
 		return usersProcedureDao.writeCommentReply(params);
 	}
