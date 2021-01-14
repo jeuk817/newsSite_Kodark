@@ -24,13 +24,20 @@
           >
             <td>{{ item.id }}</td>
             <td>{{ item.calories }}</td>
-            <td>
+            <td style="padding-left: 32px">
               <span class="material-icons stopBtn" @click="onSuspend">stop</span>
             </td>
           </tr>
         </tbody>
       </template>
     </v-simple-table>
+    <div class="text-center paging">
+      <v-pagination
+        v-model="page"
+        :length="6"
+      ></v-pagination>
+    </div>
+    <!-- Email Form -->
     <div class="sendMailForm">
       <div class="userEmail">
         <!-- <input type="text" value="TO: userEmail" disabled="disabled"> -->
@@ -62,13 +69,25 @@
         value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
         ></v-textarea>
       </div>
-      <div class="submitBtn">
-        <v-btn
-        depressed
-        color="indigo"
-        >
-          <span>SubMit</span>
-        </v-btn>
+      <div class="btns">
+        <div class="cancleBtn">
+          <v-btn
+          depressed
+          color="indigo"
+          @click="hideForm"
+          >
+            <span>Cancle</span>
+          </v-btn>
+        </div>
+    
+        <div class="submitBtn">
+          <v-btn
+          depressed
+          color="indigo"
+          >
+            <span>SubMit</span>
+          </v-btn>
+        </div>
       </div>
     </div>
   </div>
@@ -134,6 +153,10 @@ export default {
       onSuspend() {
         const sendMailForm = document.querySelector('.sendMailForm');
         sendMailForm.style.display = 'block';
+      },
+      hideForm() {
+        const sendMailForm = document.querySelector('.sendMailForm');
+        sendMailForm.style.display = 'none';
       }
     }
 }
@@ -145,8 +168,13 @@ export default {
   border-bottom: 1px solid black;
   margin-bottom: 50px;
 }
+
 .stopBtn{
   cursor: pointer;
+}
+
+.paging{
+  margin: 60px 175px 0 0;
 }
 .sendMailForm{
   display: none;
@@ -172,11 +200,22 @@ export default {
   width: 800px;
   height: 300px;
 }
+.btns{
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}
 .submitBtn{
-  text-align: right;
+  justify-self: end;
   margin-right: 60px;
 }
-.submitBtn span{
+.cancleBtn{
+  justify-self: end;
+}
+
+.submitBtn span,
+.cancleBtn span{
   color: white;
 }
+
+
 </style>

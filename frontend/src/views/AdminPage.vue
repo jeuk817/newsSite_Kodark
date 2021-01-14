@@ -3,6 +3,9 @@
     <MyPageHeader />
     <div class="adminPage">
       <IntroduceSideBar :sideMenu="sideMenu" />
+      <template v-if="currentRoute === 'users'">
+        <UserList />
+      </template>
       <template v-if="currentRoute === 'reporters/new'">
         <CreateReporterForm />
       </template>
@@ -22,6 +25,7 @@ import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
 import CreateReporterForm from '../components/bodies/admins/CreateReporterForm'
 import ReportList from '../components/bodies/admins/ReportList'
 import WaitArticleList from '../components/bodies/admins/WaitArticleList'
+import UserList from '../components/bodies/admins/UserList'
 
 export default {
   components: {
@@ -29,7 +33,8 @@ export default {
     IntroduceSideBar,
     CreateReporterForm,
     ReportList,
-    WaitArticleList
+    WaitArticleList,
+    UserList
   },
   computed: {
     // side menu
