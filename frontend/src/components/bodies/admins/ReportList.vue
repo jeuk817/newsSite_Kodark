@@ -27,14 +27,14 @@
         </thead>
         <tbody>
           <tr
-            v-for="item in reporterList"
-            :key="item.id"
+            v-for="reporter in reporterList"
+            :key="reporter.id"
           >
-            <td>{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.subNum }}</td>
-            <td>{{ item.totalHit }}</td>
-            <td>{{ item.articleNum }}</td>
+            <td>{{ reporter.id }}</td>
+            <td>{{ reporter.name }}</td>
+            <td>{{ reporter.subNum }}</td>
+            <td>{{ reporter.totalHit === undefined ? 0 : reporter.totalHit }}</td>
+            <td>{{ reporter.articleNum }}</td>
           </tr>
         </tbody>
       </template>
