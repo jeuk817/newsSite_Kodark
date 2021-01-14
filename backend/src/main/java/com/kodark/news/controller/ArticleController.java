@@ -251,42 +251,38 @@ public class ArticleController {
 	 * 작성일 : 2021-01-06
 	 */
 	@GetMapping(path = "/latest")
-	public ResponseEntity<Map<String, Object>> latest(@RequestParam String category) {
+	public ResponseEntity<Map<String, Object>> latest(
+			@RequestParam(value = "section", required = false, defaultValue = "politics") String category,
+			HttpServletResponse response) {
 		Map<String, Object> params = new HashMap<>();
-		Map<String, Object> map = new HashMap<>();
-		Map<String, Object> data;
-		Map<String, Object> link;
-		List<Map<String, Object>> list = new ArrayList<>();
-		List<Map<String, Object>> list2 = new ArrayList<>();		
+		Map<String, Object> temp = new HashMap<>();
+		Map<String, Object> link = new HashMap<>();
+		List<Map<String, Object>> list = new ArrayList<>();		
 		params.put("_category", category);
 		try {
 			list = articleProcedureService.execuLatestProcedure(params);
-			if(params.get("result_set").equals("200")) {
-				for (int i = 0; i < list.size(); i++) {
-					map = new HashMap<>();
-					data = new HashMap<>();
-					link = new HashMap<>();
-					map.put("category", category);
-					map.put("type", "latest");
-					data.put("id", list.get(i).get("id"));
-					data.put("title", list.get(i).get("title"));
-					data.put("subTitle", list.get(i).get("sub_title"));
-					data.put("image", list.get(i).get("image"));
-					data.put("imgDec", list.get(i).get("imgDec"));
-					link.put("rel", "article");
-					link.put("href", "/article?articleId="+list.get(i).get("id"));
-					link.put("method", "get");
-					data.put("_link", link);
-					list2.add(data);				
-				}
-				map.put("data", list2);	
-			}else if(params.get("result_set").equals("404")) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
+			params.put("type", "latest");
+			for (int i = 0; i < list.size(); i++) {
+				temp = new HashMap<>();
+				link = new HashMap<>();
+				link.put("rel", "article");
+				link.put("href", "/article?articleId=" + list.get(i).get("id"));
+				link.put("method", "get");			
+				temp.put("id", list.get(i).get("id"));
+				temp.put("title", list.get(i).get("title"));
+				temp.put("content", list.get(i).get("content"));
+				temp.put("image", list.get(i).get("image"));
+				temp.put("imgDec", list.get(i).get("imgDec"));
+				temp.put("_link", link);
+				list.set(i, temp);			
 			}
+			params.put("data", list);
+
+			response.setHeader("Links", "rel : \"article\"," + "href : \"/article?articleId\"," + "method : \"get\"");
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);// 404
 		}
-		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);// 200
+		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
 	}
 
 	/**
@@ -302,47 +298,24 @@ public class ArticleController {
 	}
 
 	/**
-	 * title :19.기사댓글 데이터 
-	 * author : 최윤수 
-	 * date : 2021-01-07
+	 * 기사댓글 데이터 
+	 * 작성자 : 최윤수 
+	 * 작성일 : 2021-01-07
 	 */
 	@GetMapping(path = "/comment")
 	public ResponseEntity<List<Map<String, Object>>> comment(
-			@RequestParam(value = "articleId") int articleId,
-			@RequestParam(value = "commentStartId") int commentStartId,
-			HttpServletResponse response) {
+			@RequestParam(value = "articleId", required = false, defaultValue = "1") int articleId,
+			@RequestParam(value = "commentStartId", required = false, defaultValue = "1") int commentStartId) {
 		Map<String, Object> params = new HashMap<>();
-		Map<String, Object> user;
-		Map<String, Object> reputation;
-		Map<String, Object> comment;
 		List<Map<String, Object>> list = new ArrayList<>();
-		params.put("_article_id", articleId);
-		params.put("_start_id", commentStartId-1);		
-//		try {
-			list = articleProcedureService.execuCommentProcedure(params);
-			System.out.println("list:"+list);
-			for(int i=0;i<list.size();i++) {
-				user = new HashMap<>();
-				reputation = new HashMap<>();
-				comment = new HashMap<>();
-				comment.put("id", list.get(i).get("id"));
-				comment.put("content", list.get(i).get("content"));
-				comment.put("createdAt", list.get(i).get("createdAt"));
-				comment.put("delFlag", list.get(i).get("delFlag"));
-				user.put("id", list.get(i).get("userId"));
-				user.put("email", list.get(i).get("email"));
-				user.put("nickName", list.get(i).get("nickName"));
-				user.put("local", list.get(i).get("local"));
-				comment.put("user", user);
-				reputation.put("recommend", list.get(i).get("recommend"));
-				reputation.put("decommend", list.get(i).get("decommend"));
-				comment.put("reputation", reputation);
-				list.set(i, comment);
-				response.setHeader("links", "</article/comment/reply?id>; rel=\"reply\"");
-			}
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
-//		}		
+		articleId = 3;
+
+		try {
+			list = articleProcedureService.execuCommentProcedure(articleId);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
+		}
+		params.put("data", list);
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);// 200
 	}
 	/**

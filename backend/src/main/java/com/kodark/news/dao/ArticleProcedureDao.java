@@ -43,8 +43,8 @@ public class ArticleProcedureDao {
 		return articleProcedureMapper.latestProcedure(params);
 	}
 
-	public List<Map<String, Object>> commentProcedure(Map<String, Object> params) {
-		return articleProcedureMapper.commentProcedure(params);
+	public List<Map<String, Object>> commentProcedure(int i) {
+		return articleProcedureMapper.commentProcedure(i);
 	}
 
 }

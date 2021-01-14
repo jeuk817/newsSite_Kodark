@@ -1,19 +1,19 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reporter_profile_procedure`(
-	in _id int  
+CREATE DEFINER=`jack`@`localhost` PROCEDURE `reporter_profile_procedure`(
+	in _id int
  
 )
 BEGIN
 
     select
     users.id,
-    users.email,    
-    ud.nick_name,
+    users.email,
+    ud.nick_Name,
     ud.name,
-    ud.image,  
     ud.local,
     date_format(ud.birth, '%Y-%m-%d') as birth,
-    ud.gender,	
-	(select count(*) from subscriber where reporter_id = users.id) as subNum   
+    ud.gender,
+    ud.image,
+	(select count(*) from subscriber where reporter_id = users.id) as subNum
     from 
     users
 
