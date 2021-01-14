@@ -134,8 +134,7 @@ public class AuthController {
 	public ResponseEntity<Map<String, Object>> signIn(@RequestBody Map<String, Object> body,
 			HttpServletResponse response) {
 		String email = (String) body.get("email");
-		String pwd = (String) body.get("pwd");
-
+		String pwd = (String) body.get("pwd");		
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "sign_in");
 		params.put("_email", email);

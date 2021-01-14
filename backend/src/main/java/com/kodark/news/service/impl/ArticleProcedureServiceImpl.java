@@ -36,8 +36,8 @@ public class ArticleProcedureServiceImpl implements ArticleProcedureService {
 	}
 
 	@Override
-	public void execuArticleProcedure(Map<String, Object> params) {
-		articleProcedureDao.excuArticleProcedure(params);
+	public List<Map<String, Object>> execuArticleProcedure(Map<String, Object> params) {
+		return articleProcedureDao.excuArticleProcedure(params);
 	}
 	
 	@Override

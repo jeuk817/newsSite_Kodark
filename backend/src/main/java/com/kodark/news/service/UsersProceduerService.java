@@ -15,5 +15,7 @@ public interface UsersProceduerService {
 	public Map<String, Object> mypageDetail(Map<String, Object> params);
 
 	public Map<String, Object> myPage(Map<String, Object> params);
+	
+	public List<Map<String, Object>> subList(Map<String, Object> params);
 
 }

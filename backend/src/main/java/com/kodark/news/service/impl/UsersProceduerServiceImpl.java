@@ -46,5 +46,9 @@ public class UsersProceduerServiceImpl implements UsersProceduerService {
 		return usersProcedureDao.myPage(params);
 	}
 
+	@Override
+	public List<Map<String, Object>> subList(Map<String, Object> params) {		
+		return usersProcedureDao.subList(params);
+	}
 
 }

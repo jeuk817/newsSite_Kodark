@@ -35,5 +35,4 @@ public class AdminProcedureServiceImpl implements AdminProcedureService {
 		return adminProcedureDao.getWaitArticles(_status);
 	}
 
-
 }
