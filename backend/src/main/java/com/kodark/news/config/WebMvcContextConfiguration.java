@@ -75,8 +75,8 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
 			//.addPathPatterns("/users/*")
 			.addPathPatterns("/reporter")
 			.addPathPatterns("/reporter/*")
-			//.addPathPatterns("/admin")
-			//.addPathPatterns("/admin/*")
+			.addPathPatterns("/admin")
+			.addPathPatterns("/admin/*")
 			.excludePathPatterns("/users/sign-up");
 		
 	}

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,6 @@ public class ArticleController {
 		Map<String, Object> temp;
 		List<Map<String,Object>>list = new ArrayList<>();
 		Map<String, Object> reporter = new HashMap<>();;
-		
-
 		
 		int _articleId = Integer.parseInt(articleId);
 		params.put("_articleId", _articleId);
@@ -211,15 +210,19 @@ public class ArticleController {
 	 * date : 2021-01-07
 	 */
 	@GetMapping(path = "/popular")
-	public ResponseEntity<Map<String, Object>> hotNews(HttpServletResponse response) {
-		Map<String, Object> params = new HashMap<>();
+	public ResponseEntity<Map<String, Object>> hotNews(@RequestParam String category){
+		Map<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> temp;
 		Map<String, Object> link;
 		List<Map<String, Object>> list = new ArrayList<>();
 
 		try {
 			params.put("_switch", "popular");
+			params.put("_category", category);
+			
+			System.out.println("프로시저 전 param~~~~~~~~~ "+ params );
 			list = articleProcedureService.execuArticleProcedure_2(params);
+			System.out.println("프로시저 후 params~~~~~~ " + params);
 
 			for (int i = 0; i < list.size(); i++) {
 				temp = new HashMap<>();
@@ -238,16 +241,17 @@ public class ArticleController {
 				System.out.println("temp~~~~~" + temp);
 				list.set(i, temp);
 			}
-
-			params.put("category", "all");
+			params = new HashMap<String, Object>();
+			params.put("category", category);
 			params.put("type", "popular");
 			params.put("data", list);
-			response.setHeader("Links", "rel : \"article\"," + "href : \"/article?articleId\"," + "method : \"get\"");
+			
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Map<String, Object>>(params, HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
-		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
+		return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);// 200
 	}
 
 	/**
