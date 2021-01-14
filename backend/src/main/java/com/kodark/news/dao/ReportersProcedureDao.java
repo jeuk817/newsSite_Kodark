@@ -21,7 +21,7 @@ public class ReportersProcedureDao {
 
 	public List<Map<String, Object>> execuReportersProcedure(Map<String, Object> params) {
 		return reportersProcedureMapper.reportersProcedure(params);
-  }
+	}
 	
 	public List<Map<String, Object>> execuReportersProcedureList(Map<String, Object> params) {
 		return reportersProcedureMapper.reportersProcedureList(params);

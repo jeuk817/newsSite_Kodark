@@ -17,6 +17,7 @@ begin
 declare emailCheck int;
 declare idCount int;
 declare letterCheck char(1);
+declare tmp_pwd varchar(300);
 
 -- 회원정보 수정(34)--------------------------------------------
    if _switch = 'update_detail' then
@@ -36,40 +37,14 @@ declare letterCheck char(1);
          set result_set = '500';
       end if; 
       
-    elseif _switch = 'mypage' then
-      select count(*) into idCount from users where  id = _id;   
-       
-      if idCount > 0 then
-         if _email is null then
-            set result_set = '404';
-            else    
-            select email, auth from users where id = _id;
-            set _email = email;
-            set _auth = auth;
-            set result_set = '200';
-         end if;
-      end if;
-      
 -- 회원정보(33)--------------------------------------------
     elseif _switch = 'mypage_detail' then
       select count(*) into idCount from users where id = _id;   
       select exists (select email from users where id = _id) into emailCheck;   
-		if idCount > 0 then
-			if emailCheck = 1 then
-				select image, nick_name, name, local, date_format(birth,'%Y-%m-%d') as birth, gender
-				from user_detail where user_id = _id;
-				set result_set = '204';
-			else    
-				set result_set = '404';
-			end if;    
-		elseif idCount < 0 or idCount = 0 then 
-			 set result_set = '401';
-		else 
-			 set result_set = '500';
-      end if;
+	end if;
 
 -- 회원 탈퇴(32) --------------------------------------------------
-	elseif _switch = 'delete' then
+	if _switch = 'delete' then
 	select count(*) into idCount from users where  id = _id;   
 	select count(email) into emailCheck from users where id = _id;
       if idCount > 0 then
@@ -92,16 +67,30 @@ declare letterCheck char(1);
       if idCount > 0 then
          if _email is null then
             set result_set = '404';
-            else    
+		else    
             update users
             set pwd = _pwd
                 where id = _id;
             set result_set = '204';
-            end if;    
+		end if;    
       elseif idCount < 0 or idCount = 0 then 
          set result_set = '401';
       else 
          set result_set = '500';    
+		end if;
+
+	elseif _switch = 'mypage_detail' then
+      select count(*) into idCount from users where  id = _id;   
+
+      if idCount > 0 then
+         select nick_name, name, local, DATE_FORMAT(birth, '%Y-%m-%d %H:%i:%S') as birth, gender, image into _nickName, _name,  _local,  _birth, _gender, _image from user_detail where user_id = _id;
+            
+         set result_set = '200';
+            
+      elseif idCount < 0 or idCount = 0 then 
+         set result_set = '401';
+      else
+         set result_set = '500';
       end if;
         
   elseif _switch = 'signin_info' then
@@ -114,12 +103,23 @@ declare letterCheck char(1);
       end if;
       
    elseif _switch = 'user_info' then
-      select email, auth into _email, _auth from users where id = _id;
+      select email, auth, pwd into _email, _auth, _pwd from users where id = _id;
         if _email = null then
          set result_set = 'not_found';
       else
          set result_set = 'success';
         end if;
+        
+	/***** 이메일 업데이트 *****/
+    elseif _switch = 'update_email' then
+		select count(*) into idCount from users where email = _email;
+        
+        if idCount > 0 then
+			set result_set = 'conflict';
+		else
+			update users set email = _email where id = _id;
+            set result_set = 'success';
+		end if;
         
 	-- 37.구독취소 ys		
 	elseif _switch = 'cancel_sub' then
@@ -145,34 +145,6 @@ declare letterCheck char(1);
 		else
 			set result_set = '404';
 		end if;		
-        
--- 비밀번호 수정 -------------------------------------------------
-	elseif _switch = 'update_password' then 
-	select count(*) into idCount from users where id = _id;   
-        
-	if idCount > 0 then
-		if _email is null then
-			set result_set = '404';
-		else    
-            update users
-            set pwd = _pwd;
-            set result_set = '200';
-		end if;
-    
-	elseif idCount < 0 or idCount = 0 then 
-     set result_set = '401';
-	else 
-     set result_set = '500';    
-  end if;
-
-	elseif _switch = 'signin_info' then
-    select count(*) into idCount from users where  id = _id;   
-        
-		if idCount > 0 then           
-			set result_set = '200';
-		else 
-			set result_set = '401';
-		end if;
     
 	end if;
       
@@ -189,7 +161,6 @@ declare letterCheck char(1);
 				set result_set = '200';
 			end if;
         end if;
-        
 	end if;
    
 END
