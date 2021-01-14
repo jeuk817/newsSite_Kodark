@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,12 @@ public class UserController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	/**
+	 * title : 로그인 정보
+	 * desc :  
+	 * author : 류제욱 
+	 * date :
+	 */
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> userInfo(HttpServletRequest request, HttpServletResponse response) {
 		int id = (int) request.getAttribute("id");
@@ -61,43 +68,69 @@ public class UserController {
 			map.put("auth", params.get("_auth"));
 
 			response.setHeader("Links",
-					"</users/my-page>; rel=\"myPage\"" + ", </users/my-page/detail>; rel=\"userDetail\""
+					"</users/my-page>; rel=\"myPage\""
+							+ ", </users/my-page/detail>; rel=\"userDetail\""
 							+ ", </users/my-page/subscribed-list>; rel=\"subscribedList\""
 							+ ", </users/sign-out>; rel=\"signOut\"");
 			return new ResponseEntity<>(map, HttpStatus.OK);// 200
-		} else if (resultSet.equals("not_found")) {
+		} else
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // 401
-		} else {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
+	}
+	
+
+	/**
+	 * title : 회원 탈퇴(33)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-12
+	 */
+	@DeleteMapping
+	public ResponseEntity<Map<String, Object>> delete(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> params= new HashMap<String, Object>();
+		
+		int id = (int)request.getAttribute("id");
+		//int id = 3;
+		
+		params.put("_switch", "delete");
+		params.put("_id", id);
+
+		usersProcedureService.execuUsersProcedure(params);
+		
+		response.setHeader("Links", "</users/my-page>; rel=\"self\"," + "</>; rel=\"next\"");
+				
+		if(params.get("result_set").equals("204")){
+			return  new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
+		}else{
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); //404
 		}
 	}
 
 	/**
-	 * 마이페이지 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-07
+	 * title : 마이페이지(28)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-07
 	 */
 	@GetMapping(path = "/my-page")
 	public ResponseEntity<Map<String, Object>> myPage(HttpServletResponse response, HttpServletRequest request) {
 		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> temp = new HashMap<String, Object>();
 		List<Map<String, Object>> linkList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> link1;
 		Map<String, Object> link2;
 		Map<String, Object> link3;
 
-		request.getAttribute("id");
-		int id = 2;
-		params.put("_id", id);
+		int id = (int)request.getAttribute("id");
 
 		params.put("_switch", "my_page");
+		params.put("_id", id);
 		usersProcedureService.myPage(params);
 
 		String email = (String) params.get("_email");
 		String auth = (String) params.get("_auth");
-		params.clear();
-		
-		params.put("email", email);
-		params.put("auth", auth);
+
+		temp.put("email", email);
+		temp.put("auth", auth);
 
 		link1 = new HashMap<String, Object>();
 		link2 = new HashMap<String, Object>();
@@ -118,8 +151,8 @@ public class UserController {
 		link3.put("method ", "patch");
 		linkList.add(link3);
 
-		params.put("_links", linkList);
-
+		temp.put("_links", linkList);
+		
 		response.setHeader("Links",
 						"</users/my-page>; 						rel=\"self\","
 						+ "</users/my-page/detail>;				rel=\"userDetail\","
@@ -128,7 +161,58 @@ public class UserController {
 						+ "</auth/verify>;  					rel=\"validation\","
 						+ "</users>; 							rel=\"deleteUser\"");
 
-		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
+		
+		if (params.get("result_set").equals("200")) {
+				return new ResponseEntity<Map<String, Object>>(temp, HttpStatus.OK);// 200
+		}else {
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);// 404
+		}
+	}
+	
+	/**
+	 * title : 회원정보(33)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-08
+	 */
+	@GetMapping(path = "/my-page/detail")
+	public ResponseEntity<Map<String, Object>> myPageDetail(HttpServletRequest request, HttpServletResponse response) {		
+		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> link = new HashMap<String, Object>();
+		Map<String, Object> temp = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int user_id = (int) request.getAttribute("id");
+		//int user_id = 1;
+		
+		params.put("_switch", "mypage_detail");
+		params.put("_id", user_id);
+		
+		//System.out.println("params~~~~~~~~~~ " + params);
+		
+		map = usersProcedureService.mypageDetail(params);
+		
+		link.put("rel", "editUserDetail");
+		link.put("href", "/users/detail");
+		link.put("method ", "put");
+		
+		temp.put("image", map.get("image"));
+		temp.put("nickName", map.get("nick_name"));
+		temp.put("name", map.get("name"));
+		temp.put("local", map.get("local"));
+		temp.put("birth", map.get("birth"));
+		temp.put("gender", map.get("gender"));
+		temp.put("_link", link);
+		
+		response.setHeader("Links",
+						"</users/my-page>;					rel=\"myPage\""
+						+ ", </users/my-page/detail>;		rel=\"userDetail\""
+						+ ", </users/my-page/subscribed-list>;rel=\"subscribedList\""
+						+ ", </users/sign-out>;				rel=\"signOut\"");
+	
+		return new ResponseEntity<>(temp, HttpStatus.OK);// 200
+
+			
 	}
 
 	// 회원가입
@@ -143,7 +227,9 @@ public class UserController {
 		params.put("_pwd", encodedPwd);
 		authProcedureService.execuAuthProcedure(params);
 
-		response.setHeader("Links", "</users/sign-up>; rel=\"self\"," + "</ko/auth/signIn>; rel=\"next\"");
+		response.setHeader("Links",
+						"</users/sign-up>; rel=\"self\","
+						+ "</ko/auth/signIn>; rel=\"next\"");
 		if (params.get("result_set").equals("success"))
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		else
@@ -344,3 +430,4 @@ public class UserController {
 	}
 
 }
+

@@ -22,8 +22,8 @@ public interface UsersProcedureMapper {
 			+ ",#{_birth, mode=INOUT, jdbcType=DATE, javaType=java.util.Date}"
 			+ ",#{_gender, mode=INOUT, jdbcType=CHAR, javaType=java.lang.String}"
 			+ ",#{_image, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_auth, mode=OUT, jdbcType=CHAR, javaType=java.lang.String}"
+			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public void usersProcedure(Map<String, Object> params);
@@ -77,8 +77,8 @@ public interface UsersProcedureMapper {
 			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"			
 			+ ",#{_email, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{_pwd, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_nickName, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_pwd, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_name, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_local, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_birth, mode=INOUT, jdbcType=DATE, javaType=java.util.Date}"
@@ -90,8 +90,28 @@ public interface UsersProcedureMapper {
 	@Options(statementType = StatementType.CALLABLE)
 	public Map<String, Object> getMyPage(Map<String, Object> params);
 	
-	@Select(value ="{CALL test_procedure()}")
+	@Select(value = "{CALL users_procedure("
+			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"			
+			+ ",#{_email, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_nickName, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_pwd, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_name, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_local, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_birth, mode=INOUT, jdbcType=DATE, javaType=java.util.Date}"
+			+ ",#{_gender, mode=INOUT, jdbcType=CHAR, javaType=java.lang.String}"
+			+ ",#{_image, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_auth, mode=OUT, jdbcType=CHAR, javaType=java.lang.String}"
+			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
-	public List<Map<String,Object>> testMapper();
-
+	public Map<String, Object> getMyPageDetail(Map<String, Object> params);
+	
+	@Insert(value = "CALL users_write_comment_procedure("
+			+ "#{_commentId, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"			
+			+ ",#{_email, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_content, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ")")
+	public String writeCommentReply(Map<String, Object> params);
+	
 }

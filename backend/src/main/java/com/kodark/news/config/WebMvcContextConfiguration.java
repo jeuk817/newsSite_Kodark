@@ -65,20 +65,21 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer {
         return viewResolver;
    }
 
-   // 인터셉터 : 요청과 응답을 기록하는 LogInterceptor와 인증을 검사하는 JwtInterceptor를 세팅
-   @Override
-   public void addInterceptors(InterceptorRegistry registry) {
-      registry.addInterceptor(logInterceptor);
-      
-      //registry.addInterceptor(jwtInterceptor)
-         //.addPathPatterns("/users")
-         //.addPathPatterns("/users/*")
-         //.addPathPatterns("/reporter")
-         //.addPathPatterns("/reporter/*")
-        //.addPathPatterns("/admin")
-        //.addPathPatterns("/admin/*")
-         //.excludePathPatterns("/users/sign-up");
-      
-   }
-    
+
+	// 인터셉터 : 요청과 응답을 기록하는 LogInterceptor와 인증을 검사하는 JwtInterceptor를 세팅
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(logInterceptor);
+		
+		registry.addInterceptor(jwtInterceptor)
+			//.addPathPatterns("/users")
+			//.addPathPatterns("/users/*")
+			.addPathPatterns("/reporter")
+			.addPathPatterns("/reporter/*")
+			.addPathPatterns("/admin")
+			.addPathPatterns("/admin/*")
+			.excludePathPatterns("/users/sign-up");
+		
+	}
+ 
 }
