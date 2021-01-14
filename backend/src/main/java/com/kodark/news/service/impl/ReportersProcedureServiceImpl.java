@@ -16,8 +16,8 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
 	private ReportersProcedureDao reportersProcedureDao;
 
 	@Override
-	public void execuReportersProcedure(Map<String, Object> params) {
-		reportersProcedureDao.reportersBlindProcedure(params);
+	public List<Map<String, Object>> execuReportersProcedure(Map<String, Object> params) {
+		return reportersProcedureDao.execuReportersProcedure(params);
 	}
 
 	// 기자프로필
@@ -31,9 +31,6 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
 		return reportersProcedureDao.getPubAndWaitArtlcles(status);
 	}
 
-	@Override
-	public List<Map<String, Object>> reportersArticleList(Map<String, Object> params) {		
-		return reportersProcedureDao.reportersArticleList(params);
-	}
+
 
 }
