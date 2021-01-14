@@ -3,8 +3,17 @@
     <MyPageHeader />
     <div class="adminPage">
       <IntroduceSideBar :sideMenu="sideMenu" />
+      <template v-if="currentRoute === 'users'">
+        <UserList />
+      </template>
       <template v-if="currentRoute === 'reporters/new'">
         <CreateReporterForm />
+      </template>
+      <template v-if="currentRoute === 'reporters'">
+        <ReportList />
+      </template>
+      <template v-if="currentRoute === 'article/new'">
+        <WaitArticleList />
       </template>
     </div>
   </div>
@@ -14,12 +23,18 @@
 import MyPageHeader from '../components/headers/MyPageHeader'
 import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
 import CreateReporterForm from '../components/bodies/admins/CreateReporterForm'
+import ReportList from '../components/bodies/admins/ReportList'
+import WaitArticleList from '../components/bodies/admins/WaitArticleList'
+import UserList from '../components/bodies/admins/UserList'
 
 export default {
   components: {
     MyPageHeader,
     IntroduceSideBar,
-    CreateReporterForm
+    CreateReporterForm,
+    ReportList,
+    WaitArticleList,
+    UserList
   },
   computed: {
     // side menu

@@ -17,6 +17,7 @@ const actions = {
       formData.append('birth', birth)
       formData.append('gender', gender)
       formData.append('image', image)
+      console.log(formData)
       const res = await axios.post('/admin/reporters', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -29,6 +30,37 @@ const actions = {
     }
   },
 
+  async getReporters () {
+    try{
+      const res = await axios.get('/admin/reporters',{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = res.data
+      return {reporters: data, status: res.status}
+    }catch(err){
+      return {status: err.response.status}
+    }
+  },
+  async getWaitArticles () {
+    try{
+      const res = await axios.get('/admin/article',{
+        params: {
+          status: 'wait'
+        }
+      } 
+      ,{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = res.data
+      return {data, status: res.status}
+    }catch(err){
+      return {status: err.response.status}
+    }
+  }
 }
 
 export default {

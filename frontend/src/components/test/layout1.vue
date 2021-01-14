@@ -30,66 +30,6 @@
         </li>
       </ul>
     </div>
-     <div class="articleRow">
-      <div class="sectionTop">
-        <h3 class="sectionTitle">Politic</h3>
-        <a class="sectionLink" href="#">More in The Politic</a>
-      </div>
-      <ul class="articles">
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed repell
-            e?</p>
-        </li>
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum dolor sitihil veritatis alias ratione?</p>
-        </li>
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed repell
-            s ratione?</p>
-        </li>
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum doliis!ratione?</p>
-        </li>
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum is alias ratione?</p>
-        </li>
-      </ul>
-    </div>
-     <div class="articleRow">
-      <div class="sectionTop">
-        <h3 class="sectionTitle">Politic</h3>
-        <a class="sectionLink" href="#">More in The Politic</a>
-      </div>
-      <ul class="articles">
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed repell
-            e?</p>
-        </li>
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum dolor sitihil veritatis alias ratione?</p>
-        </li>
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed repell
-            s ratione?</p>
-        </li>
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum doliis!ratione?</p>
-        </li>
-        <li class="item">
-          <img src="../../assets/img/articleList1.jpg" alt="articleImg" class="articleImg">
-          <p class="articleTitle">Lorem ipsum is alias ratione?</p>
-        </li>
-      </ul>
-    </div>
     
 </div>
 </template>
