@@ -48,7 +48,8 @@
               <p>Image</p>
             </div>
             <div class="userInfoContent image">
-              <p>{{image}}</p> 
+              <!-- <p>{{image}}</p> -->
+              <img class="userInfoImage" :src="image">
             </div>
         </div>
         <div class="EditBtn">
@@ -303,6 +304,7 @@ export default {
     },
     async created () {
       const {status, userDetail, links} = await this.$store.dispatch('users/getUserDetail');
+
       if(status === 200){
         this.nickName = userDetail.nickName;
         this.name = userDetail.name;
@@ -335,8 +337,8 @@ export default {
 }
 
 .image{
-  width: 280px;
-  height: 70px;
+  width: 70px;
+  /* height: 70px; */
   border-radius: 5px;
   background-color: #f7f7f5;
 }
@@ -349,6 +351,11 @@ export default {
 .userInfoTitle{
   margin-top: 10px;
   flex-basis: 20%;
+}
+
+.userInfoImage {
+  width: 100%;
+  object-fit: cover;
 }
 
 .EditBtn span,
