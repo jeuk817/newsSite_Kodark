@@ -19,21 +19,20 @@ public class AdminProcedureServiceImpl implements AdminProcedureService {
 	public void execuAdminProcedure(Map<String, Object> params) {
 		adminProcedureDao.excuAdminProcedure(params);
 	}
+	
+	@Override
+	public Map<String, Object> execuAdminProcedureMap(Map<String, Object> params) {
+		return adminProcedureDao.execuAdminProcedureMap(params);
+	}
+	
+	@Override
+	public List<Map<String, Object>> execuAdminProcedureList(Map<String, Object> params) {
+		return adminProcedureDao.execuAdminProcedureList(params);
+	}
 
 	@Override
 	public List<Map<String, Object>> getWaitArticles(String _status) {
 		return adminProcedureDao.getWaitArticles(_status);
 	}
 
-	//
-	@Override
-	public List<Map<String, Object>> getReporterList() {
-		return adminProcedureDao.getReporterList();
-	}
-
-	@Override
-	public List<Map<String, Object>> getArticleList(Map<String, Object> params) {
-		return adminProcedureDao.getArticleList(params);
-		
-	}
 }

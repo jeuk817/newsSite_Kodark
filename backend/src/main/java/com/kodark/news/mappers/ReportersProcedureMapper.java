@@ -32,12 +32,4 @@ public interface ReportersProcedureMapper {
 	@Select(value = "{CALL reporter_getPubAndWaitArtlcles(#{_status})}")
 	public List<Map<String, Object>> getPubAndWaitArtlcles(@Param("_status") String status);
 
-	// 기자프로필(이종현)
-	@Select(value = "{CALL reporter_profile_procedure("
-			+ "#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer}"		
-			+ ")}")
-	@Options(statementType = StatementType.CALLABLE)
-	public Map<String, Object> getReporterInfo(Map<String, Object> params);
-
-
 }

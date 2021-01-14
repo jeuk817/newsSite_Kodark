@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,22 +44,28 @@ public class ReporterController {
 	 * 작성자 : 이종현
 	 */
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> getInfoProfile(@RequestBody Map<String, Object> body) {
+	public ResponseEntity<Map<String, Object>> getInfoProfile(HttpServletRequest request) {
 		Map<String, Object> params = null;
-
+		Map<String, Object> map = null;
 		try {
 			params = new HashMap<String, Object>();
-			params = reportersProcedureService.getReporterInfo(body);
+			map = new HashMap<String, Object>();
+			//params.put("_id", request.getAttribute("id")); 미사용
+			params.put("_id", 5); //임의로 지정
+			params.put("_switch", "reporter_profile");
+			
+			map = reportersProcedureService.execuReportersProcedureMap(params);
 
-			if (params.isEmpty()) {
+			if (map.isEmpty()) {
 				throw new NullPointerException();
 			}
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 
 	/**
@@ -274,6 +281,5 @@ public class ReporterController {
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200
 	}
 	
-
-	
 }
+

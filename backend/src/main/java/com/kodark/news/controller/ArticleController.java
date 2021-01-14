@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,6 @@ public class ArticleController {
 		Map<String, Object> temp;
 		List<Map<String,Object>>list = new ArrayList<>();
 		Map<String, Object> reporter = new HashMap<>();;
-		
-
 		
 		int _articleId = Integer.parseInt(articleId);
 		params.put("_articleId", _articleId);
@@ -89,31 +88,35 @@ public class ArticleController {
 	 * 작성자 : 이종현
 	 */
 	@GetMapping(path ="/emotion")
-	public ResponseEntity<List<Map<String, Object>>> 
-	getEmotionInfo(@RequestParam("articleId") int articleId, HttpServletResponse response){
-		
-		List<Map<String, Object>> params = null;
+	public ResponseEntity<List<Map<String, Object>>> getEmotionInfo(
+			@RequestParam("articleId") int articleId, HttpServletResponse response){
+		List<Map<String, Object>> list = null;
+		Map<String, Object> params = null;
 		Map<String, Object> map = null;
 		StringBuffer sb = null;
 		int pSize = 0;
 		
 		try {
-			params = articleProcedureService.getEmotionInfo(articleId);
+			params = new HashMap<String, Object>();
+			params.put("_switch", "article_emotion");
+			params.put("_id", articleId);
+			list = articleProcedureService.excuArticleProcedureList(params);
+			
 			sb = new StringBuffer();
-			pSize = params.size();
+			pSize = list.size();
 			
 			for(int i=0; i<pSize; i++) {
 				map = new HashMap<String, Object>();
-				map.put("href","/article/emotion?articleId=" + articleId + "&emotion="+params.get(i).get("emotion"));
+				map.put("href","/article/emotion?articleId=" + articleId + "&emotion="+list.get(i).get("emotion"));
 				map.put("method", "put");
-				map.put("rel", params.get(i).get("emotion"));		
-				params.get(i).put("_link", map);
+				map.put("rel", list.get(i).get("emotion"));		
+				list.get(i).put("_link", map);
 				} 
 			for(int i=0; i<pSize; i++) {
 				sb.append("</article/emotion?articleId="+articleId
-						+"&emotion="+params.get(i).get("emotion")
+						+"&emotion="+list.get(i).get("emotion")
 						+">;" 
-						+"rel="+ params.get(i).get("emotion")
+						+"rel="+ list.get(i).get("emotion")
 						);
 				if(pSize>1) {
 					sb.insert(sb.length(), ",");
@@ -125,10 +128,10 @@ public class ArticleController {
 			}
 			response.setHeader("Links", sb.toString());	
 			
-			if(params.isEmpty()) {
-				return new ResponseEntity<List<Map<String, Object>>>(params,HttpStatus.NO_CONTENT); //404
+			if(list.isEmpty()) {
+				return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.NO_CONTENT); //404
 			}
-			return new ResponseEntity<List<Map<String, Object>>>(params,HttpStatus.OK); //200
+			return new ResponseEntity<List<Map<String, Object>>>(list,HttpStatus.OK); //200
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR); //500
@@ -144,12 +147,21 @@ public class ArticleController {
 	public ResponseEntity<List<Map<String,Object>>> getCommentReply(
 			@RequestParam("articleId") int articleId, @RequestParam("commentStartId") int commentStartId){
 		
-		List<Map<String, Object>> list = articleProcedureService.getCommentReply(articleId, commentStartId);
+		List<Map<String, Object>> list = null;
 		List<Map<String, Object>> tempList = null;
+		Map<String,Object> params = null;
 		Map<String,Object> map = null;
 		Map<String,Object> temp = null;
 		try {
+			list = new ArrayList<Map<String,Object>>();
+			params = new HashMap<String, Object>();
 			tempList = new ArrayList<Map<String,Object>>();
+			
+			params.put("_switch", "article_comment_reply");
+			params.put("_id", articleId);
+			params.put("_commentId", commentStartId);
+			
+			list = articleProcedureService.excuArticleProcedureList(params);
 			for(int i=0; i<list.size(); i++) {
 				map = new HashMap<String, Object>();
 				temp = new HashMap<String, Object>();
@@ -182,39 +194,51 @@ public class ArticleController {
 	}
 
 	/**
-	 * 메인네비 정보 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-06
+	 * title : 메인네비 정보(14) 
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> mainNavi(HttpServletResponse response) {
 
 		response.setHeader("Links",
-				"</auth/sign-in>; 		rel=\"signIn\"," + "</>; 	   				rel=\"home\","
-						+ "</section/politics>;	rel=\"politics\"," + "</section/economy>;  	rel=\"economy\","
-						+ "</section/society>;  	rel=\"society\"," + "</section/tech>; 		rel=\"tech\","
-						+ "</section/world>;  	rel=\"world\"," + "</section/sports>;  	rel=\"sports\","
-						+ "</weather>;  			rel=\"weather\"," + "</help>;  				rel=\"help\","
-						+ "</introduce>;  		rel=\"introduce\"");
+				"</auth/sign-in>; 		rel=\"signIn\","
+				+ "</>;    				rel=\"home\","
+				+ "</section/politics>;	rel=\"politics\","
+				+ "</section/economy>; 	rel=\"economy\","
+				+ "</section/society>; 	rel=\"society\","
+				+ "</section/tech>;		rel=\"tech\","
+				+ "</section/world>;  	rel=\"world\","
+				+ "</section/sports>;  	rel=\"sports\","
+				+ "</weather>;  		rel=\"weather\","
+				+ "</help>; 			rel=\"help\","
+				+ "</introduce>;  		rel=\"introduce\"");
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 
 	}
 
 	/**
-	 * 핫 뉴스 (popular) 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-07
+	 * title : 핫 뉴스(6)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-07
 	 */
 	@GetMapping(path = "/popular")
-	public ResponseEntity<Map<String, Object>> hotNews(HttpServletResponse response) {
-		Map<String, Object> params = new HashMap<>();
+	public ResponseEntity<Map<String, Object>> hotNews(@RequestParam String category){
+		Map<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> temp;
 		Map<String, Object> link;
 		List<Map<String, Object>> list = new ArrayList<>();
 
 		try {
-			list = articleProcedureService.hotNews();
+			params.put("_switch", "popular");
+			params.put("_category", category);
+			
+			System.out.println("프로시저 전 param~~~~~~~~~ "+ params );
+			list = articleProcedureService.execuArticleProcedure_2(params);
+			System.out.println("프로시저 후 params~~~~~~ " + params);
 
 			for (int i = 0; i < list.size(); i++) {
 				temp = new HashMap<>();
@@ -226,23 +250,24 @@ public class ArticleController {
 
 				temp.put("id", list.get(i).get("id"));
 				temp.put("title", list.get(i).get("title"));
-				temp.put("content", list.get(i).get("content"));
+				temp.put("subTitle", list.get(i).get("sub_title"));
 				temp.put("image", list.get(i).get("image"));
 				temp.put("imgDec", list.get(i).get("imgDec"));
 				temp.put("_link", link);
-
+				System.out.println("temp~~~~~" + temp);
 				list.set(i, temp);
 			}
-
-			params.put("category", "all");
+			params = new HashMap<String, Object>();
+			params.put("category", category);
 			params.put("type", "popular");
 			params.put("data", list);
-			response.setHeader("Links", "rel : \"article\"," + "href : \"/article?articleId\"," + "method : \"get\"");
+			
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Map<String, Object>>(params, HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
-		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
+		return new ResponseEntity<Map<String, Object>>(params,HttpStatus.OK);// 200
 	}
 
 	/**
@@ -261,6 +286,7 @@ public class ArticleController {
 		params.put("_category", category);
 		try {
 			list = articleProcedureService.execuLatestProcedure(params);
+
 			if(params.get("result_set").equals("200")) {
 				for (int i = 0; i < list.size(); i++) {
 					map = new HashMap<>();
@@ -290,15 +316,20 @@ public class ArticleController {
 	}
 
 	/**
-	 * 카테고리 정보 
-	 * 작성자 : 최현지 
-	 * 작성일 : 2021-01-06
+	 * title : 카테고리 정보(63)
+	 * desc : 
+	 * author : 최현지 
+	 * date : 2021-01-06
 	 */
-	// 카테고리 정보
 	@GetMapping(path = "/category")
-	public ResponseEntity<List<CategoryDto>> categoryInfo() {
-		List<CategoryDto> categoryInfo = articleProcedureService.categoryInfo();
-		return new ResponseEntity<List<CategoryDto>>(categoryInfo, HttpStatus.OK);// 200
+	public ResponseEntity<List<Map<String, Object>>> categoryInfo() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		List<Map<String, Object>> categoryInfo = new ArrayList<Map<String,Object>>();
+		
+		params.put("_switch","category_info");
+		categoryInfo = articleProcedureService.execuArticleProcedure_2(params);
+		
+		return new ResponseEntity<List<Map<String, Object>>>(categoryInfo, HttpStatus.OK);// 200
 	}
 
 		/**
@@ -347,6 +378,7 @@ public class ArticleController {
 		}		
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);// 200
 	}
+  
 	/**
 	 * title : 38.구독기자의 기사목록
 	 * desc : 
@@ -390,6 +422,5 @@ public class ArticleController {
 		}
 		return new ResponseEntity<Map<String,Object>>(info,HttpStatus.OK);//200
 	}
-
 
 }
