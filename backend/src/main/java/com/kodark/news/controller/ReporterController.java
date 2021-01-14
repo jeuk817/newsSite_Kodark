@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,22 +44,28 @@ public class ReporterController {
 	 * 작성자 : 이종현
 	 */
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> getInfoProfile(@RequestBody Map<String, Object> body) {
+	public ResponseEntity<Map<String, Object>> getInfoProfile(HttpServletRequest request) {
 		Map<String, Object> params = null;
-
+		Map<String, Object> map = null;
 		try {
 			params = new HashMap<String, Object>();
-			params = reportersProcedureService.getReporterInfo(body);
+			map = new HashMap<String, Object>();
+			//params.put("_id", request.getAttribute("id")); 미사용
+			params.put("_id", 5); //임의로 지정
+			params.put("_switch", "reporter_profile");
+			
+			map = reportersProcedureService.execuReportersProcedureMap(params);
 
-			if (params.isEmpty()) {
+			if (map.isEmpty()) {
 				throw new NullPointerException();
 			}
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 
 	/**
@@ -81,16 +88,17 @@ public class ReporterController {
 
 	}
 
-	/**
-	 * 기사댓글통계데이터 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-07
+/**
+	 * title : 69.기사댓글통계데이터 
+	 * desc : 기사별 성별&연령대 통계 데이터
+	 * author : 최윤수 
+	 * date : 2021-01-07
+	 * @param : articleId
+	 * @return : gender(num), age(num)
 	 */
 	@GetMapping(path = "/article/statistics")
-	public ResponseEntity<Map<String, Object>> statistics(
-			@RequestParam(value = "articleId", required = false, defaultValue = "2") String articleId) {
-		int id = Integer.parseInt(articleId);
-		id = 2;
+	public ResponseEntity<Map<String, Object>> statistics(@RequestParam(value = "articleId") int articleId) {
+		int id = articleId;		
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> gender = new HashMap<>();
 		Map<String, Object> age = new HashMap<>();
@@ -116,20 +124,24 @@ public class ReporterController {
 		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
 	}
 
-	/**
-	 * 발행된 기사 블라인드 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-07
+
+/**
+	 * title : 68.발행된 기사 블라인드 
+	 * desc : 발행전에 올라온 기사 삭제
+	 * author : 최윤수 
+	 * date : 2021-01-07
+	 * @param : articleId
 	 */
 	@PatchMapping(path = "/article")
-	public ResponseEntity<String> articleBlind(@RequestBody Map<String, Object> body) {
+	public ResponseEntity<String> articleBlind(@RequestBody Map<String, Object> body,HttpServletRequest request) {
 		int articleId = Integer.valueOf((String) body.get("articleId"));
-		int reporterId = Integer.valueOf((String) body.get("reporterId"));
+		int reporterId = 4;//request.getAttribute("id");
+		String status = (String)body.get("status");
 		Map<String, Object> params = new HashMap<>();
 
 		params.put("_article_id", articleId);
 		params.put("_reporter_id", reporterId);
-		params.put("result_set", "blind");
+		params.put("result_set", status);
 		try {
 			reportersProcedureService.execuReportersProcedure(params);
 		} catch (Exception e) {
@@ -139,19 +151,20 @@ public class ReporterController {
 		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);// 205
 	}
 
-	/**
-	 * 발행대기전 기사 삭제 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-07
+		/**
+	 * title : 67.발행대기전 기사 삭제 
+	 * author : 최윤수 
+	 * date : 2021-01-07
+	 * @param : articleId
 	 */
 	@DeleteMapping(path = "/article")
-	public ResponseEntity<String> articleDelete(@RequestParam(value = "articleId") String param) {
+	public ResponseEntity<String> articleDelete(@RequestParam(value = "articleId") String param,HttpServletRequest request) {
 		int articleId = Integer.parseInt(param);
-		int reporterId = 1;
+		int reporterId = 4; //request.getAttribute("id");
 		Map<String, Object> params = new HashMap<>();
 		params.put("_article_id", articleId);
 		params.put("_reporter_id", reporterId);
-		params.put("result_set", "delete");
+		params.put("_switch", "unpublish");
 		try {
 			reportersProcedureService.execuReportersProcedure(params);
 		} catch (Exception e) {
@@ -160,31 +173,52 @@ public class ReporterController {
 		return new ResponseEntity<>(HttpStatus.RESET_CONTENT);// 205
 	}
 
-	/**
-	 * 기사수정(일단보류2021-01-07) 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-07
+/**
+	 * title : 66.기사수정
+	 * author : 최윤수 
+	 * date : 2021-01-14
 	 */
-	@PutMapping(path = "/new-post")
-	public ResponseEntity<String> articleModify(@RequestBody Map<String, Object> body) {
-		int reporterId = Integer.valueOf((String) body.get("reporterId"));
+	@PutMapping(path = "/article")
+	public ResponseEntity<String> articleModify(@RequestBody Map<String, Object> body
+			,HttpServletResponse response,HttpServletRequest request) {
+		int id = 4;//(int)request.getAttribute("id");
+		int articleId = 7; //(int)request.getAttribute("articleId");
 		int categoryId = Integer.valueOf((String) body.get("categoryId"));
 		String title = (String) body.get("title");
+		String subTitle = (String) body.get("subTitle");
 		String content = (String) body.get("content");
-
+		  
+		@SuppressWarnings("unchecked")
+		Map<String, Object> mainImage = (Map<String, Object>) body.get("mainImage");
+		String mainImageUrl = (String) mainImage.get("url");
+		String mainImageSource = (String) mainImage.get("source");
+		String mainImageDescription = (String) mainImage.get("description");
+		
 		Map<String, Object> params = new HashMap<>();
-		params.put("_reporter_id", reporterId);
+		params.put("_switch", "modify");
+		params.put("_reporter_id", id);
+		params.put("_article_id", articleId);
 		params.put("_category_id", categoryId);
-		params.put("result_set", "update");
-		params.put("title", title);
-		params.put("content", content);
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);// 204
+		params.put("_title", title);
+		params.put("_sub_title", subTitle);
+		params.put("_content", content);
+		params.put("_main_image_url", mainImageUrl);
+		params.put("_main_image_source", mainImageSource);
+		params.put("_main_image_description", mainImageDescription);
+		reportersProcedureService.execuReportersProcedure(params);		
+		if(params.get("result_set").equals("500")) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500 DB error
+		}else
+			response.setHeader("links", "</reporters/new-post>; rel=\"self\",\r\n"
+								  	            + "</ko/reporters/article?status=\"waiting\">; rel=\"next\"");
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204
 	}
 
+
 	/**
-	 * 발행/발행대기 기사 
-	 * 작성자 : 이푸름 
-	 * 작성일 : 2021-01-06
+	 * title : 65.발행/발행대기 기사 
+	 * author : 이푸름 
+	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/article")
 	public ResponseEntity<List<Map<String, Object>>> pubAndWaitArtlcles(@RequestParam("status") String status,
@@ -246,5 +280,6 @@ public class ReporterController {
 		}
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200
 	}
-
+	
 }
+

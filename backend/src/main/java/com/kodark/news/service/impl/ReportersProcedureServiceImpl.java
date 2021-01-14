@@ -1,3 +1,4 @@
+  
 package com.kodark.news.service.impl;
 
 import java.util.List;
@@ -14,16 +15,25 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
 
 	@Autowired
 	private ReportersProcedureDao reportersProcedureDao;
+	
+	@Override
+	public List<Map<String, Object>> execuReportersProcedure(Map<String, Object> params) {
+		return reportersProcedureDao.execuReportersProcedure(params);
+  }
 
+  @Override
+	public Map<String, Object> execuReportersProcedureMap(Map<String, Object> params) {
+		return reportersProcedureDao.execuReportersProcedureMap(params);
+	}
+
+	@Override
+	public List<Map<String, Object>> execuReportersProcedureList(Map<String, Object> params) {
+		return reportersProcedureDao.execuReportersProcedureList(params);
+	}
+	
 	@Override
 	public void execuReportersProcedure(Map<String, Object> params) {
 		reportersProcedureDao.reportersBlindProcedure(params);
-	}
-
-	// 기자프로필
-	@Override
-	public Map<String, Object> getReporterInfo(Map<String, Object> params) {
-		return reportersProcedureDao.getReporterInfo(params);
 	}
 
 	@Override
@@ -32,3 +42,4 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
 	}
 
 }
+
