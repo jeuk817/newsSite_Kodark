@@ -45,6 +45,7 @@ public class ArticleProcedureDao {
 
 	public List<Map<String, Object>> commentProcedure(Map<String, Object> params) {
 		return articleProcedureMapper.articleProcedure(params);
+
 	}
 
 }

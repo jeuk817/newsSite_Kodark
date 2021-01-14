@@ -4,7 +4,7 @@
 -- -------------------------
 delimiter $$
 create trigger updateUsersTB
-after insert on forbidden 
+after insert on forbbiden 
 for each row
 begin 
 declare userStatus varchar(8);

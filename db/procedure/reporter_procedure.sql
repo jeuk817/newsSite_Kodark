@@ -15,9 +15,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `reporter_procedure`(
 BEGIN
 declare checkId varchar(8);
    
-    /* 기자 프로필
-      작성자 : 이종현
-    */
+    -- 기자프로필 이종현
     if _switch = 'reporter_profile' then
       select count(*)
       into checkId
@@ -60,5 +58,4 @@ declare checkId varchar(8);
     
     else set result_set = '500';
   end if;
-    
 END

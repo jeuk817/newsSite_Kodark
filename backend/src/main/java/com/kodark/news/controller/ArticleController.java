@@ -301,7 +301,7 @@ public class ArticleController {
 		return new ResponseEntity<List<CategoryDto>>(categoryInfo, HttpStatus.OK);// 200
 	}
 
-	/**
+		/**
 	 * title :19.기사댓글 데이터 
 	 * author : 최윤수 
 	 * date : 2021-01-07

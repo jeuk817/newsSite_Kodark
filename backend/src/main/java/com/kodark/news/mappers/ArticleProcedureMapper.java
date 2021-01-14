@@ -53,11 +53,9 @@ public interface ArticleProcedureMapper {
 
 	@Select(value = "{CALL latest_procedure("
 			+ "#{_category, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public List<Map<String, Object>> latestProcedure(Map<String, Object> params);
-
 
 
 }
