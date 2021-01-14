@@ -85,8 +85,9 @@ public class UserController {
 	@DeleteMapping
 	public ResponseEntity<Map<String, Object>> delete(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> params= new HashMap<String, Object>();
+		
 		int id = (int)request.getAttribute("id");
-		//int id = 2;
+		//int id = 3;
 		
 		params.put("_switch", "delete");
 		params.put("_id", id);
@@ -111,23 +112,24 @@ public class UserController {
 	@GetMapping(path = "/my-page")
 	public ResponseEntity<Map<String, Object>> myPage(HttpServletResponse response, HttpServletRequest request) {
 		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> temp = new HashMap<String, Object>();
 		List<Map<String, Object>> linkList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> link1;
 		Map<String, Object> link2;
 		Map<String, Object> link3;
 
 		int id = (int)request.getAttribute("id");
-		//int id =2;
-		params.put("_id", id);
+		//int id = 1;
 
 		params.put("_switch", "my_page");
+		params.put("_id", id);
 		usersProcedureService.myPage(params);
 
 		String email = (String) params.get("_email");
 		String auth = (String) params.get("_auth");
 
-		params.put("email", email);
-		params.put("auth", auth);
+		temp.put("email", email);
+		temp.put("auth", auth);
 
 		link1 = new HashMap<String, Object>();
 		link2 = new HashMap<String, Object>();
@@ -148,8 +150,8 @@ public class UserController {
 		link3.put("method ", "patch");
 		linkList.add(link3);
 
-		params.put("_links", linkList);
-
+		temp.put("_links", linkList);
+		
 		response.setHeader("Links",
 						"</users/my-page>; 						rel=\"self\","
 						+ "</users/my-page/detail>;				rel=\"userDetail\","
@@ -160,9 +162,9 @@ public class UserController {
 
 		
 		if (params.get("result_set").equals("200")) {
-				return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
+				return new ResponseEntity<Map<String, Object>>(temp, HttpStatus.OK);// 200
 		}else {
-			return new ResponseEntity<Map<String, Object>>(params, HttpStatus.NOT_FOUND);// 404
+			return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);// 404
 		}
 	}
 	
@@ -179,8 +181,8 @@ public class UserController {
 		Map<String, Object> temp = new HashMap<String, Object>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		//int user_id = 1;
 		int user_id = (int) request.getAttribute("id");
+		//int user_id = 1;
 		
 		params.put("_switch", "mypage_detail");
 		params.put("_id", user_id);

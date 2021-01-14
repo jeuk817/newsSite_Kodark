@@ -101,8 +101,9 @@ declare idCount int;
     
 	end if;
       
--- 마이페이지 -----------------------------------------------------
+-- 마이페이지(28)-----------------------------------------------------
 	if _switch = 'my_page' then
+		select count(*) into idCount from users where id = _id;   
 		select email into _email from users where id = _id;
 		select auth into _auth from users where id = _id; 
 		
