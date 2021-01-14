@@ -5,6 +5,7 @@ import AuthPage from '../views/AuthPage'
 import IntroducePage from '../views/IntroducePage'
 import MyPage from '../views/MyPage'
 import AdminPage from '../views/AdminPage'
+import ReporterPage from '../views/ReporterPage'
 
 
 Vue.use(VueRouter)
@@ -36,12 +37,16 @@ const routes = [
     component: MyPage
   },
   {
-    path: '/en/admin/admin-page',
+    path: '/en/admin/*',
     component: AdminPage
   },
   {
-    path: '/en/admin/admin-page/*',
-    component: AdminPage
+    path: '/en/reporters',
+    component: ReporterPage
+  },
+  {
+    path: '/en/reporters/*',
+    component: ReporterPage
   }
 ]
 

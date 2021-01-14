@@ -1,3 +1,0 @@
-#Tomcat publish data
-#Mon Jan 11 17:25:02 KST 2021
-org.eclipse.jst.jee.server\:/binary\:C\:\\Users\\vnfma\\.m2\\repository\\org\\springframework\\spring-web\\5.2.12.RELEASE\\spring-web-5.2.12.RELEASE.jar=WEB-INF/lib/spring-web-5.2.12.RELEASE.jar

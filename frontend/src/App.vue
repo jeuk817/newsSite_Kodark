@@ -21,7 +21,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 * {
   box-sizing: border-box;
   margin: 0;
@@ -32,5 +32,9 @@ export default {
   max-width: 1200px;
   margin: 0 auto;
   /* padding: 0 3%; */
+}
+
+.displayNone {
+  display: none;
 }
 </style>

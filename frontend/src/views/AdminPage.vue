@@ -3,7 +3,7 @@
     <MyPageHeader />
     <div class="adminPage">
       <IntroduceSideBar :sideMenu="sideMenu" />
-      <template v-if="currentRoute === 'reporters/new'">
+      <template v-if="currentRoute === 'new'">
         <CreateReporterForm />
       </template>
     </div>
@@ -26,25 +26,26 @@ export default {
     sideMenu() {
       const sideMenu = []
       sideMenu.push({ type: 'title', text: 'Admin' })
-      sideMenu.push({ type: 'sub', text: 'Statistics', link: '/en/admin/admin-page' })
-      sideMenu.push({ type: 'sub', text: 'Waiting articles', link: '/en/admin/admin-page/article/new' })
+      sideMenu.push({ type: 'sub', text: 'Statistics', link: '/en/admin/statistics' })
+      sideMenu.push({ type: 'sub', text: 'Waiting articles', link: '/en/admin/article/waiting' })
       sideMenu.push({ type: 'title', text: 'Users' })
-      sideMenu.push({ type: 'sub', text: 'User list', link: '/en/admin/admin-page/users' })
+      sideMenu.push({ type: 'sub', text: 'User list', link: '/en/admin/users' })
       sideMenu.push({ type: 'title', text: 'Reporter' })
-      sideMenu.push({ type: 'sub', text: 'Reporter list', link: '/en/admin/admin-page/reporters' })
-      sideMenu.push({ type: 'sub', text: 'Create reporter', link: '/en/admin/admin-page/reporters/new' })
+      sideMenu.push({ type: 'sub', text: 'Reporter list', link: '/en/admin/reporters' })
+      sideMenu.push({ type: 'sub', text: 'Create reporter', link: '/en/admin/reporters/new' })
       sideMenu.push({ type: 'title', text: 'Report' })
-      sideMenu.push({ type: 'sub', text: 'Reported articles', link: '/en/admin/admin-page/report/article' })
-      sideMenu.push({ type: 'sub', text: 'Reported comments', link: '/en/admin/admin-page/report/comment' })
+      sideMenu.push({ type: 'sub', text: 'Reported articles', link: '/en/admin/report/article' })
+      sideMenu.push({ type: 'sub', text: 'Reported comments', link: '/en/admin/report/comment' })
       sideMenu.push({ type: 'title', text: 'Question' })
-      sideMenu.push({ type: 'sub', text: 'Question list', link: '/en/admin/admin-page/question' })
+      sideMenu.push({ type: 'sub', text: 'Question list', link: '/en/admin/question-list' })
       return sideMenu
     },
     // 현재 라우트 반환
     currentRoute () {
       const routeArr = this.$route.fullPath.split('/')
       const lastUrl = routeArr[routeArr.length - 1];
-      return lastUrl === 'new' ? `${routeArr[routeArr.length - 2]}/${lastUrl}` : lastUrl
+      // return lastUrl === 'new' ? `${routeArr[routeArr.length - 2]}/${lastUrl}` : lastUrl
+      return routeArr[routeArr.length - 1]
     }
   }
 }

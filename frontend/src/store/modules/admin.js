@@ -7,7 +7,6 @@ const util = new Util()
 const actions = {
   async createReporter({}, { email, pwd, nickName, name, local, birth, gender, image}) {
     try {
-      console.log('createReporter axios')
       const formData = new FormData();
       formData.append('email', email)
       formData.append('pwd', pwd)

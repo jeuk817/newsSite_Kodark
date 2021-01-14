@@ -23,8 +23,8 @@ public class ReportersProcedureDao {
 		return reportersProcedureMapper.getReporterInfo(params);
 	}
 
-	public void execuReportersProcedure(Map<String, Object> params) {
-		reportersProcedureMapper.reportersProcedure(params);
+	public List<Map<String, Object>> execuReportersProcedure(Map<String, Object> params) {
+		return reportersProcedureMapper.reportersProcedure(params);
 	}
 
 	// 이푸름

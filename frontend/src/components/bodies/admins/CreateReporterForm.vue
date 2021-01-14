@@ -229,7 +229,7 @@ export default {
       const { status } = await this.$store.dispatch('admin/createReporter' ,
       { email, pwd, nickName, name, local, birth, gender, image})
       if(status === 201) {
-        this.$router.push({ path: '/en/admin/admin-page/reporters' })
+        this.$router.push({ path: '/en/admin/reporters' })
       }
       else if(status === 409)  {
         this.failMsg = 'There are duplicate users.'
