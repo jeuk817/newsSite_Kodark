@@ -17,4 +17,9 @@ public class HelpProcedureDao {
 	public List<Map<String, Object>> execuHelpProcedure(Map<String, Object> params) {
 		return helpProcedureMapper.helpProcedure(params);
 	}
+	
+	public Map<String, Object> execuHelpProcedureMap(Map<String, Object> params) {
+		return helpProcedureMapper.helpProcedureMap(params);
+	}
 }
+

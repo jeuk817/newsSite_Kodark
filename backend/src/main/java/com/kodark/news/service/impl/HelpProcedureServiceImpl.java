@@ -19,4 +19,11 @@ public class HelpProcedureServiceImpl implements HelpProcedureService {
 	public List<Map<String, Object>> execuHelpProcedure(Map<String, Object> params) {
 		return helpProcedureDao.execuHelpProcedure(params);
 	}
+
+	@Override
+	public Map<String, Object> execuHelpProcedureMap(Map<String, Object> params) {
+		return helpProcedureDao.execuHelpProcedureMap(params);
+	}
+
+	
 }

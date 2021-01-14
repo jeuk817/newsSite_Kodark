@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kodark.news.service.HelpProcedureService;
@@ -40,18 +43,9 @@ public class HelpController {
 		Map<String, Object> params = new HashMap<>();
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
-		/*
-		 * params.put("id", 1);
-		 * params.put("_title", "제목제목");
-		 * params.put("_content", "내용내용");
-		 */
-		
 		params.put("_switch", "service_center");
 		
 		list = helpProcedureService.execuHelpProcedure(params);
-		
-		System.out.println("params~~~~~~~~~  " + params);
-		//params.clear();
 		
 		for(int i =0; i<list.size(); i++) {
 			int id = (int)list.get(i).get("id");
@@ -85,23 +79,10 @@ public class HelpController {
 		Map<String, Object>link; 
 		
 		int id = (int) request.getAttribute("id");
-		//int id = 1;
 		
 		params.put("_switch", "question_list");
 		params.put("_user_id", id);
 		list = helpProcedureService.execuHelpProcedure(params);
-		
-		System.out.println("params~~~~~~~~~  " + params);
-		
-		
-			/*
-			 * int user_id = 1;
-			 * int id = (int)list.get(i).get("id");
-			 * String title = (String)list.get(i).get("title");
-			 * String content = (String)list.get(i).get("content");
-			 * Date createdAt = (Date)list.get(i).get("creatded_at");
-			 * int accepted = (int)list.get(i).get("accepted");
-			 */
 		
 		for(int i=0; i<list.size(); i++) {
 			link = new HashMap<String, Object>();  
@@ -119,8 +100,7 @@ public class HelpController {
 			
 			list.set(i, temp);
 		}
-		
-		System.out.println("list~~~~~~~~~~~~~ " + list);
+
 		response.setHeader("Links",	"</help/question>; rel=\"questionPage\"");
 		
 		if (params.get("result_set").equals("200")) {
@@ -130,4 +110,51 @@ public class HelpController {
 		}
 	
 	}	
+
+	/**
+	 * 문의글 상세 페이지
+	 * author : 이종현
+	 * date : 2021-01-11
+	 */
+	@GetMapping(path = "/question")
+	public ResponseEntity<Map<String, Object>> getQuestion(@RequestParam int questionId, HttpServletResponse response){
+		Map<String, Object> params = null;
+		Map<String, Object> map = null;
+		try {
+			params = new HashMap<String, Object>();
+			map = new HashMap<String, Object>();
+			params.put("_switch", "question_info");
+			params.put("_id", questionId);
+			map = helpProcedureService.execuHelpProcedureMap(params);
+			
+			response.setHeader("Links", "</help/question>;rel=\"questionPage\"");
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+	}
+	
+	/**
+	 * 문의글 작성
+	 * author : 이종현
+	 * date : 2021-01-11
+	 */
+	@PostMapping(path = "/question")
+	public ResponseEntity<Map<String, Object>> writeQuestion(@RequestBody Map<String, Object> body, HttpServletResponse response){
+		Map<String, Object> params = null;
+		try {
+			params = new HashMap<String, Object>();
+			params.put("_switch", "question_write");
+			params.put("_id", 4); //작정자 아이디는 일단 임의로 지정함
+			params.put("_title", body.get("title"));
+			params.put("_content", body.get("content"));
+			helpProcedureService.execuHelpProcedureMap(params);
+			
+			response.setHeader("Links", "</help/question-list>;rel=\"myQuestionList\"");
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String,Object>>(HttpStatus.OK);
+	}
+
 }

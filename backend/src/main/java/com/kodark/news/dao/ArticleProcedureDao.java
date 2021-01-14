@@ -17,17 +17,17 @@ public class ArticleProcedureDao {
 	public void execuArticleProcedure(Map<String, Object> params) {
 		articleProcedureMapper.articleProcedure(params);
 	}
+	
+	public Map<String, Object> excuArticleProcedureMap(Map<String, Object> params) {
+		return articleProcedureMapper.articleProcedureMap(params);
+	}
+	
+	public List<Map<String, Object>> excuArticleProcedureList(Map<String, Object> params) {
+		return articleProcedureMapper.articleProcedureList(params);
+	}
 
 	public List<Map<String, Object>> getArticleDetail(Map<String, Object> params) {
 		return articleProcedureMapper.getArticleDetail(params);
-	}
-
-	public List<Map<String, Object>> getEmotionInfo(int _articleId) {
-		return articleProcedureMapper.getEmotionInfo(_articleId);
-	}
-
-	public List<Map<String, Object>> getCommentReply(int _articleId, int _commentId) {
-		return articleProcedureMapper.getCommentReply(_articleId, _commentId);
 	}
 
 	public List<Map<String, Object>> execuArticleProcedure_2(Map<String, Object> params) {

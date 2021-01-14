@@ -85,31 +85,35 @@ public class ArticleController {
 	 * 작성자 : 이종현
 	 */
 	@GetMapping(path ="/emotion")
-	public ResponseEntity<List<Map<String, Object>>> 
-	getEmotionInfo(@RequestParam("articleId") int articleId, HttpServletResponse response){
-		
-		List<Map<String, Object>> params = null;
+	public ResponseEntity<List<Map<String, Object>>> getEmotionInfo(
+			@RequestParam("articleId") int articleId, HttpServletResponse response){
+		List<Map<String, Object>> list = null;
+		Map<String, Object> params = null;
 		Map<String, Object> map = null;
 		StringBuffer sb = null;
 		int pSize = 0;
 		
 		try {
-			params = articleProcedureService.getEmotionInfo(articleId);
+			params = new HashMap<String, Object>();
+			params.put("_switch", "article_emotion");
+			params.put("_id", articleId);
+			list = articleProcedureService.excuArticleProcedureList(params);
+			
 			sb = new StringBuffer();
-			pSize = params.size();
+			pSize = list.size();
 			
 			for(int i=0; i<pSize; i++) {
 				map = new HashMap<String, Object>();
-				map.put("href","/article/emotion?articleId=" + articleId + "&emotion="+params.get(i).get("emotion"));
+				map.put("href","/article/emotion?articleId=" + articleId + "&emotion="+list.get(i).get("emotion"));
 				map.put("method", "put");
-				map.put("rel", params.get(i).get("emotion"));		
-				params.get(i).put("_link", map);
+				map.put("rel", list.get(i).get("emotion"));		
+				list.get(i).put("_link", map);
 				} 
 			for(int i=0; i<pSize; i++) {
 				sb.append("</article/emotion?articleId="+articleId
-						+"&emotion="+params.get(i).get("emotion")
+						+"&emotion="+list.get(i).get("emotion")
 						+">;" 
-						+"rel="+ params.get(i).get("emotion")
+						+"rel="+ list.get(i).get("emotion")
 						);
 				if(pSize>1) {
 					sb.insert(sb.length(), ",");
@@ -121,10 +125,10 @@ public class ArticleController {
 			}
 			response.setHeader("Links", sb.toString());	
 			
-			if(params.isEmpty()) {
-				return new ResponseEntity<List<Map<String, Object>>>(params,HttpStatus.NO_CONTENT); //404
+			if(list.isEmpty()) {
+				return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.NO_CONTENT); //404
 			}
-			return new ResponseEntity<List<Map<String, Object>>>(params,HttpStatus.OK); //200
+			return new ResponseEntity<List<Map<String, Object>>>(list,HttpStatus.OK); //200
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR); //500
@@ -140,12 +144,21 @@ public class ArticleController {
 	public ResponseEntity<List<Map<String,Object>>> getCommentReply(
 			@RequestParam("articleId") int articleId, @RequestParam("commentStartId") int commentStartId){
 		
-		List<Map<String, Object>> list = articleProcedureService.getCommentReply(articleId, commentStartId);
+		List<Map<String, Object>> list = null;
 		List<Map<String, Object>> tempList = null;
+		Map<String,Object> params = null;
 		Map<String,Object> map = null;
 		Map<String,Object> temp = null;
 		try {
+			list = new ArrayList<Map<String,Object>>();
+			params = new HashMap<String, Object>();
 			tempList = new ArrayList<Map<String,Object>>();
+			
+			params.put("_switch", "article_comment_reply");
+			params.put("_id", articleId);
+			params.put("_commentId", commentStartId);
+			
+			list = articleProcedureService.excuArticleProcedureList(params);
 			for(int i=0; i<list.size(); i++) {
 				map = new HashMap<String, Object>();
 				temp = new HashMap<String, Object>();
