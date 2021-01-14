@@ -244,6 +244,8 @@ public class AuthController {
 		String accessToken = oauthToken.get("access_token");
 		
 		Map<String, Object> userInfo = oauthManager.getUserInfo("kakao", accessToken);
+		
+		@SuppressWarnings("unchecked")
 		Map<String, Object> kakaoAccount = (Map<String, Object>)userInfo.get("kakao_account");
 		String email = (String)kakaoAccount.get("email");
 		

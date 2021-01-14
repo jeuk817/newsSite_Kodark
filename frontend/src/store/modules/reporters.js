@@ -31,7 +31,7 @@ const actions = {
 
   async newPost({}, { title, subTitle, categoryId, mainImage, content }) {
     try {
-      const res = await axios.post('/reporters/new-post', { title, subTitle, categoryId, mainImage, content }, {
+      const res = await axios.post('/reporters/article', { categoryId, title, subTitle, content, mainImage }, {
         headers: {
           'Content-Type': 'application/json'
         }

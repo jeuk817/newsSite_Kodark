@@ -205,7 +205,11 @@ export default {
                 title: this.title,
                 subTitle: this.subTitle,
                 categoryId,
-                mainImage: this.mainImageForm.imageUrl,
+                mainImage: {
+                    url: this.mainImageForm.imageUrl,
+                    source: this.mainImageForm.source,
+                    description: this.mainImageForm.description
+                },
                 content: this.editor.getHTML()
             })
 
