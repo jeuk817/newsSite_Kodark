@@ -34,4 +34,5 @@ public class AdminProcedureDao {
 	public void insertReporterDetail(Map<String, Object> params) {
 		adminProcedureMapper.insertReporterDetail(params);
 	}
+
 }

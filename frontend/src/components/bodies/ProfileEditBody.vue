@@ -43,6 +43,14 @@
               <p>{{gender}}</p> 
             </div>
         </div>
+        <div class="userDetailContainer">
+            <div class="userInfoTitle">
+              <p>Image</p>
+            </div>
+            <div class="userInfoContent image">
+              <p>{{image}}</p> 
+            </div>
+        </div>
         <div class="EditBtn">
           <v-btn
             depressed
@@ -62,50 +70,61 @@
             </v-btn>
         </div>
       </div>
+
+      <!-- Detail Form start -->
       <div class="editInputContainer inputHide">
         <div class="inputContainer">
             <div class="inputTitle" style="margin-right: 20px">
               <p>Nick Name</p>
             </div>
-            <v-text-field
-              ref="nickName"
-              label="NickName"
-              height="40px"
-              outlined
-
-              required
-              dense=true
-          >
-          </v-text-field>
+            <div class="inputContent nickNameInput">
+              <v-text-field
+                ref="nickName"
+                label="NickName"
+                height="40px"
+                outlined
+                v-model="userDetailForm.nickName"
+                required
+                dense=true
+              >
+              </v-text-field>
+            </div>
         </div>
         <div class="inputContainer">
             <div class="inputTitle" style="margin-right: 76px">Name</div>
-            <v-text-field
-              ref="name"
-              label="Name"
-              height="40px"
-              outlined
-              required
-              dense=true
-          >
-          </v-text-field>
+            <div class="inputContent">
+              <v-text-field
+                ref="name"
+                label="Name"
+                v-model="userDetailForm.name"
+                height="40px"
+                outlined
+                required
+                dense=true
+              >
+              </v-text-field>
+            </div>
         </div>
         
         <div class="inputContainer">
             <div class="inputTitle" style="margin-right: 76px">Local</div>
-            <v-text-field
-              ref="local"
-              label="Local"
-              height="40px"
-              outlined
-              required
-              dense=true
-          >
-          </v-text-field>
+            <div class="inputContent">
+              <v-text-field
+                ref="local"
+                label="local"
+                v-model="userDetailForm.local"
+                height="40px"
+                outlined
+                required
+                dense=true
+              >
+              </v-text-field>
+            </div>
 
         </div>
           <div class="inputContainer">
             <div class="inputTitle" style="margin-right: 70px; line-height:70px ">Birth</div>
+            <div class="inputContent">
               <v-menu
                       ref="menu"
                       v-model="menu"
@@ -116,7 +135,7 @@
                   >
                   <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                      v-model="date"
+                      v-model="userDetailForm.date"
                       label="Birthday date"
                       prepend-icon="mdi-calendar"
                       readonly
@@ -126,21 +145,41 @@
                   </template>
                   <v-date-picker
                       ref="picker"
-                      v-model="date"
+                      v-model="userDetailForm.date"
                       :max="new Date().toISOString().substr(0, 10)"
                       min="1950-01-01"
                       @change="save"
                   ></v-date-picker>
               </v-menu>
+            </div>
           </div>
 
           <div class="inputContainer gender">
             <div class="inputTitle" style="margin-right: 76px; line-height: 65px">Gender</div>
-            <v-radio-group v-model="gender" row>
-              <v-radio label="Male" value="M"></v-radio>
-              <v-radio label="Female" value="F" color="red"></v-radio>
-            </v-radio-group>
+            <div class="inputContent">
+              <v-radio-group v-model="userDetailForm.gender" row>
+                <v-radio label="Male" value="M"></v-radio>
+                <v-radio label="Female" value="F" color="red"></v-radio>
+              </v-radio-group>
+            </div>
           </div>
+          
+          <div class="inputContainer gender">
+            <div class="inputTitle" style="margin-right: 76px; line-height: 65px">Profile Image</div>
+            <div class="inputContent">
+              <v-file-input
+              ref="profileImage"
+              :rules="userDetailForm.imageRules"
+              accept="image/png, image/jpeg, image/bmp"
+              placeholder="Pick an image"
+              prepend-icon="mdi-camera"
+              label="Profile image"
+              @change="changeImage"
+            ></v-file-input>
+            </div>
+          </div>
+          
+
         <div class="inputFromBtn">
           <div class="CancleBtn">
             <v-btn
@@ -162,6 +201,25 @@
             </div>
         </div>
       </div>
+      <v-snackbar
+      v-model="failCreate"
+      bottom="true"
+      color="error"
+      :timeout="failMsgTimeOut"
+    >
+      {{ failMsg }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          class="text-capitalize"
+          dark
+          text
+          v-bind="attrs"
+          @click="failCreate = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 
 </template>
@@ -169,13 +227,27 @@
 <script>
 export default {
     data: () => ({
-      nickName: "",
-      name: "",
-      local: "",
-      birth: "",
-      gender: "M",
-      date: null,
-      menu: false,
+      name: '',
+      nickName: '',
+      local: '',
+      birth: '',
+      gender: '',
+      image: '',
+    userDetailForm: {
+      imageFile: undefined,
+      imageRules: [
+        value => !value || value.size < 2000000 || 'Image size should be less than 2 MB!',
+      ],
+      name: '',
+      nickName: '',
+      local: '',
+      birth: new Date().toISOString().substr(0, 10),
+      gender: ''
+    },
+    failCreate: false,
+    failMsg: '',
+    failMsgTimeOut: 10000
+  
     }),
     watch: {
       menu (val) {
@@ -198,20 +270,51 @@ export default {
         const inputHide = document.querySelector('.inputHide');
         userDetailInfo.style.display ="block";
         inputHide.style.visibility="hidden";
+      },
+      async userDetailSubmit () {
+        if(!this.userDetailForm.name || !this.userDetailForm.nickName || !this.userDetailForm.local || !this.userDetailForm.birth || !this.userDetailForm.gender) {
+        this.failMsg = 'All information is required'
+        return this.failCreate = true
+        }
+        const nickName = this.userDetailForm.nickName
+        , name = this.userDetailForm.name
+        , local = this.userDetailForm.local
+        , birth = this.userDetailForm.birth // string
+        , gender = this.userDetailForm.gender
+        , image = this.userDetailForm.imageFile // object
+        console.log(image)
+        console.log(nickName)
+        const {status} = await this.$store.dispatch('users/updateDetail', 
+        { nickName, name, local, birth, gender, image})
+        console.log(status)
+        if(status === 204){
+          this.$router.push({path: '/en/users/my-page'})
+        }
+        else if(status === 401) {
+          this.$router.push({ path: '/en/auth/signIn' })
+        }else if(status === 409){
+          this.failMsg = 'NickName is already in use'
+          this.failCreate = true
+        }
+      },
+      changeImage(imageFile) {
+        this.userDetailForm.imageFile = imageFile;
       }
     },
     async created () {
-    const {status, userDetail, links} = await this.$store.dispatch('users/getUserDetail');
-    if(status === 200){
-      this.nickName = userDetail.nickName;
-      this.name = userDetail.name;
-      this.local = userDetail.local;
-      this.birth = userDetail.birth;
-      this.gender = userDetail.gender;
-    }
-    if(status===401){
-      alert('Please Sign in your Account')
-    }
+      const {status, userDetail, links} = await this.$store.dispatch('users/getUserDetail');
+      if(status === 200){
+        this.nickName = userDetail.nickName;
+        this.name = userDetail.name;
+        this.local = userDetail.local;
+        this.birth = userDetail.birth;
+        this.gender = userDetail.gender;
+        this.image = userDetail.image;
+      }
+      if(status===401){
+        this.failMsg = ('Please Sign in your Account')
+        this.failCreate = true
+      }
     }
 }
 </script>
@@ -227,6 +330,13 @@ export default {
 .userInfoContent{
   width: 250px;
   height: 40px;
+  border-radius: 5px;
+  background-color: #f7f7f5;
+}
+
+.image{
+  width: 280px;
+  height: 70px;
   border-radius: 5px;
   background-color: #f7f7f5;
 }
@@ -274,8 +384,8 @@ export default {
   margin-bottom: 50px;
 }
 .inputContainer{
-    margin-top: 35px;
-    width: 450px;
+    margin-top: 50px;
+    width: 80%;
     height: 30px;
     display: flex;
 }
@@ -285,17 +395,21 @@ export default {
     line-height: 40px;
     height: 45px;
     font-size: 13px;
-    flex-basis: 10%;
+    flex-basis: 20%;
 }
 
 .inputTitle p{
   line-height: 50px;
   width: 100px;
 }
-.inputBox{
+.inputContent{
     width: 350px;
     height: 40px;
-    flex-basis: 95%;
+    flex-basis:70%;
+}
+.nickNameInput{
+  padding-left: 57px;
+  flex-basis:78%;
 }
 
 .maleCheck{
