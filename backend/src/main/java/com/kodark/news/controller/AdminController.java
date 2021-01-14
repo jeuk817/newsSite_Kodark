@@ -1,5 +1,7 @@
 package com.kodark.news.controller;
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,11 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,12 +25,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.kodark.news.dto.Mail;
 import com.kodark.news.dto.UserDto;
 import com.kodark.news.service.AdminProcedureService;
 import com.kodark.news.service.MailService;
 import com.kodark.news.service.StatisticsService;
+import com.kodark.news.utils.PasswordEncoderImpl;
+import com.kodark.news.utils.Util;
 
 @RestController
 @RequestMapping(path = "/admin")
@@ -36,15 +44,19 @@ public class AdminController {
 	MailService mailService;
 	StatisticsService statisticsService;
 	AdminProcedureService adminProcedureService;
+	Util util;
+	PasswordEncoderImpl passwordEncoder;
 
 	@Autowired
 	public AdminController(MailService mailService, StatisticsService statisticsService,
-			AdminProcedureService adminProcedureService, Environment env) {
+			AdminProcedureService adminProcedureService, Environment env, Util util
+			, PasswordEncoderImpl passwordEncoder) {
 		this.env = env;
 		this.mailService = mailService;
 		this.statisticsService = statisticsService;
 		this.adminProcedureService = adminProcedureService;
-
+		this.util = util;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	/**
@@ -131,7 +143,7 @@ public class AdminController {
 		if (adminProcedureService.getWaitArticles(_status).get(1) == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
 		} else if (adminProcedureService.getWaitArticles(_status).get(1) != null) {
-			return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 201;
+			return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200;
 		} else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
@@ -141,41 +153,37 @@ public class AdminController {
 	 * 기자 아이디 생성 
 	 * 작성자 : 이푸름 
 	 * 작성일 : 2021-01-05
+	 * 수정: 류제욱 2021-01-11
 	 */
-	@PostMapping(path = "/reporters")
-	public ResponseEntity<UserDto> createReporter(@RequestBody Map<String, Object> body) throws ParseException {
-		String email = (String) body.get("email");
-		String pwd = (String) body.get("pwd");
-		String auth = "reporter";
+	@PostMapping(path = "/reporters", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<String> createReporter(
+			MultipartHttpServletRequest multiRequest, HttpServletRequest request) throws ParseException {
+		
+		MultipartFile imageFile = multiRequest.getFile("image");
+		String fileName = util.saveImage(imageFile, request);
+		String email = request.getParameter("email");
+		String pwd = request.getParameter("pwd");
+		String encodedPwd = passwordEncoder.encode(pwd);
+		String nickName = request.getParameter("nickName");
+		String name = request.getParameter("name");
+		String local = request.getParameter("local");
+		String birth = request.getParameter("birth");
+		String gender = request.getParameter("gender");
+		
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "create_reporter");
 		params.put("_email", email);
-		params.put("_pwd", pwd);
-		params.put("_auth", auth);
-		String nickName = (String) body.get("nickname");
-		String name = (String) body.get("name");
-		String local = (String) body.get("local");
-
-		String Stringbirth = (String) body.get("birth");
-		SimpleDateFormat afterFormat = new SimpleDateFormat("yyyy-mm-dd");
-		java.sql.Date birth = java.sql.Date.valueOf(Stringbirth);
-
-		String gender = (String) body.get("gender");
-		String image = (String) body.get("image");
+		params.put("_pwd", encodedPwd);
 		params.put("_nickName", nickName);
 		params.put("_name", name);
 		params.put("_local", local);
 		params.put("_birth", birth);
 		params.put("_gender", gender);
-		params.put("_image", image);
-
-		adminProcedureService.execuAdminProcedure(params);
-		if (params.get("result_set").equals("conflict")) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT); // 409
-		}
+		params.put("_image", fileName);
+		
+		adminProcedureService.createReporter(params);
 
 		return new ResponseEntity<>(HttpStatus.CREATED); // 201
-
 	}
 
 	/**

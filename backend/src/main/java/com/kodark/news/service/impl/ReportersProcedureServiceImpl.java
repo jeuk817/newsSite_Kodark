@@ -19,21 +19,17 @@ public class ReportersProcedureServiceImpl implements ReportersProcedureService 
 	@Override
 	public List<Map<String, Object>> execuReportersProcedure(Map<String, Object> params) {
 		return reportersProcedureDao.execuReportersProcedure(params);
-  }
+	}
 
-  @Override
+	@Override
 	public Map<String, Object> execuReportersProcedureMap(Map<String, Object> params) {
 		return reportersProcedureDao.execuReportersProcedureMap(params);
 	}
+	
 
 	@Override
 	public List<Map<String, Object>> execuReportersProcedureList(Map<String, Object> params) {
 		return reportersProcedureDao.execuReportersProcedureList(params);
-	}
-	
-	@Override
-	public void execuReportersProcedure(Map<String, Object> params) {
-		reportersProcedureDao.reportersBlindProcedure(params);
 	}
 
 	@Override

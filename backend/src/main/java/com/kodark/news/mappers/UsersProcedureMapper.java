@@ -20,7 +20,7 @@ public interface UsersProcedureMapper {
 			+ ",#{_nickName, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_name, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_local, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
-			+ ",#{_birth, mode=INOUT, jdbcType=DATE, javaType=java.util.Date}"
+			+ ",#{_birth, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_gender, mode=INOUT, jdbcType=CHAR, javaType=java.lang.String}"
 			+ ",#{_image, mode=INOUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_auth, mode=OUT, jdbcType=CHAR, javaType=java.lang.String}"
