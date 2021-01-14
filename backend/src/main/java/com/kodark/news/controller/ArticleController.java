@@ -246,9 +246,9 @@ public class ArticleController {
 	}
 
 	/**
-	 * 섹션별 최신기사(10개) 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-06
+	 * title : 섹션별 최신기사(10개) 
+	 * author : 최윤수 
+	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/latest")
 	public ResponseEntity<Map<String, Object>> latest(@RequestParam String category) {
@@ -317,9 +317,10 @@ public class ArticleController {
 		Map<String, Object> comment;
 		List<Map<String, Object>> list = new ArrayList<>();
 		params.put("_article_id", articleId);
-		params.put("_start_id", commentStartId-1);		
-//		try {
-			list = articleProcedureService.execuCommentProcedure(params);
+		params.put("_start_id", commentStartId-1);
+		params.put("_switch", "comment");		
+		try {
+			list = articleProcedureService.execuArticleProcedure(params);
 			System.out.println("list:"+list);
 			for(int i=0;i<list.size();i++) {
 				user = new HashMap<>();
@@ -338,11 +339,12 @@ public class ArticleController {
 				reputation.put("decommend", list.get(i).get("decommend"));
 				comment.put("reputation", reputation);
 				list.set(i, comment);
-				response.setHeader("links", "</article/comment/reply?id>; rel=\"reply\"");
+				
 			}
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
-//		}		
+			response.setHeader("links", "</article/comment/reply?id>; rel=\"reply\"");
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
+		}		
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);// 200
 	}
 	/**
@@ -372,7 +374,7 @@ public class ArticleController {
 			reporter.put("name", params2.get("name"));
 			reporter.put("image", params2.get("image"));
 			info.put("reporter", reporter);
-			list = reportersProcedureService.reportersArticleList(params);
+			list = reportersProcedureService.execuReportersProcedure(params);
 			for(int i=0;i<list.size();i++) {
 				articles = new HashMap<>();
 				articles.put("title", list.get(i).get("title"));
