@@ -3,6 +3,7 @@
     <HomeHeader />
     <HelloWorld />
     <HelloWorld />
+    <layout2 />
     <layout1 />
   </div>
 </template>

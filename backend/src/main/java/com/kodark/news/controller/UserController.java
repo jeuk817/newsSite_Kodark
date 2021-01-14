@@ -49,7 +49,6 @@ public class UserController {
 	@Autowired
 	public UserController(Environment env, MailService mailService, AuthProcedureService authProcedureService,
 			UsersProceduerService usersProcedureService, PasswordEncoderImpl passwordEncoder, Util util) {
-		System.out.println("constructor!!!!");
 		this.env = env;
 		this.mailService = mailService;
 		this.authProcedureService = authProcedureService;
