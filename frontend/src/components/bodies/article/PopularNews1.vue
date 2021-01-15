@@ -6,7 +6,8 @@
       </div>
       <div class="pop1BestText">
         <div class="text-h5 font-weight-bold">
-          가나다라마바사아자차카타파하가나다라마바사아자차카타파하
+          가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다
+          <!-- 45자 -->
         </div>
         <div class="pop1BestSubTitle">
           가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하
@@ -18,15 +19,16 @@
       <div class="pop1RightSecond">
         <div class="pop1RightTop">
           <div class="pop1RightTitle text-h5 font-weight-bold">
-            ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJK
+            ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKOPD
+            <!-- 40자 -->
           </div>          
           <div class="pop1RightImg">
             <img src="https://picsum.photos/1920/1080?random">
           </div>          
         </div>
-        <div class="pop1RightBody">
+        <div>
           abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
-          <!-- 90자 -->
+          <!-- 130자 -->
         </div>
         <div class="pop1RightFoot">
           10h ago - By Jack
@@ -41,7 +43,7 @@
             <img src="https://picsum.photos/1920/1080?random">
           </div>          
         </div>
-        <div class="pop1RightBody">
+        <div>
           abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
         </div>
         <div class="pop1RightFoot">
@@ -57,7 +59,7 @@
             <img src="https://picsum.photos/1920/1080?random">
           </div>          
         </div>
-        <div class="pop1RightBody">
+        <div>
           abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrst
         </div>
         <div class="pop1RightFoot">
@@ -97,12 +99,12 @@ export default {
 }
 
 .pop1Right {
-  border-left: 1px solid gray;
+  border-left: 1px solid rgb(195, 195, 195);
   padding-left: 30px;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
   row-gap: 15px;
-  word-break: break-all;
+  /* word-break: break-all; */
 }
 
 .poppularNew1 img {
@@ -128,19 +130,11 @@ export default {
 }
 
 .pop1RightSecond{
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid rgb(195, 195, 195);
 }
 
 .pop1RightThird{
-  border-bottom: 1px solid gray;
-}
-
-.pop1RightForth{
-  
-}
-
-.pop1RightBody {
-  
+  border-bottom: 1px solid rgb(195, 195, 195);
 }
 
 .pop1RightFoot {

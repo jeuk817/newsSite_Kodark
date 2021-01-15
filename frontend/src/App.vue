@@ -28,6 +28,11 @@ export default {
   padding: 0;
 }
 
+div, p {
+  white-space: normal;
+  word-break: break-all;
+}
+
 #app {
   max-width: 1200px;
   margin: 0 auto;

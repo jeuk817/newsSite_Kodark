@@ -7,7 +7,7 @@
         class="text-center footers"
         cols="4"
       >
-      <span>©</span> <span>2020</span> <span>version 0.0.1</span>
+      <span>©</span> <span>2020</span> <span>version 0.3.1</span>
       </v-col>
       <v-col
         class="text-center footers"

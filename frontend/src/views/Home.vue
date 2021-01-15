@@ -2,6 +2,7 @@
   <div class="home">
     <HomeHeader />
     <PopularNews1 />
+    <PopularNewsCarousels />
     <!-- <HelloWorld />
     <HelloWorld />
     <layout2 />
@@ -16,6 +17,7 @@ import layout1 from '../components/test/layout1'
 import layout2 from '../components/test/layout2'
 import Footer from '../components/footer/Footer'
 import PopularNews1 from '../components/bodies/article/PopularNews1'
+import PopularNewsCarousels from '../components/bodies/article/PopularNewsCarousels'
 
 export default {
   name: 'Home',
@@ -25,7 +27,8 @@ export default {
     layout1,
     layout2,
     Footer,
-    PopularNews1
+    PopularNews1,
+    PopularNewsCarousels
   }
 }
 </script>
