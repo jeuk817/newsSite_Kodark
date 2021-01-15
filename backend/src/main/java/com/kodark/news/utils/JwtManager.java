@@ -40,8 +40,9 @@ public class JwtManager {
         SignatureAlgorithm  signatureAlgorithm= SignatureAlgorithm.HS256;
         byte[] secretKeyBytes = DatatypeConverter.parseBase64Binary(env.getProperty("secret.jwt"));
         Key signingKey = new SecretKeySpec(secretKeyBytes, signatureAlgorithm.getJcaName());
+        System.out.println("time:"+ttlMillis);
         long expirationMillis = System.currentTimeMillis() + ttlMillis;
-        
+        System.out.println("ex"+expirationMillis);
         JwtBuilder builder = Jwts.builder()
                 .setSubject(subject)
                 .signWith(signatureAlgorithm, signingKey)

@@ -1,4 +1,4 @@
-CREATE DEFINER=`jack`@`localhost` PROCEDURE `admin_procedure`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `admin_procedure`(
    in _switch varchar(20)
     , in _id int
     , in _input varchar(5000)
@@ -87,9 +87,14 @@ BEGIN
 			set result_set = 404;
 		end if;			
     -- 56.기사신고 확인(미완성)    
-	elseif _switch = 'article_report' then			
-		
-        set result_set = '205';
+	elseif _switch = 'confirm' then			
+		select count(*) from article_report where id = _id;
+        if count > 0 then
+			update article_report set done_flag = 'T' where id = _id;
+            set result_set = '205';
+		else
+			set result_set = '404';
+		end if;		
     -- 53.신고기사 목록    
 	elseif _switch = 'article_list' then	
 		select 

@@ -51,11 +51,12 @@ public class Util {
 				}
 				
 			} catch(Exception e) {
+				e.getStackTrace();
 				throw new RuntimeException("file save error");
 			}
 			
 		} else {
-			throw new RuntimeException("file save error");
+			throw new RuntimeException("file save error2");
 		}
 		
 		return fileName;
