@@ -22,8 +22,6 @@ public class ArticleProcedureDao {
 		return articleProcedureMapper.getArticleDetail(params);
 	}
 
-	public List<Map<String, Object>> latestProcedure(Map<String, Object> params) {
-		return articleProcedureMapper.latestProcedure(params);
-	}
+
 
 }

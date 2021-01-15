@@ -27,7 +27,7 @@ public interface UsersProcedureMapper {
 			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"			
 			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
-	public void usersProcedure(Map<String, Object> params);
+	public List<Map<String, Object>> usersProcedure(Map<String, Object> params);
 	
 	@Select(value = "{CALL users_procedure("
 			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"

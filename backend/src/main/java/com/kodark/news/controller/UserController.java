@@ -425,10 +425,7 @@ public class UserController {
 		Map<String, Object> map4;
 		params.put("_switch", "sub_list");
 		params.put("_id", id);				
-		list = usersProcedureService.execuUsersProcedureList(params);
-		if(params.get("result_set").equals("404")) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
-		}else if(params.get("result_set").equals("200")){
+		list = usersProcedureService.execuUsersProcedure(params);		
 			try {
 				for(int i=0;i<list.size();i++) {
 					link = new ArrayList<>();
@@ -457,17 +454,18 @@ public class UserController {
 					map1.put("_links", link);
 					list.set(i, map1);						
 				}
+				response.setHeader("links",	  "</users/my-page>; rel=\"myPage\",\r\n"
+						+ "</users/my-page/detail>; rel=\"userDetail\",\r\n"
+						+ "</users/my-page/subscribed-list>; rel=\"self\",\r\n"
+						+ "</users/detail>; rel=\"editUserDetail\",\r\n"
+						+ "</users/reporters/article>; rel=\"reporterArticles\",\r\n"
+						+ "</users/reporters/letter-accepted>; rel=\"letterAccept\",\r\n"
+						+ "</users/subscription>; rel=\"deleteSubscription\"");	
 			} catch (Exception e) {
 				return new ResponseEntity<>(HttpStatus.OK);//500
 			}
-		}	
-		response.setHeader("links",	  "</users/my-page>; rel=\"myPage\",\r\n"
-									+ "</users/my-page/detail>; rel=\"userDetail\",\r\n"
-									+ "</users/my-page/subscribed-list>; rel=\"self\",\r\n"
-									+ "</users/detail>; rel=\"editUserDetail\",\r\n"
-									+ "</users/reporters/article>; rel=\"reporterArticles\",\r\n"
-									+ "</users/reporters/letter-accepted>; rel=\"letterAccept\",\r\n"
-									+ "</users/subscription>; rel=\"deleteSubscription\"");	
+			
+		
 		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);//200
 	}
 	

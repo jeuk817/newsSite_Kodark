@@ -20,11 +20,6 @@ public class ArticleProcedureServiceImpl implements ArticleProcedureService {
 		return articleProcedureDao.excuArticleProcedure(params);
 	}
 	
-	@Override
-	public List<Map<String, Object>> execuLatestProcedure(Map<String, Object> params) {
-		return articleProcedureDao.latestProcedure(params);
-	}
-	
 	public List<Map<String, Object>> getArticleDetail(Map<String, Object> params) {
 		return articleProcedureDao.getArticleDetail(params);
 	}

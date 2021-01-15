@@ -271,7 +271,7 @@ public class ArticleController {
 	}
 
 	/**
-	 * title : 섹션별 최신기사(10개) 
+	 * title : 15.섹션별 최신기사(10개) 
 	 * author : 최윤수 
 	 * date : 2021-01-06
 	 */
@@ -284,8 +284,9 @@ public class ArticleController {
 		List<Map<String, Object>> list = new ArrayList<>();
 		List<Map<String, Object>> list2 = new ArrayList<>();		
 		params.put("_category", category);
+		params.put("_switch", "latest");
 		try {
-			list = articleProcedureService.execuLatestProcedure(params);
+			list = articleProcedureService.execuArticleProcedure(params);
 
 			if(params.get("result_set").equals("200")) {
 				for (int i = 0; i < list.size(); i++) {
@@ -310,9 +311,11 @@ public class ArticleController {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
 			}
 		} catch (Exception e) {
+			e.getMessage();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);// 200
+		
 	}
 
 	/**
@@ -406,6 +409,7 @@ public class ArticleController {
 			reporter.put("name", params2.get("name"));
 			reporter.put("image", params2.get("image"));
 			info.put("reporter", reporter);
+			params.replace("_switch", "get_list");
 			list = articleProcedureService.execuArticleProcedure(params);
 			for(int i=0;i<list.size();i++) {
 				articles = new HashMap<>();
@@ -417,7 +421,7 @@ public class ArticleController {
 				list.set(i, articles);
 			}
 			info.put("articles", list);
-		} catch (Exception e) {
+		} catch (Exception e) {			
 			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
 		return new ResponseEntity<Map<String,Object>>(info,HttpStatus.OK);//200

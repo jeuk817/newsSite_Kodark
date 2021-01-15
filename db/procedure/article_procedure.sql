@@ -1,4 +1,3 @@
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `article_procedure`(
   in _switch varchar(20)
   , inout _id int
@@ -21,14 +20,30 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `article_procedure`(
   ,out result_set varchar(8)
 )
 BEGIN
+declare checkData int default -1;
 	if _switch = 'blind' then
 		update article set status = 'deleted' where reporter_id = _reporter_id and id =_article_id;
+	-- 38.구독기자 기사목록		
 	elseif _switch = 'get_list' then
-		select a.id,a.title,a.content, i.image,i.description 
+		select a.id,a.title,a.sub_title, i.image,i.description 
         from article a
         left outer join image i on i.article_id = a.id
         where a.reporter_id = _reporter_id
         ;
+    -- 15.섹션별 최신기사
+	elseif _switch = 'latest' then
+		select count(*)into checkData from article where created_at  > date_sub(now(), interval 12 hour);
+		if checkData > 0 then
+			select a.id, a.title, a.sub_title, i.image, i.description as imgDec from article as a 
+			left outer join image as i on a.id=i.article_id
+			left outer join category as c on c.name = _category
+			where created_at  > date_sub(now(), interval 12 hour) 
+			order by created_at desc
+			limit 10;
+			set result_set = '200';
+		else
+			set result_set = '404';
+		end if;		
 	-- 19. 기사 댓글데이터		
 	elseif _switch = 'comment' then
 		select c.id,u.id as userId,u.email,ud.nick_name as nickName,ud.local, c.content
@@ -113,10 +128,11 @@ BEGIN
 				and c.name = _category
 			order by a.hit desc limit 10;
 	end if;
-
+end if;
 -- 카테고리 정보 ------------------------------------------------------
 	if _switch = 'category_info' then
 		select * from category;
 	end if;
+    
 
 END
