@@ -134,23 +134,22 @@ public class ReporterController {
 
 /**
 	 * title : 68.발행된 기사 블라인드 
-	 * desc : 발행전에 올라온 기사 삭제
+	 * desc : toggle
 	 * author : 최윤수 
 	 * date : 2021-01-07
 	 * @param : articleId
 	 */
 	@PatchMapping(path = "/article")
-	public ResponseEntity<String> articleBlind(@RequestBody Map<String, Object> body,HttpServletRequest request) {
-		int articleId = Integer.valueOf((String) body.get("articleId"));
-		int reporterId = 4;//request.getAttribute("id");
-		String status = (String)body.get("status");
+	public ResponseEntity<String> articleBlind(@RequestParam int articleId, @RequestParam String status) {		
 		Map<String, Object> params = new HashMap<>();
-
-		params.put("_article_id", articleId);
-		params.put("_reporter_id", reporterId);
-		params.put("result_set", status);
+		params.put("_switch", "published");
+		params.put("_article_id", articleId);	
+		params.put("_title", status);
 		try {
-			reportersProcedureService.execuReportersProcedureList(params);
+			reportersProcedureService.execuReportersProcedure(params);
+			if(params.get("result_set").equals("500")){
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500 DB
+			}
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
@@ -165,12 +164,9 @@ public class ReporterController {
 	 * @param : articleId
 	 */
 	@DeleteMapping(path = "/article")
-	public ResponseEntity<String> articleDelete(@RequestParam(value = "articleId") String param,HttpServletRequest request) {
-		int articleId = Integer.parseInt(param);
-		int reporterId = 4; //request.getAttribute("id");
+	public ResponseEntity<String> articleDelete(@RequestParam int articleId,HttpServletRequest request) {			
 		Map<String, Object> params = new HashMap<>();
-		params.put("_article_id", articleId);
-		params.put("_reporter_id", reporterId);
+		params.put("_article_id", articleId);	
 		params.put("_switch", "unpublish");
 		try {
 			reportersProcedureService.execuReportersProcedure(params);
@@ -182,10 +178,10 @@ public class ReporterController {
 
 
 	/**
-	 * 기사작성
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-07
-	 * 수정 : 류제욱 2021=01-14
+	 * title : 64.기사작성
+	 * author : 최윤수 
+	 * date : 2021-01-07
+	 * update : 2021-01-14 by 류제욱
 	 */
 	@PostMapping(path = "/article")
 	public ResponseEntity<String> articleModify(HttpServletRequest request, @RequestBody Map<String, Object> body) {

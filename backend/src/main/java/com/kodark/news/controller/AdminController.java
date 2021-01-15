@@ -82,20 +82,19 @@ public class AdminController {
 	}
 
 	/**
-	 * title : 관리자메인 
+	 * title : 45.관리자메인 
 	 * author : 최윤수 
 	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/statistics")
 	public ResponseEntity<Map<String, Object>> mainPage(HttpServletRequest request) {
 		List<Map<String, Object>> list = new ArrayList<>();
-		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> params = new HashMap<>();		
 		int id = (int)request.getAttribute("id");
 		params.put("_id", id);
-		statisticsService.execuStatisticsProcedure(params);
-		
+		statisticsService.execuStatisticsProcedure(params);		
 		list = statisticsService.execuTodayPopularProcedure();
-		
+	
 		params.put("todayPopular", list);
 		
 		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
@@ -240,11 +239,8 @@ public class AdminController {
 	 * @param : articleId,status	 
 	 */
 	@PatchMapping(path = "/report/article")
-	public ResponseEntity<Map<String, Object>> articleBlind(@RequestBody Map<String, Object> body){
-		System.out.println("aaa:"+body);
-		Map<String, Object> params = new HashMap<>();
-		int articleId = Integer.valueOf((String)body.get("articleId"));
-		String status = (String)body.get("status");
+	public ResponseEntity<Map<String, Object>> articleBlind(@RequestParam int articleId, @RequestParam String status){
+		Map<String, Object> params = new HashMap<>();		
 		params.put("_id", articleId);
 		params.put("_auth", status);
 		params.put("_switch", "article_blind");
@@ -252,7 +248,7 @@ public class AdminController {
 		if(params.get("result_set").equals("404")) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
 		}else if(params.get("result_set").equals("204")) {
-			return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//204
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 		}else
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500		
 	}
@@ -342,48 +338,40 @@ public class AdminController {
 	 * @param : questionStartId, status
 	 * @return : List<Map<String, Object(Map)>>
 	 */
-	@GetMapping(path = "/question-list") //-넣으면 nullpoint error발생 -대신 /넣으면 잘 실행됨
-	public ResponseEntity<List<Map<String,Object>>> questionList(
-			@RequestParam(value = "status", required = false) String status, 
-			@RequestParam(value = "questionStartId", required = false, defaultValue = "2")int sId,
-			HttpServletResponse response
-			){
+	@GetMapping(path = "/question-list") 
+	public ResponseEntity<List<Map<String,Object>>> questionList(@RequestParam String status,@RequestParam int questionStartId,HttpServletResponse response){
 		List<Map<String, Object>> list = new ArrayList<>();
 		List<Map<String, Object>> temp = new ArrayList<>();
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> maps = new HashMap<>();
-		Map<String, Object> userInfo = new HashMap<>();
-		 System.out.println(status+":"+sId);
-		int id = sId;	
+		Map<String, Object> userInfo = new HashMap<>();				
 		params.put("_switch","question_list");
-		params.put("_id", id-1);		
-		try {
-			
+		params.put("_id", questionStartId-1);
+		params.put("_input", status);
+		try {		
+			list = adminProcedureService.execuAdminProcedure(params);		
+			for(int i=0;i<list.size();i++) {
+				System.out.println("list:"+list.get(i));
+				maps = new HashMap<>();
+				temp = new ArrayList<>();			
+				userInfo = new HashMap<>();
+				maps.put("id", list.get(i).get("id"));
+				maps.put("title",list.get(i).get("title"));
+				maps.put("content",list.get(i).get("content"));
+				maps.put("doneFlag",list.get(i).get("done_flag"));
+				maps.put("answer",list.get(i).get("answer"));
+				int userId = (int)list.get(i).get("userId");
+				String userEmail = (String)list.get(i).get("userEmail");
+				userInfo.put("id", userId);
+				userInfo.put("email", userEmail);
+				maps.put("user", userInfo);
+				temp.add(maps);	
+				list.set(i, maps);				
+			}
 		
-		list = adminProcedureService.execuAdminProcedure(params);		
-		for(int i=0;i<list.size();i++) {
-			System.out.println("list:"+list.get(i));
-			maps = new HashMap<>();
-			temp = new ArrayList<>();			
-			userInfo = new HashMap<>();
-			maps.put("id", list.get(i).get("id"));
-			maps.put("title",list.get(i).get("title"));
-			maps.put("content",list.get(i).get("content"));
-			maps.put("doneFlag",list.get(i).get("done_flag"));
-			maps.put("answer",list.get(i).get("answer"));
-			int userId = (int)list.get(i).get("userId");
-			String userEmail = (String)list.get(i).get("userEmail");
-			userInfo.put("id", userId);
-			userInfo.put("email", userEmail);
-			maps.put("user", userInfo);
-			temp.add(maps);	
-			list.set(i, maps);
-			
-		}
-		
-		response.setHeader("Links", "</admin/question-list?questionStartId="+sId+"&status=\"all\">; rel=\"allQuestionList\","
-								  + "</admin/question-list?questionStartId="+sId+"&status=\"waiting\">; rel=\"waitingQuestionList\","
-								  + "</admin/question-list?questionStartId="+sId+"&status=\"done\">; rel=\"doneQuestionList\",");
+		response.setHeader("Links", "</admin/question-list?questionStartId="+questionStartId+"&status=\"all\">; rel=\"allQuestionList\","
+								  + "</admin/question-list?questionStartId="+questionStartId+"&status=\"waiting\">; rel=\"waitingQuestionList\","
+								  + "</admin/question-list?questionStartId="+questionStartId+"&status=\"done\">; rel=\"doneQuestionList\",");
 		} catch (Exception e) {
 			return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
@@ -392,7 +380,7 @@ public class AdminController {
 	}
 	/**
 	 * title : 48. 회원정보 및 이메일 전송
-	 * desc : id, 정지사유, 기간(day)을 입력받아 DB에 저장하고 이메일을 발송(forbbiden에 isert되면 users테이블의 status도 변경되게)
+	 * desc : id, 정지사유, 기간(day)을 입력받아 DB에 저장하고 이메일을 발송(forbidden에 insert되면 users테이블의 status도 변경되게)
 	 * author : 최윤수
 	 * date : 2021-01-11
 	 * @param : id, reason, period 
@@ -404,9 +392,10 @@ public class AdminController {
 		String startDate = fm.format(today);
 		Date someday = new Date();
 		Map<String,Object> params = new HashMap<>();
-		int id = Integer.valueOf((String) body.get("id"));
+		int id = Integer.valueOf((String)body.get("id"));
+		int period = Integer.valueOf((String)body.get("period"));
 		String reason = (String) body.get("reason");
-		int period = Integer.valueOf((String) body.get("period"));;
+		
 		Mail mail = new Mail();
 		try {		
 			someday.setTime(today.getTime()+((long)period*24*60*60*1000));
@@ -414,6 +403,7 @@ public class AdminController {
 			params.put("_id", id);
 			params.put("_switch", "suspension");
 			params.put("_input", reason);
+			params.put("_commentId", period);
 			adminProcedureService.execuAdminProcedure(params);
 			System.out.println("param:"+params);
 			mail.setMailFrom(env.getProperty("email.username"));
@@ -425,7 +415,8 @@ public class AdminController {
 			mailService.sendMail(mail);
 			
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 500
+			e.getStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
 
 		return new ResponseEntity<>(HttpStatus.CREATED);//201

@@ -33,10 +33,19 @@ public interface ReportersProcedureMapper {
 	public List<Map<String, Object>> getPubAndWaitArtlcles(@Param("_status") String status);
 	
 	@Select(value = "{CALL reporter_procedure("
-		+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
-		+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
-		+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
-		+ ")}")
+			+ "#{_switch, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
+			+ ",#{_article_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
+			+ ",#{_reporter_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
+			+ ",#{_category_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
+			+ ",#{_title, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_sub_title, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_content, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_main_image_url, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_main_image_source, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{_main_image_description, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ",#{result_set, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
+			+ ")}")
 	@Options(statementType = StatementType.CALLABLE)
 	public Map<String, Object> reportersProcedureMap(Map<String, Object> params);
 	   

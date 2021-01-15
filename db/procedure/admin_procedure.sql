@@ -77,19 +77,19 @@ BEGIN
 	elseif _switch = 'article_blind' then
 		select count(*)into idCount from article where id = _id;
 		if idCount > 0 then
-			if _auth = 'unpublish' then
+			if _auth = 'blind' then
 				update article set status = 'publish' where id = _id;				
             else
-				update article set status = 'unpublish' where id = _id;				
+				update article set status = 'blind' where id = _id;				
             end if;
             set result_set = 204;
 		else 
 			set result_set = 404;
 		end if;			
-    -- 56.기사신고 확인(미완성)    
+    -- 56.기사신고 확인   
 	elseif _switch = 'confirm' then			
-		select count(*) from article_report where id = _id;
-        if count > 0 then
+		select count(*)into idCount from article_report where id = _id;
+        if idCount > 0 then
 			update article_report set done_flag = 'T' where id = _id;
             set result_set = '205';
 		else
@@ -108,20 +108,37 @@ BEGIN
         where done_flag = 'F';
     -- 49.문의글 목록    
 	elseif _switch = 'question_list' then
-	 	select q.id,q.user_id,q.title,q.content
-        ,(select u.id from users u where u.id = q.user_id)userId
-        ,(select u.email from users u where u.id = q.user_id)userEmail
-        ,aw.question_id , aw.content as answer
-        from question q 
-        join users u on u.id = q.user_id
-        left outer join answer aw on aw.question_id = q.id 
-        order by q.id asc
-        limit 10 offset _id
-        ;
+		if _input = 'ALL' then
+			select q.id,q.user_id,q.title,q.content
+			,(select u.id from users u where u.id = q.user_id)userId
+			,(select u.email from users u where u.id = q.user_id)userEmail
+			,aw.question_id , aw.content as answer
+			from question q 
+			join users u on u.id = q.user_id
+			left outer join answer aw on aw.question_id = q.id       
+			order by q.id asc
+			limit 10 offset _id;
+        else
+        	select q.id,q.user_id,q.title,q.content
+			,(select u.id from users u where u.id = q.user_id)userId
+			,(select u.email from users u where u.id = q.user_id)userEmail
+			,aw.question_id , aw.content as answer
+			from question q 
+			join users u on u.id = q.user_id
+			left outer join answer aw on aw.question_id = q.id
+			where q.done_flag = _input
+			order by q.id asc
+			limit 10 offset _id;
+        end if;
 	-- 48. 회원정지 및 이메일전송
     elseif _switch = 'suspension' then
+		select count(*) into idCount from forbidden where user_id = _id; 
 		select email into _email from users where id = _id;
-        insert into forbbiden(user_id, status, reason, end_date) values(_id,'suspend',_input,  date_add(current_timestamp(),interval 3 day));
+		if idCount > 0 then
+			update forbidden set reason = _input, end_date = date_add(end_date,interval _commentId day) where user_id = _id;
+        else
+			insert into forbidden(user_id, status, reason, end_date) values(_id,'suspend',_input,  date_add(current_timestamp(),interval 3 day));
+        end if;    
 	-- 47. 회원정보리스트
     elseif _switch = 'user_info' then
 		select u.id,u.email,u.status ,ud.nick_name, ud.name,ud.local,date_format(ud.birth,'%Y-%m-%d')birth,ud.gender,ud.image
