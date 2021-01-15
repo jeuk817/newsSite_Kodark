@@ -395,7 +395,7 @@ public class ArticleController {
 		Map<String, Object> articles;
 		List<Map<String,Object>>list = new ArrayList<>();		
 		params.put("_reporter_id", reporterId);
-		params.put("result_set", "get_list");
+		params.put("_switch", "reporter_profile");
 		params.put("_id", reporterId);
 		try {	
 			params2 = reportersProcedureService.getReporterInfo(params);				
@@ -406,7 +406,7 @@ public class ArticleController {
 			reporter.put("name", params2.get("name"));
 			reporter.put("image", params2.get("image"));
 			info.put("reporter", reporter);
-			list = reportersProcedureService.execuReportersProcedure(params);
+			list = articleProcedureService.execuArticleProcedure(params);
 			for(int i=0;i<list.size();i++) {
 				articles = new HashMap<>();
 				articles.put("title", list.get(i).get("title"));

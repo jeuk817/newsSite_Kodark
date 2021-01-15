@@ -362,12 +362,9 @@ public class UserController {
 	 * @param : reporterId
 	 */
 	@DeleteMapping(path = "/subscription")
-	public ResponseEntity<String> cancelSubscription(@RequestParam int reporterId
-			//,HttpServletRequest request
-			){
+	public ResponseEntity<String> cancelSubscription(@RequestParam int reporterId,HttpServletRequest request){
 		Map<String, Object> params = new HashMap<>();		
-		//int id = (int) request.getAttribute("id");
-		int id = 4;//test용
+		int id = (int) request.getAttribute("id");		
 		params.put("_switch", "cancel_sub");
 		params.put("_id", id);
 		params.put("_reporter_id", reporterId);
@@ -390,13 +387,10 @@ public class UserController {
 	 * @param : reporterId
 	 */
 	@PatchMapping(path = "/reporters/letter-accepted")
-	public ResponseEntity<String> newsletterToggle(@RequestParam int reporterId
-			//,HttpServletRequest request
-			){
+	public ResponseEntity<String> newsletterToggle(@RequestParam int reporterId,HttpServletRequest request){
 		Map<String, Object> params = new HashMap<>();		
 		System.out.println("start");
-		//int id = (int) request.getAttribute("id");
-		int id = 5;//test용
+		int id = (int) request.getAttribute("id");		
 		params.put("_switch", "toggle");
 		params.put("_id", id);
 		params.put("_reporter_id", reporterId);
@@ -431,7 +425,7 @@ public class UserController {
 		Map<String, Object> map4;
 		params.put("_switch", "sub_list");
 		params.put("_id", id);				
-		list = usersProcedureService.subList(params);
+		list = usersProcedureService.execuUsersProcedureList(params);
 		if(params.get("result_set").equals("404")) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
 		}else if(params.get("result_set").equals("200")){
@@ -485,9 +479,9 @@ public class UserController {
 	 * @param : userId
 	 */
 	@PostMapping(path = "/subscription")
-	public ResponseEntity<String> subscription(@RequestBody Map<String, Object> body){
+	public ResponseEntity<String> subscription(@RequestBody Map<String, Object> body,HttpServletRequest request){
 		int reporterId =Integer.valueOf((String)body.get("id"));//기자아이디
-		int id = 4; //userId httpservletrequest
+		int id = (int)request.getAttribute("id");
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "subs");
 		params.put("_id", id);

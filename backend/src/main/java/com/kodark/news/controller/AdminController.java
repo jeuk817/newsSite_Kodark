@@ -82,16 +82,16 @@ public class AdminController {
 	}
 
 	/**
-	 * 관리자메인 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-06
+	 * title : 관리자메인 
+	 * author : 최윤수 
+	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/statistics")
-	public ResponseEntity<Map<String, Object>> mainPage() {
+	public ResponseEntity<Map<String, Object>> mainPage(HttpServletRequest request) {
 		List<Map<String, Object>> list = new ArrayList<>();
 		Map<String, Object> params = new HashMap<>();
-		
-		params.put("_id", 1);
+		int id = (int)request.getAttribute("id");
+		params.put("_id", id);
 		statisticsService.execuStatisticsProcedure(params);
 		
 		list = statisticsService.execuTodayPopularProcedure();
