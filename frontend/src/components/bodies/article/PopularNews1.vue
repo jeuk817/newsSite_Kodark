@@ -15,14 +15,54 @@
       </div>
     </div>
     <div class="pop1Right">
-      <div>
-        second news
+      <div class="pop1RightSecond">
+        <div class="pop1RightTop">
+          <div class="pop1RightTitle text-h5 font-weight-bold">
+            ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJK
+          </div>          
+          <div class="pop1RightImg">
+            <img src="https://picsum.photos/1920/1080?random">
+          </div>          
+        </div>
+        <div class="pop1RightBody">
+          abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+          <!-- 90자 -->
+        </div>
+        <div class="pop1RightFoot">
+          10h ago - By Jack
+        </div>
       </div>
-      <div>
-        third news
+      <div class="pop1RightThird">
+        <div class="pop1RightTop">
+          <div class="pop1RightTitle text-h5 font-weight-bold">
+            ABCDEFGHIJKLMNOPQRSTUVWXYZ
+          </div>          
+          <div class="pop1RightImg">
+            <img src="https://picsum.photos/1920/1080?random">
+          </div>          
+        </div>
+        <div class="pop1RightBody">
+          abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+        </div>
+        <div class="pop1RightFoot">
+          10h ago - By Jack
+        </div>
       </div>
-      <div>
-        forth news
+      <div class="pop1RightForth">
+        <div class="pop1RightTop">
+          <div class="pop1RightTitle text-h5 font-weight-bold">
+            ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJK
+          </div>          
+          <div class="pop1RightImg">
+            <img src="https://picsum.photos/1920/1080?random">
+          </div>          
+        </div>
+        <div class="pop1RightBody">
+          abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrst
+        </div>
+        <div class="pop1RightFoot">
+          10h ago - By Jack
+        </div>
       </div>
     </div>
   </div>
@@ -61,10 +101,50 @@ export default {
   padding-left: 30px;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
+  row-gap: 15px;
+  word-break: break-all;
 }
 
 .poppularNew1 img {
   object-fit: cover;
   width: 100%;
+  height: 100%;
+}
+
+.pop1RightTop {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+}
+
+.pop1RightTitle {
+  padding-bottom: 3px;
+}
+
+.pop1RightImg {
+  width: 90px;
+  height: 80px;
+  padding-left: 15px;
+  padding-bottom: 5px;
+}
+
+.pop1RightSecond{
+  border-bottom: 1px solid gray;
+}
+
+.pop1RightThird{
+  border-bottom: 1px solid gray;
+}
+
+.pop1RightForth{
+  
+}
+
+.pop1RightBody {
+  
+}
+
+.pop1RightFoot {
+  font-size: 10px;
+  font-style: italic;
 }
 </style>

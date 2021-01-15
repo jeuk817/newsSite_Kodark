@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="authPage">
     <LogoHeader />
     <div class="authBody">
       <div class="authContent">
@@ -44,6 +44,10 @@ export default {
 }
 </script>
 <style scoped>
+.authPage {
+  height: 100%;
+}
+
 .authBody {
  padding-top: 64px;
 }
