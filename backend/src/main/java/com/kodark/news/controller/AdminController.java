@@ -1,5 +1,7 @@
 package com.kodark.news.controller;
 
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,11 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,12 +25,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.kodark.news.dto.Mail;
 import com.kodark.news.dto.UserDto;
 import com.kodark.news.service.AdminProcedureService;
 import com.kodark.news.service.MailService;
 import com.kodark.news.service.StatisticsService;
+import com.kodark.news.utils.PasswordEncoderImpl;
+import com.kodark.news.utils.Util;
 
 @RestController
 @RequestMapping(path = "/admin")
@@ -36,15 +44,19 @@ public class AdminController {
 	MailService mailService;
 	StatisticsService statisticsService;
 	AdminProcedureService adminProcedureService;
+	Util util;
+	PasswordEncoderImpl passwordEncoder;
 
 	@Autowired
 	public AdminController(MailService mailService, StatisticsService statisticsService,
-			AdminProcedureService adminProcedureService, Environment env) {
+			AdminProcedureService adminProcedureService, Environment env, Util util
+			, PasswordEncoderImpl passwordEncoder) {
 		this.env = env;
 		this.mailService = mailService;
 		this.statisticsService = statisticsService;
 		this.adminProcedureService = adminProcedureService;
-
+		this.util = util;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	/**
@@ -55,8 +67,11 @@ public class AdminController {
 	@GetMapping(path = "/reporters")
 	public ResponseEntity<List<Map<String, Object>>> getReportersList() {
 		List<Map<String, Object>> list = null;
+		Map<String, Object> params = null;
 		try {
-			list = adminProcedureService.getReporterList();
+			params = new HashMap<String, Object>();
+			params.put("_switch", "admin_reporters_list");
+			list = adminProcedureService.execuAdminProcedure(params);
 		} catch (Exception e) {
 			if (list.isEmpty()) {
 				return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.NO_CONTENT);
@@ -67,18 +82,21 @@ public class AdminController {
 	}
 
 	/**
-	 * 관리자메인 
-	 * 작성자 : 최윤수 
-	 * 작성일 : 2021-01-06
+	 * title : 45.관리자메인 
+	 * author : 최윤수 
+	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/statistics")
-	public ResponseEntity<Map<String, Object>> mainPage() {
+	public ResponseEntity<Map<String, Object>> mainPage(HttpServletRequest request) {
 		List<Map<String, Object>> list = new ArrayList<>();
-		Map<String, Object> params = new HashMap<>();
-		params.put("_id", 1);
-		statisticsService.execuStatisticsProcedure(params);
+		Map<String, Object> params = new HashMap<>();		
+		int id = (int)request.getAttribute("id");
+		params.put("_id", id);
+		statisticsService.execuStatisticsProcedure(params);		
 		list = statisticsService.execuTodayPopularProcedure();
+	
 		params.put("todayPopular", list);
+		
 		return new ResponseEntity<Map<String, Object>>(params, HttpStatus.OK);// 200
 	}
 
@@ -124,7 +142,7 @@ public class AdminController {
 		if (adminProcedureService.getWaitArticles(_status).get(1) == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
 		} else if (adminProcedureService.getWaitArticles(_status).get(1) != null) {
-			return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 201;
+			return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200;
 		} else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
@@ -134,44 +152,45 @@ public class AdminController {
 	 * 기자 아이디 생성 
 	 * 작성자 : 이푸름 
 	 * 작성일 : 2021-01-05
+	 * 수정: 류제욱 2021-01-11
 	 */
-	@PostMapping(path = "/reporters")
-	public ResponseEntity<UserDto> createReporter(@RequestBody Map<String, Object> body) throws ParseException {
-		String email = (String) body.get("email");
-		String pwd = (String) body.get("pwd");
-		String auth = "reporter";
+	@PostMapping(path = "/reporters", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<String> createReporter(
+			MultipartHttpServletRequest multiRequest, HttpServletRequest request) throws ParseException {
+		
+		MultipartFile imageFile = multiRequest.getFile("image");
+		String fileName = util.saveImage(imageFile, request);
+		String email = request.getParameter("email");
+		String pwd = request.getParameter("pwd");
+		String encodedPwd = passwordEncoder.encode(pwd);
+		String nickName = request.getParameter("nickName");
+		String name = request.getParameter("name");
+		String local = request.getParameter("local");
+		String birth = request.getParameter("birth");
+		String gender = request.getParameter("gender");
+		
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "create_reporter");
 		params.put("_email", email);
-		params.put("_pwd", pwd);
-		params.put("_auth", auth);
-		String nickName = (String) body.get("nickname");
-		String name = (String) body.get("name");
-		String local = (String) body.get("local");
-
-		String Stringbirth = (String) body.get("birth");
-		SimpleDateFormat afterFormat = new SimpleDateFormat("yyyy-mm-dd");
-		java.sql.Date birth = java.sql.Date.valueOf(Stringbirth);
-
-		String gender = (String) body.get("gender");
-		String image = (String) body.get("image");
+		params.put("_pwd", encodedPwd);
 		params.put("_nickName", nickName);
 		params.put("_name", name);
 		params.put("_local", local);
 		params.put("_birth", birth);
 		params.put("_gender", gender);
-		params.put("_image", image);
-
-		adminProcedureService.execuAdminProcedure(params);
-		if (params.get("result_set").equals("conflict")) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT); // 409
-		}
+		params.put("_image", fileName);
+		
+		adminProcedureService.createReporter(params);
 
 		return new ResponseEntity<>(HttpStatus.CREATED); // 201
-
 	}
 
-	// 관리자 네비정보
+	/**
+	 * title : 관리자 네비정보(46)
+	 * desc :
+	 * author : 최현지 
+	 * date :2021-01-07
+	 */
 	@GetMapping(path = "/navigation")
 	public ResponseEntity<Map<String, Object>> adminNavi(HttpServletResponse response) {
 
@@ -211,6 +230,7 @@ public class AdminController {
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 	}
+
 	 /**
 	 * title : 54.기사블라인드 토글
 	 * desc :  블라인드처리 on/off
@@ -219,11 +239,8 @@ public class AdminController {
 	 * @param : articleId,status	 
 	 */
 	@PatchMapping(path = "/report/article")
-	public ResponseEntity<Map<String, Object>> articleBlind(@RequestBody Map<String, Object> body){
-		System.out.println("aaa:"+body);
-		Map<String, Object> params = new HashMap<>();
-		int articleId = Integer.valueOf((String)body.get("articleId"));
-		String status = (String)body.get("status");
+	public ResponseEntity<Map<String, Object>> articleBlind(@RequestParam int articleId, @RequestParam String status){
+		Map<String, Object> params = new HashMap<>();		
 		params.put("_id", articleId);
 		params.put("_auth", status);
 		params.put("_switch", "article_blind");
@@ -231,7 +248,7 @@ public class AdminController {
 		if(params.get("result_set").equals("404")) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);//404
 		}else if(params.get("result_set").equals("204")) {
-			return new ResponseEntity<>(HttpStatus.RESET_CONTENT);//204
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);//204
 		}else
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500		
 	}
@@ -258,7 +275,7 @@ public class AdminController {
 		params.put("_switch", "article_list");
 		
 		try {
-			list = adminProcedureService.getArticleList(params);			
+			list = adminProcedureService.execuAdminProcedure(params);			
 			for (int i = 0; i < list.size(); i++) {
 				templist = new ArrayList<>();	
 				temp = new HashMap<>();
@@ -321,48 +338,40 @@ public class AdminController {
 	 * @param : questionStartId, status
 	 * @return : List<Map<String, Object(Map)>>
 	 */
-	@GetMapping(path = "/question-list") //-넣으면 nullpoint error발생 -대신 /넣으면 잘 실행됨
-	public ResponseEntity<List<Map<String,Object>>> questionList(
-			@RequestParam(value = "status", required = false) String status, 
-			@RequestParam(value = "questionStartId", required = false, defaultValue = "2")int sId,
-			HttpServletResponse response
-			){
+	@GetMapping(path = "/question-list") 
+	public ResponseEntity<List<Map<String,Object>>> questionList(@RequestParam String status,@RequestParam int questionStartId,HttpServletResponse response){
 		List<Map<String, Object>> list = new ArrayList<>();
 		List<Map<String, Object>> temp = new ArrayList<>();
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> maps = new HashMap<>();
-		Map<String, Object> userInfo = new HashMap<>();
-		 System.out.println(status+":"+sId);
-		int id = sId;	
+		Map<String, Object> userInfo = new HashMap<>();				
 		params.put("_switch","question_list");
-		params.put("_id", id-1);		
-		try {
-			
+		params.put("_id", questionStartId-1);
+		params.put("_input", status);
+		try {		
+			list = adminProcedureService.execuAdminProcedure(params);		
+			for(int i=0;i<list.size();i++) {
+				System.out.println("list:"+list.get(i));
+				maps = new HashMap<>();
+				temp = new ArrayList<>();			
+				userInfo = new HashMap<>();
+				maps.put("id", list.get(i).get("id"));
+				maps.put("title",list.get(i).get("title"));
+				maps.put("content",list.get(i).get("content"));
+				maps.put("doneFlag",list.get(i).get("done_flag"));
+				maps.put("answer",list.get(i).get("answer"));
+				int userId = (int)list.get(i).get("userId");
+				String userEmail = (String)list.get(i).get("userEmail");
+				userInfo.put("id", userId);
+				userInfo.put("email", userEmail);
+				maps.put("user", userInfo);
+				temp.add(maps);	
+				list.set(i, maps);				
+			}
 		
-		list = adminProcedureService.getArticleList(params);		
-		for(int i=0;i<list.size();i++) {
-			System.out.println("list:"+list.get(i));
-			maps = new HashMap<>();
-			temp = new ArrayList<>();			
-			userInfo = new HashMap<>();
-			maps.put("id", list.get(i).get("id"));
-			maps.put("title",list.get(i).get("title"));
-			maps.put("content",list.get(i).get("content"));
-			maps.put("doneFlag",list.get(i).get("done_flag"));
-			maps.put("answer",list.get(i).get("answer"));
-			int userId = (int)list.get(i).get("userId");
-			String userEmail = (String)list.get(i).get("userEmail");
-			userInfo.put("id", userId);
-			userInfo.put("email", userEmail);
-			maps.put("user", userInfo);
-			temp.add(maps);	
-			list.set(i, maps);
-			
-		}
-		
-		response.setHeader("Links", "</admin/question-list?questionStartId="+sId+"&status=\"all\">; rel=\"allQuestionList\","
-								  + "</admin/question-list?questionStartId="+sId+"&status=\"waiting\">; rel=\"waitingQuestionList\","
-								  + "</admin/question-list?questionStartId="+sId+"&status=\"done\">; rel=\"doneQuestionList\",");
+		response.setHeader("Links", "</admin/question-list?questionStartId="+questionStartId+"&status=\"all\">; rel=\"allQuestionList\","
+								  + "</admin/question-list?questionStartId="+questionStartId+"&status=\"waiting\">; rel=\"waitingQuestionList\","
+								  + "</admin/question-list?questionStartId="+questionStartId+"&status=\"done\">; rel=\"doneQuestionList\",");
 		} catch (Exception e) {
 			return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
@@ -371,7 +380,7 @@ public class AdminController {
 	}
 	/**
 	 * title : 48. 회원정보 및 이메일 전송
-	 * desc : id, 정지사유, 기간(day)을 입력받아 DB에 저장하고 이메일을 발송(forbbiden에 isert되면 users테이블의 status도 변경되게)
+	 * desc : id, 정지사유, 기간(day)을 입력받아 DB에 저장하고 이메일을 발송(forbidden에 insert되면 users테이블의 status도 변경되게)
 	 * author : 최윤수
 	 * date : 2021-01-11
 	 * @param : id, reason, period 
@@ -383,9 +392,10 @@ public class AdminController {
 		String startDate = fm.format(today);
 		Date someday = new Date();
 		Map<String,Object> params = new HashMap<>();
-		int id = Integer.valueOf((String) body.get("id"));
+		int id = Integer.valueOf((String)body.get("id"));
+		int period = Integer.valueOf((String)body.get("period"));
 		String reason = (String) body.get("reason");
-		int period = Integer.valueOf((String) body.get("period"));;
+		
 		Mail mail = new Mail();
 		try {		
 			someday.setTime(today.getTime()+((long)period*24*60*60*1000));
@@ -393,6 +403,7 @@ public class AdminController {
 			params.put("_id", id);
 			params.put("_switch", "suspension");
 			params.put("_input", reason);
+			params.put("_commentId", period);
 			adminProcedureService.execuAdminProcedure(params);
 			System.out.println("param:"+params);
 			mail.setMailFrom(env.getProperty("email.username"));
@@ -404,7 +415,8 @@ public class AdminController {
 			mailService.sendMail(mail);
 			
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 500
+			e.getStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}
 
 		return new ResponseEntity<>(HttpStatus.CREATED);//201
@@ -427,7 +439,7 @@ public class AdminController {
 		params.put("_switch", "user_info");
 		params.put("_id", startIndex-1);
 		try {	
-			list = adminProcedureService.getArticleList(params);
+			list = adminProcedureService.execuAdminProcedure(params);
 			for (int i = 0; i < list.size(); i++) {			
 				temp1 = new HashMap<>();
 				temp2 = new HashMap<>();
@@ -473,4 +485,182 @@ public class AdminController {
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 	}
+	
+	/**
+	 * 댓글 블라인드 토글
+	 * 작성자 : 이종현 
+	 * 작성일 :2021-01-11
+	 */
+	@PatchMapping(path = "/report/comment")
+	public ResponseEntity<Map<String, Object>> toggleReport(
+			@RequestParam("commentId") int commentId, @RequestParam("delFlag") String delFlag){
+		Map<String, Object> params = null;
+		try {
+			params = new HashMap<String, Object>();
+			params.put("_switch","comment_report_toggle");
+			params.put("_commentId", commentId);
+			params.put("_delFlag", delFlag);
+			adminProcedureService.execuAdminProcedure(params);
+			if(params.get("result_set").equals("404")) {
+				return new ResponseEntity<Map<String,Object>>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String,Object>>(HttpStatus.OK);
+	}
+	
+	/**
+	 * 댓글 신고 확인
+	 * 작성자 : 이종현 
+	 * 작성일 :2021-01-11
+	 */
+	@GetMapping(path = "/report/comment/done")
+	public ResponseEntity<Map<String, Object>> reportCheck(@RequestParam("commentReportId") int commentReportId){
+		Map<String, Object> params = null;
+		try {
+			params = new HashMap<String, Object>();
+			params.put("_switch","comment_report_check");
+			params.put("_commentReportId", commentReportId);
+			adminProcedureService.execuAdminProcedure(params);
+			if(params.get("result_set").equals("404")) {
+				return new ResponseEntity<Map<String,Object>>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String,Object>>(HttpStatus.OK);
+	}
+	
+	/**
+	 * 신고 댓글 목록
+	 * 작성자 : 이종현 
+	 * 작성일 :2021-01-11
+	 */
+	@GetMapping(path = "/report/comment")
+	public ResponseEntity<List<Map<String, Object>>> reportList(
+			@RequestParam("commentStartId") int commentStartId, @RequestParam("doneFlag") String doneFlag){
+		List<Map<String, Object>> list = null;
+		List<Map<String, Object>> listTemp = null;
+		Map<String, Object> params = null;
+		Map<String, Object> map = null;
+		try {
+			list = new ArrayList<Map<String,Object>>();
+			listTemp = new ArrayList<Map<String,Object>>();
+			params = new HashMap<String, Object>();
+			params.put("_switch","comment_report_list");
+			params.put("_commentId", commentStartId);
+			params.put("_doneFlag", doneFlag);
+			list = adminProcedureService.execuAdminProcedure(params);
+			
+			for(int i=0; i<list.size(); i++) {
+				map = new HashMap<String, Object>();
+				map.put("id", list.get(i).get("id"));
+				map.put("reason", list.get(i).get("reason"));
+				map.put("createdAt", list.get(i).get("createdAt"));
+				map.put("doneFlag", list.get(i).get("doneFlag"));				
+				
+				params = new HashMap<String, Object>();
+				params.put("id", list.get(i).get("userId"));
+				params.put("email", list.get(i).get("email"));
+				map.put("user", params);
+				
+				params = new HashMap<String, Object>();
+				params.put("id", list.get(i).get("commentId"));
+				params.put("content", list.get(i).get("content"));
+				params.put("delFlag", list.get(i).get("delFlag"));
+				
+				map.put("comment", params);
+				listTemp.add(map);	
+			}
+			
+			list = new ArrayList<Map<String,Object>>();
+			map = new HashMap<String, Object>();
+			
+			params = new HashMap<String, Object>();
+			params.put("rel", "blindComment");
+			params.put("href", "admin/report/comment="+commentStartId+"&delFlag=T");
+			params.put("method", "patch");
+			list.add(params);
+			
+			params = new HashMap<String, Object>();
+			params.put("rel", "blindComment");
+			params.put("href", "admin/report/comment="+commentStartId+"&delFlag=F");
+			params.put("method", "patch");
+			list.add(params);
+			
+			map.put("_links", list);
+			listTemp.add(map);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Map<String, Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<List<Map<String, Object>>>(listTemp,HttpStatus.OK);
+	}
+	/**
+	 * 대기중 기사 상세
+	 * 작성자 : 이종현 
+	 * 작성일 :2021-01-13
+	 */
+	@GetMapping(path = "/article/detail")
+	public ResponseEntity<Map<String, Object>> getArticleDetail(
+			@RequestParam("articleId") int articleId, @RequestParam("status") String status, HttpServletResponse response){
+		List<Map<String, Object>> list = null;
+		Map<String, Object> params = null;
+		List<Map<String, Object>> mapList = null;
+		Map<String, Object> map = null;
+		Map<String, Object> temp = null;
+		Map<String, Object> mapAll = null;
+		try {
+			params = new HashMap<String, Object>();
+			temp = new HashMap<String, Object>();
+			mapAll = new HashMap<String, Object>();
+			params.put("_switch", "article_wait_detail");
+			params.put("_id", articleId);
+			params.put("_status", status);
+			mapList = adminProcedureService.execuAdminProcedure(params);
+			map = mapList.get(0);
+			params.put("_switch", "article_wait_detail_image");
+			list = adminProcedureService.execuAdminProcedure(params);
+			
+			temp.put("id", map.get("id"));
+			temp.put("category", map.get("category"));
+			temp.put("title", map.get("title"));
+			temp.put("subTitle", map.get("sub_title"));
+			temp.put("content", map.get("content"));
+			temp.put("image", list);
+			mapAll.put("article", temp);
+			
+			temp = new HashMap<String, Object>();
+			temp.put("id", map.get("userId"));
+			temp.put("name", map.get("name"));
+			temp.put("email", map.get("email"));
+			mapAll.put("user", temp);
+			
+			list = new ArrayList<Map<String,Object>>();
+			map = new HashMap<String, Object>();
+			map.put("rel", "publish");
+			map.put("href", "/admin/article="+articleId+"/status=publish");
+			map.put("method", "publish");
+			list.add(map);
+			map = new HashMap<String, Object>();
+			map.put("rel", "sendEmailToReporter");
+			map.put("href", "/admin/reporters/email");
+			map.put("method", "post");
+			list.add(map);
+			mapAll.put("_links", list);
+			
+			response.setHeader("links", "</admin/article?status=publish>;"
+										+"rel=\"publish\","
+										+"</admin/reporters/email>;"
+										+"rel=\"sendEmailToReporter\"");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String,Object>>(mapAll,HttpStatus.OK);
+	}
+
 }

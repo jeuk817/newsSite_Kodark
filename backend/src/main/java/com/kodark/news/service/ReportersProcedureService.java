@@ -8,9 +8,11 @@ public interface ReportersProcedureService {
 	public List<Map<String, Object>> execuReportersProcedure(Map<String, Object> params);
 
 	public List<Map<String, Object>> getPubAndWaitArtlcles(String status);
-
-	// 기자프로필
+	
+	public Map<String, Object> execuReportersProcedureMap(Map<String, Object> params);
+	
+	public List<Map<String, Object>> execuReportersProcedureList(Map<String, Object> params);
+	
 	public Map<String, Object> getReporterInfo(Map<String, Object> params);
-
-
+	
 }
