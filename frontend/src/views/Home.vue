@@ -1,18 +1,17 @@
 <template>
   <div class="home">
+    <AppBarHeader />
     <HomeHeader />
     <HomePopularNews :popularNews="popularNews" />
-    <!-- <HelloWorld />
-    <HelloWorld /> -->
-    <!-- <layout2 /> -->
-    <template v-if="allLatestNews">
+    <div class="allLatestNews" v-if="allLatestNews">
       <LatestNews1 v-for="(latestNews, i) in allLatestNews" :key="i"
       :latestNews="latestNews" />
-    </template>
+    </div>
   </div>
 </template>
 
 <script>
+import AppBarHeader from '../components/headers/AppBarHeader'
 import HomeHeader from '../components/headers/HomeHeader'
 import HelloWorld from '../components/HelloWorld'
 import LatestNews1 from '../components/bodies/article/LatestNews1'
@@ -27,6 +26,7 @@ export default {
     allLatestNews: null
   }),
   components: {
+    AppBarHeader,
     HomeHeader,
     HelloWorld,
     LatestNews1,
@@ -57,3 +57,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.allLatestNews{
+  margin-top: 200px;
+}
+</style>

@@ -26,8 +26,10 @@ import CreateReporterForm from '../components/bodies/admins/CreateReporterForm'
 import ReportList from '../components/bodies/admins/ReportList'
 import WaitArticleList from '../components/bodies/admins/WaitArticleList'
 import UserList from '../components/bodies/admins/UserList'
+import { utils } from '../components/mixins/utils'
 
 export default {
+  mixins: [utils],
   components: {
     MyPageHeader,
     IntroduceSideBar,
@@ -54,13 +56,6 @@ export default {
       sideMenu.push({ type: 'title', text: 'Question' })
       sideMenu.push({ type: 'sub', text: 'Question list', link: '/en/admin/question-list' })
       return sideMenu
-    },
-    // 현재 라우트 반환
-    currentRoute () {
-      const routeArr = this.$route.fullPath.split('/')
-      const lastUrl = routeArr[routeArr.length - 1];
-      // return lastUrl === 'new' ? `${routeArr[routeArr.length - 2]}/${lastUrl}` : lastUrl
-      return routeArr[routeArr.length - 1]
     }
   }
 }

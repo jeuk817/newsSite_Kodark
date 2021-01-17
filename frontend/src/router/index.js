@@ -6,6 +6,7 @@ import IntroducePage from '../views/IntroducePage'
 import MyPage from '../views/MyPage'
 import AdminPage from '../views/AdminPage'
 import ReporterPage from '../views/ReporterPage'
+import SectionPage from '../views/SectionPage'
 
 
 Vue.use(VueRouter)
@@ -47,6 +48,10 @@ const routes = [
   {
     path: '/en/reporters/*',
     component: ReporterPage
+  },
+  {
+    path: '/en/section/:section',
+    component: SectionPage
   }
 ]
 

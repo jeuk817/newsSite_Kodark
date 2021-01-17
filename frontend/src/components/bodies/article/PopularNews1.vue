@@ -130,7 +130,7 @@ export default {
 }
 
 .pop1Right {
-  border-left: 1px solid rgb(195, 195, 195);
+  border-left: 1px solid rgb(215, 215, 215);
   padding-left: 30px;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
@@ -162,12 +162,12 @@ export default {
 }
 
 .pop1RightSecond{
-  border-bottom: 1px solid rgb(195, 195, 195);
+  border-bottom: 1px solid rgb(215, 215, 215);
   color: black;
 }
 
 .pop1RightThird{
-  border-bottom: 1px solid rgb(195, 195, 195);
+  border-bottom: 1px solid rgb(215, 215, 215);
 }
 
 .pop1RignthBody {

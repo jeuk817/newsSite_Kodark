@@ -18,8 +18,10 @@ import MyPageHeader from '../components/headers/MyPageHeader'
 import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import ArticleWriteBody from '../components/bodies/ArticleWriteBody'
+import { utils } from '../components/mixins/utils'
 
 export default {
+  mixins: [utils],
   components: {
     MyPageHeader,
     IntroduceSideBar,
@@ -36,11 +38,6 @@ export default {
       sideMenu.push({ type: 'sub', text: 'Article list', link: '/en/reporters/article' })
       sideMenu.push({ type: 'sub', text: 'Post article', link: '/en/reporters/new-post' })
       return sideMenu
-    },
-    // 현재 라우트 반환
-    currentRoute () {
-      const routeArr = this.$route.fullPath.split('/')
-      return routeArr[routeArr.length - 1]
     }
   }
 }

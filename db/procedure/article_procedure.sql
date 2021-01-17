@@ -103,16 +103,16 @@ declare checkData int default -1;
 			from article as a
 				left outer join image as i on a.id = i.article_id
 				left outer join category as c on a.category_id = c.id 
-			where a.created_at > DATE_SUB(current_timestamp(), INTERVAL 100 HOUR)
-			order by a.hit desc limit 10;
+			where a.created_at > DATE_SUB(current_timestamp(), INTERVAL 24 HOUR)
+			order by a.hit desc, a.id desc limit 10;
 		else 
 			select a.id, a.title, a.sub_title, i.image, i.description as imgDec, created_at
 			from article as a
 				left outer join image as i on a.id = i.article_id
 				left outer join category as c on a.category_id = c.id 
-			where a.created_at > DATE_SUB(current_timestamp(), INTERVAL 100 HOUR)
+			where a.created_at > DATE_SUB(current_timestamp(), INTERVAL 24 HOUR)
 				and c.name = _category
-			order by a.hit desc limit 10;
+			order by a.hit desc, a.id desc limit 10;
 		end if;
 	end if;
 

@@ -60,7 +60,7 @@ export default {
 
 .slideNewsContainer {
   margin-top: 15px;
-  border-left: 1px solid rgb(195, 195, 195);
+  border-left: 1px solid rgb(215, 215, 215);
   height: 200px;
   width: 350px;
   padding: 0 10px;

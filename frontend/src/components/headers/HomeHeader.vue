@@ -43,40 +43,12 @@
     <div class="homeHeaderNavi">
       <ul class="homeHeaderNaviChild1">
         <li v-for="(section, i) in sections" :key="i">
-          <v-btn text small color="black">
+          <v-btn text small color="black" :to="section.href">
             {{section.rel}}
           </v-btn>
         </li>
       </ul>
     </div>
-    <v-app-bar
-      absolute
-      color="white"
-      inverted-scroll
-      scroll-threshold=95
-      id="homeHeaderNavi"
-      height=40px
-    >
-    <div class="homeHeaderBar">
-      <div class="homeHeaderNavi">
-        <ul class="homeHeaderNaviChild2">
-          <li>
-            <v-btn icon color="black">
-              <v-icon>home</v-icon>
-            </v-btn>
-          </li>
-          <li>
-            <v-app-bar-nav-icon></v-app-bar-nav-icon>
-          </li>
-          <li v-for="(section, i) in sections" :key="i">
-            <v-btn text small color="black">
-              {{section.rel}}
-            </v-btn>
-          </li>
-        </ul>
-      </div>
-    </div>
-    </v-app-bar>
   </div>
 </template>
 
@@ -89,7 +61,7 @@ export default {
     AccountMenu
   },
   data: () => ({
-    sections: [{ rel: 'Politics', href: '/section/politics' }, { rel: 'Economy', href: '/section/economy' }, { rel: 'Society', href: '/section/society' }, { rel: 'Tech', href: '/section/tech' }, { rel: 'World', href: '/section/world' }, { rel: 'Sports', href: '/section/sports' }, { rel: 'Weather', href: '/section/weather' }],
+    sections: [{ rel: 'Politics', href: '/en/section/politics' }, { rel: 'Economy', href: '/en/section/economy' }, { rel: 'Society', href: '/en/section/society' }, { rel: 'Tech', href: '/en/section/tech' }, { rel: 'World', href: '/en/section/world' }, { rel: 'Sports', href: '/en/section/sports' }, { rel: 'Weather', href: '/en/section/weather' }],
     isSignedIn: false
   }),
   
