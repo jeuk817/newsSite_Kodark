@@ -44,14 +44,12 @@
           </div>
         </router-link>
       </div>
-     
-      <div class="adItem">
-        <img src="../../../assets/img/ad.png" alt="">
-      </div>
-    
+      <template v-if="latestNews">
+        <div class="adItem">
+          <img src="../../../assets/img/ad.png" alt="">
+        </div>
+      </template>
     </div>
-    
-    
   </div>
 </template>
 

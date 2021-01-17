@@ -234,8 +234,6 @@ export default {
             }
         },
         getEditor(editor) {
-            console.log('getEditor')
-            console.log(editor)
             this.editor = editor
         }
     },

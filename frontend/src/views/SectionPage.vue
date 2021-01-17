@@ -57,8 +57,9 @@ export default {
     async sectionName() {
       const { status, popularNews } = await this.$store.dispatch(
         'article/popular', { category: this.sectionName })
-      console.log(popularNews)
+
       this.popularNews = popularNews
+      this.latestNews = null
     }
   },
   async created() {

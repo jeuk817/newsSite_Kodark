@@ -49,13 +49,9 @@ export default {
 
   }),
   async created () {
-    console.log("created")
     const {status, reporters } = await this.$store.dispatch('admin/getReporters');
     if(status === 200) {
-      console.log(typeof(reporters))
-      console.log(reporters);
       this.reporterList = reporters;
-      console.log(this.reporterList);
     }
     if(status === 204){
       //에러처리필요
