@@ -11,7 +11,7 @@
       <div class="homeHeaderNavi">
         <ul class="homeHeaderNaviChild2">
           <li>
-            <v-btn icon color="black">
+            <v-btn icon color="black" to="/en/home">
               <v-icon>home</v-icon>
             </v-btn>
           </li>

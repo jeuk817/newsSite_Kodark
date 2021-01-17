@@ -237,7 +237,7 @@ public class ArticleController {
 			params.put("_category", category);
 			
 			list = articleProcedureService.execuArticleProcedure(params);
-
+			System.out.println(list);
 			for (int i = 0; i < list.size(); i++) {
 				temp = new HashMap<>();
 				link = new HashMap<String, Object>();
@@ -252,7 +252,6 @@ public class ArticleController {
 				temp.put("image", list.get(i).get("image"));
 				temp.put("imgDec", list.get(i).get("imgDec"));
 				temp.put("_link", link);
-				System.out.println("temp~~~~~" + temp);
 				list.set(i, temp);
 			}
 			params = new HashMap<String, Object>();
@@ -352,7 +351,6 @@ public class ArticleController {
 		params.put("_switch", "comment");		
 		try {
 			list = articleProcedureService.execuArticleProcedure(params);
-			System.out.println("list:"+list);
 			for(int i=0;i<list.size();i++) {
 				user = new HashMap<>();
 				reputation = new HashMap<>();
@@ -399,7 +397,6 @@ public class ArticleController {
 		params.put("_id", reporterId);
 		try {	
 			params2 = reportersProcedureService.getReporterInfo(params);				
-			System.out.println("params:"+params2.toString());
 			reporter.put("id", params2.get("id"));
 			reporter.put("email", params2.get("email"));
 			reporter.put("nickName", params2.get("nick_name"));
@@ -445,7 +442,6 @@ public class ArticleController {
 					if(listByCategory.size() != 0) {
 						map.put("data", listByCategory);
 						latestAll.add(map);
-						System.out.println(latestAll);
 						listByCategory = new ArrayList<>();
 					}
 					map = new HashMap<>();

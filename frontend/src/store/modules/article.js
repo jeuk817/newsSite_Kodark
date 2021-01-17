@@ -25,7 +25,6 @@ const actions = {
 
   async popular({}, {category}) {
     try {
-      console.log(category)
       const res = await axios.get(`/article/popular?category=${category}`)
       
       const popularNews = res.data.data

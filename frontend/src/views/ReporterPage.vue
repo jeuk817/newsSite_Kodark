@@ -17,7 +17,7 @@
 import MyPageHeader from '../components/headers/MyPageHeader'
 import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
-import ArticleWriteBody from '../components/bodies/ArticleWriteBody'
+import ArticleWriteBody from '../components/bodies/reporters/ArticleWriteBody'
 import { utils } from '../components/mixins/utils'
 
 export default {

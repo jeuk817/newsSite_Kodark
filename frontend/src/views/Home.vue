@@ -36,7 +36,6 @@ export default {
   },
   methods: {
     async handleScroll(){
-      // console.log(this.getCurrentScrollPercentage())
       if(this.allLatestNews === null && this.getCurrentScrollPercentage() > 90) {
         console.log('start')
         const {status, latestAll} = await this.$store.dispatch('article/latestAll')

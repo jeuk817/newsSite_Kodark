@@ -18,7 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
-		System.out.println("SecurityConfig");
+//		System.out.println("SecurityConfig");
         httpSecurity
                 .csrf()
 		        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());

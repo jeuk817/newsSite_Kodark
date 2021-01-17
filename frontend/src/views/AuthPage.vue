@@ -18,9 +18,9 @@
 
 <script>
 import LogoHeader from '../components/headers/LogoHeader'
-import SignInBody from '../components/bodies/SignInBody'
-import SignUpBody from '../components/bodies/SignUpBody'
-import OauthSign from '../components/units/OauthSign'
+import SignInBody from '../components/bodies/auth/SignInBody'
+import SignUpBody from '../components/bodies/auth/SignUpBody'
+import OauthSign from '../components/bodies/auth/OauthSign'
 import { utils } from '../components/mixins/utils'
 
 export default {
