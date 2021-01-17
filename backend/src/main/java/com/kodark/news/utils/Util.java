@@ -22,10 +22,10 @@ public class Util {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("id", params.get("_id"));
 		claims.put("auth", params.get("_auth"));
-		String token = jwtManager.createJwt("userInfo", claims, (100 * 1000 * 60));			
+		String token = jwtManager.createJwt("userInfo", claims, (24 * 60 * 60 * 1000)); // 밀리세컨드 단위, 24시간
 		
         Cookie cookie = new Cookie(key, token);
-        cookie.setMaxAge(100 * 24 * 60 * 60);
+        cookie.setMaxAge(24 * 60 * 60); // 초단위, 24시간...
         //cookie.setSecure(true);
         cookie.setHttpOnly(true);
         cookie.setPath("/");

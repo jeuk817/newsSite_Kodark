@@ -33,6 +33,11 @@ div, p {
   word-break: break-all;
 }
 
+a, a:link, a:visited {
+  color: black;
+  text-decoration: none;
+}
+
 #app {
   max-width: 1200px;
   margin: 0 auto;

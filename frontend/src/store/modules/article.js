@@ -23,6 +23,29 @@ const actions = {
     }
   },
 
+  async popular({}, {category}) {
+    try {
+      console.log(category)
+      const res = await axios.get(`/article/popular?category=${category}`)
+      
+      const popularNews = res.data.data
+      return { status: res.status, popularNews }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async latestAll({}) {
+    try {
+      const res = await axios.get('/article/latest/all')
+      
+      const latestAll = res.data
+      return { status: res.status, latestAll }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
 }
 
 export default {

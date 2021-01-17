@@ -6,27 +6,30 @@
       class="slideContainer"
     >
       <v-slide-item
-        v-for="n in 6"
-        :key="n"
+        v-for="(news, i) in formatedNews"
+        :key="i"
       >
-        <div class="slideNewsContainer">
-          <div class="text-h5 font-weight-bold" style="word-break: break-all;">
-            ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKDFS
-            <!-- 40자 -->
-          </div>
-          <div class="slideNewsBody">
-            <div>
-              abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghij
-              <!-- 140자 -->
+        <router-link :to="news._link.href">
+          <div class="slideNewsContainer">
+            <div class="text-h5 font-weight-bold" style="word-break: break-all;">
+              {{news.title}}
+              <!-- 30자 -->
             </div>
-            <div class="slideNewsImg">
-              <img src="https://picsum.photos/1920/1080?random">
+            <div class="slideNewsBody">
+              <div>
+                {{news.subTitle}}
+                <!-- 70자 -->
+              </div>
+              <div class="slideNewsImg">
+                <img :src="news.image">
+              </div>
+            </div>
+            <div class="slideNewsFoot">
+              {{news.editedAt}}
+              <!-- 10h ago - By Jack -->
             </div>
           </div>
-          <div class="slideNewsFoot">
-            10h ago - By Jack
-          </div>
-        </div>
+        </router-link>
       </v-slide-item>
     </v-slide-group>
   </div>
@@ -34,7 +37,16 @@
 
 <script>
 export default {
-  
+  props:['newsData'],
+  computed: {
+    formatedNews() {
+      return this.newsData.map((news, i) => {
+        news.title = news.title.length > 30 ? news.title.substring(0, 30) + '...' : news.title
+        news.subTitle = news.subTitle.length > 70 ? news.subTitle.substring(0, 70) + '...' : news.subTitle
+        return news
+      })
+    }
+  }
 }
 </script>
 
@@ -52,6 +64,7 @@ export default {
   height: 200px;
   width: 350px;
   padding: 0 10px;
+  color: black;
   /* white-space: normal; */
 
 }

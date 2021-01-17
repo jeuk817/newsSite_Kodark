@@ -2,6 +2,7 @@ package com.kodark.news.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -226,26 +227,23 @@ public class ArticleController {
 	 * date : 2021-01-07
 	 */
 	@GetMapping(path = "/popular")
-	public ResponseEntity<Map<String, Object>> hotNews(@RequestParam String category){
+	public ResponseEntity<Map<String, Object>> hotNews(@RequestParam(name = "category") String category){
 		Map<String, Object> params = new HashMap<String, Object>();
 		Map<String, Object> temp;
 		Map<String, Object> link;
 		List<Map<String, Object>> list = new ArrayList<>();
-
 		try {
 			params.put("_switch", "popular");
 			params.put("_category", category);
 			
-			System.out.println("프로시저 전 param~~~~~~~~~ "+ params );
 			list = articleProcedureService.execuArticleProcedure(params);
-			System.out.println("프로시저 후 params~~~~~~ " + params);
 
 			for (int i = 0; i < list.size(); i++) {
 				temp = new HashMap<>();
 				link = new HashMap<String, Object>();
 
 				link.put("rel", "article");
-				link.put("href", "article?articleId=" + list.get(i).get("id"));
+				link.put("href", "/article?articleId=" + list.get(i).get("id"));
 				link.put("method ", "get");
 
 				temp.put("id", list.get(i).get("id"));
@@ -276,7 +274,7 @@ public class ArticleController {
 	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/latest")
-	public ResponseEntity<Map<String, Object>> latest(@RequestParam String category) {
+	public ResponseEntity<Map<String, Object>> latest(@RequestParam(name = "category") String category) {
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> map = new HashMap<>();
 		Map<String, Object> data;
@@ -314,6 +312,8 @@ public class ArticleController {
 		}
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);// 200
 	}
+	
+	
 
 	/**
 	 * title : 카테고리 정보(63)
@@ -421,6 +421,59 @@ public class ArticleController {
 			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);//500
 		}
 		return new ResponseEntity<Map<String,Object>>(info,HttpStatus.OK);//200
+	}
+	
+	@GetMapping(path = "/latest/all")
+	public ResponseEntity<List<Map<String, Object>>> latestAll() {
+		Map<String, Object> params = new HashMap<>();
+		List<Map<String, Object>> resultList = new ArrayList<>();
+		params.put("_switch", "latest_arll");
+		resultList = articleProcedureService.execuArticleProcedure(params);
+		
+		Map<String, Object> row = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		Map<String, Object> link = new HashMap<>();
+		List<Map<String, Object>> listByCategory = new ArrayList<>();		
+		List<Map<String, Object>> latestAll = new ArrayList<>();
+		
+		if(params.get("result_set").equals("success")) {
+			Iterator<Map<String, Object>> it = resultList.iterator();
+			while(it.hasNext()) {
+				row = it.next();
+				if(!row.get("category").equals(map.get("category"))) {
+					if(listByCategory.size() != 0) {
+						map.put("data", listByCategory);
+						latestAll.add(map);
+						System.out.println(latestAll);
+						listByCategory = new ArrayList<>();
+					}
+					map = new HashMap<>();
+					map.put("category", row.get("category"));
+					map.put("type", "latest");
+				}
+				data = new HashMap<>();
+				data.put("id", row.get("id"));
+				data.put("title", row.get("title"));
+				data.put("subTitle", row.get("sub_title"));
+				data.put("image", row.get("image"));
+				data.put("imgDec", row.get("imgDec"));
+				
+				link = new HashMap<>();
+				link.put("rel", "article");
+				link.put("href", "/article?articleId="+ row.get("id"));
+				link.put("method", "get");
+				data.put("_link", link);
+				
+				listByCategory.add(data);
+			}
+			map.put("data", listByCategory);
+			latestAll.add(map);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
+		}
+		return new ResponseEntity<List<Map<String, Object>>>(latestAll, HttpStatus.OK);// 200
+//		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);// 200
 	}
 
 }

@@ -1,70 +1,84 @@
 <template>
   <div class="poppularNew1">
     <div class="pop1Best">
-      <div>
-        <img src="https://picsum.photos/1920/1080?random">
-      </div>
-      <div class="pop1BestText">
-        <div class="text-h5 font-weight-bold">
-          가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다
-          <!-- 45자 -->
-        </div>
-        <div class="pop1BestSubTitle">
-          가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하
-        </div>
-        <!-- 100자 or 60자 -->
-      </div>
+      <template v-if="formatedNews[0]">
+        <router-link :to="'/en' + formatedNews[0]._link.href">
+          <div>
+            <img :src="formatedNews[0].image">
+          </div>
+          <div class="pop1BestText">
+            <div class="text-h5 font-weight-bold">
+              {{formatedNews[0].title}}
+            </div>
+            <div class="pop1BestSubTitle">
+              {{formatedNews[0].subTitle}}
+            </div>
+          </div>
+        </router-link>
+      </template>
     </div>
     <div class="pop1Right">
       <div class="pop1RightSecond">
-        <div class="pop1RightTop">
-          <div class="pop1RightTitle text-h5 font-weight-bold">
-            ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKOPD
-            <!-- 40자 -->
-          </div>          
-          <div class="pop1RightImg">
-            <img src="https://picsum.photos/1920/1080?random">
-          </div>          
-        </div>
-        <div>
-          abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
-          <!-- 130자 -->
-        </div>
-        <div class="pop1RightFoot">
-          10h ago - By Jack
-        </div>
+        <template v-if="formatedNews[1]">
+          <router-link :to="'/en' + formatedNews[1]._link.href">
+            <div class="pop1RightTop">
+              <div class="pop1RightTitle text-h5 font-weight-bold">
+                {{formatedNews[1].title}}
+                <!-- 25자 -->
+              </div>          
+              <div class="pop1RightImg">
+                <img :src="formatedNews[1].image">
+              </div>          
+            </div>
+            <div class="pop1RignthBody">
+              {{formatedNews[1].subTitle}}
+              <!-- 70자 -->
+            </div>
+            <div class="pop1RightFoot">
+              {{formatedNews[1].editedAt}}
+            </div>
+          </router-link>
+        </template>
       </div>
       <div class="pop1RightThird">
-        <div class="pop1RightTop">
-          <div class="pop1RightTitle text-h5 font-weight-bold">
-            ABCDEFGHIJKLMNOPQRSTUVWXYZ
-          </div>          
-          <div class="pop1RightImg">
-            <img src="https://picsum.photos/1920/1080?random">
-          </div>          
-        </div>
-        <div>
-          abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
-        </div>
-        <div class="pop1RightFoot">
-          10h ago - By Jack
-        </div>
+        <template v-if="formatedNews[2]">
+          <router-link :to="'/en' + formatedNews[2]._link.href">
+            <div class="pop1RightTop">
+              <div class="pop1RightTitle text-h5 font-weight-bold">
+                {{formatedNews[2].title}}
+              </div>          
+              <div class="pop1RightImg">
+                <img :src="formatedNews[2].image">
+              </div>          
+            </div>
+            <div class="pop1RignthBody">
+              {{formatedNews[2].subTitle}}
+            </div>
+            <div class="pop1RightFoot">
+              {{formatedNews[1].editedAt}}
+            </div>
+          </router-link>
+        </template>
       </div>
       <div class="pop1RightForth">
-        <div class="pop1RightTop">
-          <div class="pop1RightTitle text-h5 font-weight-bold">
-            ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJK
-          </div>          
-          <div class="pop1RightImg">
-            <img src="https://picsum.photos/1920/1080?random">
-          </div>          
-        </div>
-        <div>
-          abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrst
-        </div>
-        <div class="pop1RightFoot">
-          10h ago - By Jack
-        </div>
+        <template v-if="formatedNews[3]">
+          <router-link :to="'/en' + formatedNews[3]._link.href">
+            <div class="pop1RightTop">
+              <div class="pop1RightTitle text-h5 font-weight-bold">
+                {{formatedNews[3].title}}
+              </div>          
+              <div class="pop1RightImg">
+                <img :src="formatedNews[3].image">
+              </div>          
+            </div>
+            <div class="pop1RignthBody">
+              {{formatedNews[3].subTitle}}
+            </div>
+            <div class="pop1RightFoot">
+              {{formatedNews[3].editedAt}}
+            </div>
+          </router-link>
+        </template>
       </div>
     </div>
   </div>
@@ -72,7 +86,22 @@
 
 <script>
 export default {
-  
+  props:['newsData'],
+  computed: {
+    formatedNews() {
+      return this.newsData.map((news, i) => {
+        if(i === 0) {
+          news.title = news.title.length > 45 ? news.title.substring(0, 46) + '...' : news.title
+          news.subTitle = news.subTitle.length > 150 ? news.subTitle.substring(0, 150) + '...' : news.subTitle
+        }
+        else {
+          news.title = news.title.length > 25 ? news.title.substring(0, 26) + '...' : news.title
+          news.subTitle = news.subTitle.length > 100 ? news.subTitle.substring(0, 100) + '...' : news.subTitle
+        }
+        return news
+      })
+    }
+  }
 }
 </script>
 
@@ -87,11 +116,13 @@ export default {
 
 .pop1Best {
   padding-right: 30px;
+  color: #000;
 }
 
 .pop1BestText {
   padding: 3% 15% 0 15%;
   text-align: center;
+  color: #000;
 }
 
 .pop1BestSubTitle {
@@ -116,6 +147,7 @@ export default {
 .pop1RightTop {
   display: grid;
   grid-template-columns: 1fr 90px;
+  color: black;
 }
 
 .pop1RightTitle {
@@ -131,14 +163,20 @@ export default {
 
 .pop1RightSecond{
   border-bottom: 1px solid rgb(195, 195, 195);
+  color: black;
 }
 
 .pop1RightThird{
   border-bottom: 1px solid rgb(195, 195, 195);
 }
 
+.pop1RignthBody {
+  color: black;
+}
+
 .pop1RightFoot {
   font-size: 10px;
   font-style: italic;
+  color: black;
 }
 </style>

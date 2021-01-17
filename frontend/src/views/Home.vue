@@ -1,34 +1,59 @@
 <template>
   <div class="home">
     <HomeHeader />
-    <PopularNews1 />
-    <PopularNewsCarousels />
+    <HomePopularNews :popularNews="popularNews" />
     <!-- <HelloWorld />
-    <HelloWorld />
-    <layout2 />
-    <layout1 /> -->
+    <HelloWorld /> -->
+    <!-- <layout2 /> -->
+    <template v-if="allLatestNews">
+      <LatestNews1 v-for="(latestNews, i) in allLatestNews" :key="i"
+      :latestNews="latestNews" />
+    </template>
   </div>
 </template>
 
 <script>
 import HomeHeader from '../components/headers/HomeHeader'
 import HelloWorld from '../components/HelloWorld'
-import layout1 from '../components/test/layout1'
+import LatestNews1 from '../components/bodies/article/LatestNews1'
 import layout2 from '../components/test/layout2'
 import Footer from '../components/footer/Footer'
-import PopularNews1 from '../components/bodies/article/PopularNews1'
-import PopularNewsCarousels from '../components/bodies/article/PopularNewsCarousels'
+import HomePopularNews from '../components/bodies/article/HomePopularNews'
 
 export default {
   name: 'Home',
+  data: () => ({
+    popularNews: null,
+    allLatestNews: null
+  }),
   components: {
     HomeHeader,
     HelloWorld,
-    layout1,
+    LatestNews1,
     layout2,
-    Footer,
-    PopularNews1,
-    PopularNewsCarousels
+    HomePopularNews,
+    Footer
+  },
+  methods: {
+    async handleScroll(){
+      // console.log(this.getCurrentScrollPercentage())
+      if(this.allLatestNews === null && this.getCurrentScrollPercentage() > 90) {
+        console.log('start')
+        const {status, latestAll} = await this.$store.dispatch('article/latestAll')
+        this.allLatestNews = latestAll
+      }
+    },
+    getCurrentScrollPercentage() {
+      return (window.scrollY + window.innerHeight) / document.body.clientHeight * 100
+    }
+  },
+  async created() {
+    const {status, popularNews} = await this.$store.dispatch('article/popular', {category: 'all'})
+    this.popularNews = popularNews
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 }
 </script>
