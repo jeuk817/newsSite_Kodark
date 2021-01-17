@@ -3,6 +3,9 @@
     <AppBarHeader />
     <SectionHeader :sectionName="sectionName" />
     <SectionPopularNews :popularNews="popularNews" />
+    <div class="latestNews">
+      <LatestNews2 :latestNews="latestNews" />
+    </div>
   </div>
 </template>
 
@@ -10,6 +13,7 @@
 import AppBarHeader from '../components/headers/AppBarHeader'
 import SectionHeader from '../components/headers/SectionHeader'
 import SectionPopularNews from '../components/bodies/article/SectionPopularNews'
+import LatestNews2 from '../components/bodies/article/LatestNews2'
 import { utils } from '../components/mixins/utils'
 
 export default {
@@ -21,14 +25,28 @@ export default {
   // }),
   data() {
     return {
-      popularNews: [],
-      allLatestNews: []
+      popularNews: null,
+      latestNews: null
     }
   },
   components: {
     AppBarHeader,
     SectionHeader,
-    SectionPopularNews
+    SectionPopularNews,
+    LatestNews2
+  },
+  methods: {
+    async handleScroll(){
+      if(this.latestNews === null && this.getCurrentScrollPercentage() > 90) {
+        const {status, latest} = await this.$store.dispatch(
+          'article/latest', { category: this.sectionName })
+        
+        if(status === 200) this.latestNews = latest
+      }
+    },
+    getCurrentScrollPercentage() {
+      return (window.scrollY + window.innerHeight) / document.body.clientHeight * 100
+    }
   },
   computed: {
     sectionName() {
@@ -48,11 +66,16 @@ export default {
       'article/popular', { category: this.sectionName })
     
     this.popularNews = popularNews
-    // window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('scroll', this.handleScroll)
   },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll)
+  }
 }
 </script>
 
 <style scoped>
-
+.latestNews {
+  margin-top: 200px;
+}
 </style>

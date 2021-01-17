@@ -103,14 +103,14 @@ declare checkData int default -1;
 			from article as a
 				left outer join image as i on a.id = i.article_id
 				left outer join category as c on a.category_id = c.id 
-			where a.created_at > DATE_SUB(current_timestamp(), INTERVAL 24 HOUR)
+			where a.created_at > DATE_SUB(current_timestamp(), INTERVAL 1000 HOUR)
 			order by a.hit desc, a.id desc limit 10;
 		else 
 			select a.id, a.title, a.sub_title, i.image, i.description as imgDec, created_at
 			from article as a
 				left outer join image as i on a.id = i.article_id
 				left outer join category as c on a.category_id = c.id 
-			where a.created_at > DATE_SUB(current_timestamp(), INTERVAL 24 HOUR)
+			where a.created_at > DATE_SUB(current_timestamp(), INTERVAL 1000 HOUR)
 				and c.name = _category
 			order by a.hit desc, a.id desc limit 10;
 		end if;
@@ -121,12 +121,23 @@ declare checkData int default -1;
 		select * from category;
 	end if;
     
+if _switch = 'latest' then
+	select a.id, c.name as category, DATE_FORMAT(a.edited_at, '%Y-%m-%d %H:%i:%S') as edited_at, a.title, a.sub_title, i.image, i.description as imgDec
+	from article as a 
+	left join image as i on a.id = i.article_id
+	left join category as c on a.category_id = c.id
+	where created_at  > date_sub(current_timestamp(), interval 1000 hour) and c.name= _category
+    order by a.id desc
+    limit 10;
+    set result_set = 'success';
+end if;
+    
 if _switch = 'latest_arll' then
 	(select a.id, c.name as category, a.title, a.sub_title, i.image, i.description as imgDec
 	from article as a 
 	left join image as i on a.id = i.article_id
 	left join category as c on a.category_id = c.id
-	where created_at  > date_sub(current_timestamp(), interval 24 hour) and a.category_id = 1
+	where created_at  > date_sub(current_timestamp(), interval 1000 hour) and a.category_id = 1
     order by a.id desc
     limit 5)
 	union
@@ -134,7 +145,7 @@ if _switch = 'latest_arll' then
 	from article as a 
 	left join image as i on a.id = i.article_id
 	left join category as c on a.category_id = c.id
-	where created_at  > date_sub(current_timestamp(), interval 24 hour) and a.category_id = 2
+	where created_at  > date_sub(current_timestamp(), interval 1000 hour) and a.category_id = 2
     order by a.id desc
     limit 5)
     union
@@ -142,7 +153,7 @@ if _switch = 'latest_arll' then
 	from article as a 
 	left join image as i on a.id = i.article_id
 	left join category as c on a.category_id = c.id
-	where created_at  > date_sub(current_timestamp(), interval 24 hour) and a.category_id = 3
+	where created_at  > date_sub(current_timestamp(), interval 1000 hour) and a.category_id = 3
     order by a.id desc
     limit 5)
     union
@@ -150,7 +161,7 @@ if _switch = 'latest_arll' then
 	from article as a 
 	left join image as i on a.id = i.article_id
 	left join category as c on a.category_id = c.id
-	where created_at  > date_sub(current_timestamp(), interval 24 hour) and a.category_id = 4
+	where created_at  > date_sub(current_timestamp(), interval 1000 hour) and a.category_id = 4
     order by a.id desc
     limit 5)
     union
@@ -158,7 +169,7 @@ if _switch = 'latest_arll' then
 	from article as a 
 	left join image as i on a.id = i.article_id
 	left join category as c on a.category_id = c.id
-	where created_at  > date_sub(current_timestamp(), interval 24 hour) and a.category_id = 5
+	where created_at  > date_sub(current_timestamp(), interval 1000 hour) and a.category_id = 5
     order by a.id desc
     limit 5)
     union
@@ -166,7 +177,7 @@ if _switch = 'latest_arll' then
 	from article as a 
 	left join image as i on a.id = i.article_id
 	left join category as c on a.category_id = c.id
-	where created_at  > date_sub(current_timestamp(), interval 24 hour) and a.category_id = 6
+	where created_at  > date_sub(current_timestamp(), interval 1000 hour) and a.category_id = 6
     order by a.id desc
     limit 5)
     union
@@ -174,7 +185,7 @@ if _switch = 'latest_arll' then
 	from article as a 
 	left join image as i on a.id = i.article_id
 	left join category as c on a.category_id = c.id
-	where created_at  > date_sub(current_timestamp(), interval 24 hour) and a.category_id = 7
+	where created_at  > date_sub(current_timestamp(), interval 1000 hour) and a.category_id = 7
     order by a.id desc
     limit 5)
 	;

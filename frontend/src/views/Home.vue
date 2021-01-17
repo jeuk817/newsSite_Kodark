@@ -15,7 +15,6 @@ import AppBarHeader from '../components/headers/AppBarHeader'
 import HomeHeader from '../components/headers/HomeHeader'
 import HelloWorld from '../components/HelloWorld'
 import LatestNews1 from '../components/bodies/article/LatestNews1'
-import layout2 from '../components/test/layout2'
 import Footer from '../components/footer/Footer'
 import HomePopularNews from '../components/bodies/article/HomePopularNews'
 
@@ -30,14 +29,13 @@ export default {
     HomeHeader,
     HelloWorld,
     LatestNews1,
-    layout2,
     HomePopularNews,
     Footer
   },
   methods: {
     async handleScroll(){
       if(this.allLatestNews === null && this.getCurrentScrollPercentage() > 90) {
-        console.log('start')
+        
         const {status, latestAll} = await this.$store.dispatch('article/latestAll')
         this.allLatestNews = latestAll
       }

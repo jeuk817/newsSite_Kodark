@@ -114,15 +114,21 @@ export default {
   padding-top: 30px;
 }
 
+.poppularNew1 a {
+  color: black;
+}
+
+.poppularNew1 a:hover {
+  text-decoration: underline;
+}
+
 .pop1Best {
   padding-right: 30px;
-  color: #000;
 }
 
 .pop1BestText {
   padding: 3% 15% 0 15%;
   text-align: center;
-  color: #000;
 }
 
 .pop1BestSubTitle {
@@ -147,7 +153,6 @@ export default {
 .pop1RightTop {
   display: grid;
   grid-template-columns: 1fr 90px;
-  color: black;
 }
 
 .pop1RightTitle {
@@ -163,20 +168,14 @@ export default {
 
 .pop1RightSecond{
   border-bottom: 1px solid rgb(215, 215, 215);
-  color: black;
 }
 
 .pop1RightThird{
   border-bottom: 1px solid rgb(215, 215, 215);
 }
 
-.pop1RignthBody {
-  color: black;
-}
-
 .pop1RightFoot {
   font-size: 10px;
   font-style: italic;
-  color: black;
 }
 </style>

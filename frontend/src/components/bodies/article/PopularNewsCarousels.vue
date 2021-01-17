@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="popularNewsCarousels">
     <v-slide-group
       v-model="model"
       :show-arrows="false"
@@ -51,6 +51,14 @@ export default {
 </script>
 
 <style scoped>
+.popularNewsCarousels a {
+  color: black;
+}
+
+.popularNewsCarousels a:hover {
+  text-decoration: underline;
+}
+
 .slideContainer {
   border-top: 1px solid black;
   margin-top: 30px;
@@ -64,7 +72,6 @@ export default {
   height: 200px;
   width: 350px;
   padding: 0 10px;
-  color: black;
   /* white-space: normal; */
 
 }

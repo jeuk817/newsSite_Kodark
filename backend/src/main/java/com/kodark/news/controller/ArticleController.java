@@ -280,35 +280,37 @@ public class ArticleController {
 		Map<String, Object> link;
 		List<Map<String, Object>> list = new ArrayList<>();
 		List<Map<String, Object>> list2 = new ArrayList<>();		
+		params.put("_switch", "latest");
 		params.put("_category", category);
-		try {
-			list = articleProcedureService.execuLatestProcedure(params);
-
-			if(params.get("result_set").equals("200")) {
-				for (int i = 0; i < list.size(); i++) {
-					map = new HashMap<>();
-					data = new HashMap<>();
-					link = new HashMap<>();
-					map.put("category", category);
-					map.put("type", "latest");
-					data.put("id", list.get(i).get("id"));
-					data.put("title", list.get(i).get("title"));
-					data.put("subTitle", list.get(i).get("sub_title"));
-					data.put("image", list.get(i).get("image"));
-					data.put("imgDec", list.get(i).get("imgDec"));
-					link.put("rel", "article");
-					link.put("href", "/article?articleId="+list.get(i).get("id"));
-					link.put("method", "get");
-					data.put("_link", link);
-					list2.add(data);				
-				}
-				map.put("data", list2);	
-			}else if(params.get("result_set").equals("404")) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
+		list = articleProcedureService.execuArticleProcedure(params);
+		
+		if(params.get("result_set").equals("success")) {
+			for (int i = 0; i < list.size(); i++) {
+				map = new HashMap<>();
+				data = new HashMap<>();
+				link = new HashMap<>();
+				map.put("category", category);
+				map.put("type", "latest");
+				data.put("id", list.get(i).get("id"));
+				data.put("title", list.get(i).get("title"));
+				data.put("subTitle", list.get(i).get("sub_title"));
+				data.put("editedAt", list.get(i).get("edited_at"));
+				data.put("image", list.get(i).get("image"));
+				data.put("imgDec", list.get(i).get("imgDec"));
+				
+				link.put("rel", "article");
+				link.put("href", "/article?articleId="+list.get(i).get("id"));
+				link.put("method", "get");
+				data.put("_link", link);
+				
+				list2.add(data);				
 			}
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
+			map.put("data", list2);
+			
+		}else if(params.get("result_set").equals("404")) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
 		}
+		
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);// 200
 	}
 	

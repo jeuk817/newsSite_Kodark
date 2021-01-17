@@ -45,6 +45,17 @@ const actions = {
     }
   },
 
+  async latest({}, { category }) {
+    try {
+      const res = await axios.get(`/article/latest?category=${category}`)
+      
+      const latest = res.data.data
+      return { status: res.status, latest }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
 }
 
 export default {
