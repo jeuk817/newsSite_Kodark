@@ -23,8 +23,10 @@ import AdminSideBar from '../components/sidebars/AdminSideBar'
 import MyPageBody from '../components/bodies/MyPageBody'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import SubscribeListBody from '../components/bodies/SubscribeListBody'
+import { utils } from '../components/mixins/utils'
 
 export default {
+  mixins: [utils],
   data: () => ({
     // sideMenu: []
   }),
@@ -42,10 +44,6 @@ export default {
       sideMenu.push({ type: 'sub', text: 'Profile', link: '/en/users/my-page/profile' })
       sideMenu.push({ type: 'sub', text: 'Subscription', link: '/en/users/my-page/subscribed-list' })
       return sideMenu
-    },
-    currentRoute () {
-      const routeArr = this.$route.fullPath.split('/')
-      return routeArr[routeArr.length - 1]
     }
   }
 }

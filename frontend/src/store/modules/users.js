@@ -20,9 +20,7 @@ const actions = {
           'Content-Type': 'application/json'
         }
       })
-      console.log(res.headers.links)
       const links = util.parseLinks(res.headers.links)
-      console.log(links)
       return { status: res.status, links }
     } catch(err) {
       return { status: err.response.status}
@@ -34,7 +32,6 @@ const actions = {
       const res = await axios.get('/users')
       const data = res.data
       const links = util.parseLinks(res.headers.links)
-      console.log(res.headers)
 
       commit('setAccount', { userData: data, links }, { root: true })
       return res.status
@@ -59,7 +56,6 @@ const actions = {
   },
   async updateDetail({}, {nickName, name, local, birth, gender, image} ) {
     try {
-      console.log('updateDetail axios')
       const formData = new FormData();
       formData.append('nickName', nickName)
       formData.append('name', name)
@@ -67,8 +63,6 @@ const actions = {
       formData.append('birth', birth)
       formData.append('gender', gender)
       formData.append('image', image)
-      console.log(image);
-      console.log(formData);
       const res = await axios.post('/users/detail', formData,
       {
         headers: {

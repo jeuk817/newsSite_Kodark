@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="authPage">
     <LogoHeader />
     <div class="authBody">
       <div class="authContent">
@@ -18,12 +18,13 @@
 
 <script>
 import LogoHeader from '../components/headers/LogoHeader'
-import SignInBody from '../components/bodies/SignInBody'
-import SignUpBody from '../components/bodies/SignUpBody'
-import OauthSign from '../components/units/OauthSign'
-// import HelloWorld from '../components/HelloWorld'
+import SignInBody from '../components/bodies/auth/SignInBody'
+import SignUpBody from '../components/bodies/auth/SignUpBody'
+import OauthSign from '../components/bodies/auth/OauthSign'
+import { utils } from '../components/mixins/utils'
 
 export default {
+  mixins: [utils],
   data: () => ({
     currentPath: ''
   }),
@@ -31,19 +32,15 @@ export default {
     LogoHeader,
     SignInBody,
     SignUpBody,
-    OauthSign,
-    // HelloWorld
-  },
-  computed: {
-    // 현재 라우트 반환 signIn, signUp
-    currentRoute () {
-      const routeArr = this.$route.fullPath.split('/')
-      return routeArr[routeArr.length - 1]
-    }
+    OauthSign
   }
 }
 </script>
 <style scoped>
+.authPage {
+  height: 100%;
+}
+
 .authBody {
  padding-top: 64px;
 }

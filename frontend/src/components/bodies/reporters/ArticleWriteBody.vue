@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import TiptapEditor from '../units/TiptapEditor'
+import TiptapEditor from '../../units/TiptapEditor'
 
 export default {
     components: {
@@ -234,8 +234,6 @@ export default {
             }
         },
         getEditor(editor) {
-            console.log('getEditor')
-            console.log(editor)
             this.editor = editor
         }
     },

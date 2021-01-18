@@ -295,7 +295,6 @@ export default {
             this.processSubmit = false
         },
         async changePwd() {
-            console.log('changePwd')
             this.processSubmit = true
             const { status } = await this.$store.dispatch('users/changePwd', { pwd: this.newPassword, verifPwd: this.verifPassword })
             if(status === 401) {

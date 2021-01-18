@@ -7,7 +7,7 @@
         class="text-center footers"
         cols="4"
       >
-      <span>©</span> <span>2020</span> <span>version 0.0.1</span>
+      <span>©</span> <span>2020</span> <span>version 0.3.1</span>
       </v-col>
       <v-col
         class="text-center footers"
@@ -40,7 +40,7 @@ export default {
 
 <style scoped>
 .v-sheet.v-footer {
-position: absolute;
+position: relative;
 bottom: 0;
 width: 100%;
 border-radius: 5px;

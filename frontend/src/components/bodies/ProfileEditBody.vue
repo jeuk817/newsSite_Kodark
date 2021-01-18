@@ -283,11 +283,9 @@ export default {
         , birth = this.userDetailForm.birth // string
         , gender = this.userDetailForm.gender
         , image = this.userDetailForm.imageFile // object
-        console.log(image)
-        console.log(nickName)
         const {status} = await this.$store.dispatch('users/updateDetail', 
         { nickName, name, local, birth, gender, image})
-        console.log(status)
+        
         if(status === 204){
           this.$router.push({path: '/en/users/my-page'})
         }
