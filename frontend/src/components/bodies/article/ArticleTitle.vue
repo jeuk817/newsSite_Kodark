@@ -1,25 +1,21 @@
 <template>
-  <div class="articleTitleContainer">
+  <div>
     <div class="articleTitle">
-      가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차
+      {{ title }}
     </div>
     <div class="articleSubTitle">
-      가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차
+      {{ subTitle }}
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  
+  props: ['title', 'subTitle']
 }
 </script>
 
 <style scoped>
-.articleTitleContainer {
-  /* display: grid;
-  grid-template-rows: 1fr 1fr; */
-}
 
 .articleTitle {
   font-style: italic;
@@ -31,7 +27,7 @@ export default {
 }
 
 .articleSubTitle {
-  font-size: 24px;
+  font-size: 20px;
   word-break: break-all;
   width: 600px;
   margin: 0 auto 30px calc((100% - 600px) / 2);
