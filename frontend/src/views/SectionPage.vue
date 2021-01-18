@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AppBarHeader />
+    <AppBarArticleHeader />
     <SectionHeader :sectionName="sectionName" />
     <SectionPopularNews :popularNews="popularNews" />
     <div class="latestNews">
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import AppBarHeader from '../components/headers/AppBarHeader'
+import AppBarArticleHeader from '../components/headers/AppBarArticleHeader'
 import SectionHeader from '../components/headers/SectionHeader'
 import SectionPopularNews from '../components/bodies/article/SectionPopularNews'
 import LatestNews2 from '../components/bodies/article/LatestNews2'
@@ -30,7 +30,7 @@ export default {
     }
   },
   components: {
-    AppBarHeader,
+    AppBarArticleHeader,
     SectionHeader,
     SectionPopularNews,
     LatestNews2

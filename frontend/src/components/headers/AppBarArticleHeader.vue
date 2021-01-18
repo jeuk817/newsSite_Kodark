@@ -49,7 +49,8 @@ export default {
 
 <style>
 #appBarArticleHeader > div {
-   padding: 0;
+  border-bottom: 1px solid rgb(215, 215, 215);
+  padding: 0;
 }
 </style>
 
