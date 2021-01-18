@@ -30,7 +30,7 @@
         :key="article.id"
       >
         <td>{{article["createdAt "]}}</td>
-        <td>{{article["title "]}}</td>
+        <td class="articleTitle"><router-link :to="`/en/article?articleId=${article.id}` ">{{article["title "]}}</router-link></td>
         <td>{{article.hit}}</td>
         <td>  
           <v-btn
@@ -54,7 +54,7 @@
     </tbody>
   </template>
   </v-simple-table>
-   <div class="text-center">
+   <div class="text-center page">
     <v-pagination
       v-model="page"
       :length="6"
@@ -90,5 +90,11 @@ export default {
   padding: 10px 10px 10px 0 ;
   border-bottom: 1px solid black;
   margin-bottom: 50px;
+}
+.articleTitle a{
+  color: black;
+}
+.page{
+  margin-top: 30px;
 }
 </style>

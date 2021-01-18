@@ -24,13 +24,13 @@
     </thead>
     <tbody>
       <tr
-        v-for="item in waitArticles"
-        :key="item.id"
+        v-for="article in waitArticles"
+        :key="article.id"
       >
-        <td>{{item.title}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.email}}</td>
-        <td>{{item.id}}</td>
+        <td class="acticleTitle"><router-link :to="`/en/article?articleId=${article.id}` ">{{article.title}}</router-link></td>
+        <td>{{article.name}}</td>
+        <td>{{article.email}}</td>
+        <td>{{article.id}}</td>
       </tr>
     </tbody>
   </template>
@@ -65,5 +65,8 @@ export default {
   padding: 10px 10px 10px 0 ;
   border-bottom: 1px solid black;
   margin-bottom: 50px;
+}
+.acticleTitle a{
+  color: black;
 }
 </style>
