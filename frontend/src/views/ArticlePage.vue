@@ -2,7 +2,7 @@
   <div>
     <AppBarArticleHeader />
     <div class="articleBody">
-      <ArticleTitle :title="title" :subTitle="subTitle" /> 
+      <ArticleTitle :title="title" :subTitle="subTitle" :reporter="reporter" :editedAt="editedAt" /> 
       article page
       <HelloWorld />
       <HelloWorld />
@@ -24,7 +24,9 @@ export default {
   data() {
     return {
       title: '',
-      subTitle: ''
+      subTitle: '',
+      editedAt: '',
+      reporter: {}
     }
   },
   async created() {
@@ -36,6 +38,8 @@ export default {
     if(status === 200) {
       this.title = article.title
       this.subTitle = article.subTitle
+      this.reporter = article.reporter
+      this.editedAt = article.editedAt
     }
   }
 }
