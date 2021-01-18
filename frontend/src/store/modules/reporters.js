@@ -41,6 +41,19 @@ const actions = {
     } catch(err) {
       return { status: err.response.status }
     }
+  },
+  async getArticles({}, {status}) {
+    try {
+      const res = await axios.get(`/reporters/article?status=${status}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data= res.data
+      return { status: res.status, data }
+    } catch(err) {
+      return { status: err.response.status }
+    }
   }
 
 }

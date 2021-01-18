@@ -12,7 +12,7 @@
       <template v-if="currentRoute === 'reporters'">
         <ReportList />
       </template>
-      <template v-if="currentRoute === 'article/new'">
+      <template v-if="currentRoute === 'waiting'">
         <WaitArticleList />
       </template>
     </div>
