@@ -7,6 +7,23 @@
         <ArticleSubFunction />
       </div>
       <div class="articleContentContainer" id="articleContent"></div>
+      <div class="reporterInfo">
+        <p>
+          By Reporter {{ reporter.name }}
+        </p>
+        <p>
+          Email : {{ reporter.email }}
+        </p>
+        <p>
+          Created at {{ createdAt }}
+        </p>
+        <p>
+          Edited at {{ editedAt }}
+        </p>
+        <p>
+          <ArticleSubFunction />
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +46,7 @@ export default {
       title: '',
       subTitle: '',
       content: '',
+      createdAt: '',
       editedAt: '',
       reporter: {}
     }
@@ -44,6 +62,7 @@ export default {
       this.subTitle = article.subTitle
       this.content = article.content
       this.reporter = article.reporter
+      this.createdAt = article.createdAt
       this.editedAt = article.editedAt
       document.getElementById('articleContent').innerHTML = this.content
     }
@@ -82,4 +101,15 @@ export default {
   padding: 20px 0;
 }
 
+.reporterInfo {
+  position: relative;
+  max-width: 600px;
+  width: 600px;
+  left: calc((100% - 600px) / 2);
+  padding-top: 43px;
+  font-size: 16px;
+  font-style: italic;
+  border-bottom: 1px solid black;
+  margin-bottom: 40px;
+}
 </style>
