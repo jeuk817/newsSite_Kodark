@@ -1,5 +1,5 @@
 <template>
-  
+  <div>articleList reporter</div>
 </template>
 
 <script>
