@@ -41,46 +41,45 @@ public class ArticleController {
 	  */
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> getArticleDetail(@RequestParam("articleId") String articleId, HttpServletResponse response) {
-		Map<String, Object> params = new HashMap<>();
-		Map<String, Object> temp;
-		List<Map<String,Object>>list = new ArrayList<>();
-		Map<String, Object> reporter = new HashMap<>();;
 		
 		int _articleId = Integer.parseInt(articleId);
-		params.put("_articleId", _articleId);
 		
-		try {
-			list = articleProcedureService.getArticleDetail(params);
-			params.remove("_articleId");
-			params.put("articleId", list.get(0).get("articleId"));
-			params.put("title", list.get(0).get("title"));
-			params.put("content", list.get(0).get("content"));
-			params.put("createdAt", list.get(0).get("createdAt"));
-			params.put("editedAt", list.get(0).get("editedAt"));
-			params.put("hit", list.get(0).get("hit"));
-			reporter.put("id", list.get(0).get("reporterId"));
-			reporter.put("name", list.get(0).get("name"));
-			reporter.put("email", list.get(0).get("email"));
-			params.put("reporter", reporter);
-			
-			for(int i=0; i<list.size(); i++) {    
-				temp = new HashMap<>();
-				temp.put("image", list.get(i).get("image"));
-				temp.put("imgDec", list.get(i).get("description"));
-				temp.put("source", list.get(i).get("source"));
-				
-				list.set(i, temp);
-			}	
-			params.put("images", list);
-			
-			response.setHeader("Links",
-					"</article/emotion?id\">; rel=\"emotion\""
-							+"</article/comment?id\">; rel=\"comment\"");
-			
-		} catch (Exception e) {
-			return new ResponseEntity<Map<String,Object>>(HttpStatus.NOT_FOUND);//404
-		}
-		return new ResponseEntity<Map<String, Object>> (params, HttpStatus.OK);
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "article_detail");
+		params.put("_article_id", _articleId);
+		List<Map<String,Object>> list = articleProcedureService.execuArticleProcedure(params);
+		Map<String, Object> articleData = list.get(0);
+		
+		Map<String, Object> articleDetail = new HashMap<>();
+		articleDetail.put("id", articleData.get("article_id"));
+		articleDetail.put("title", articleData.get("title"));
+		articleDetail.put("subTitle", articleData.get("sub_title"));
+		articleDetail.put("content", articleData.get("content"));
+		articleDetail.put("createdAt", articleData.get("created_at"));
+		articleDetail.put("editedAt", articleData.get("edited_at"));
+		articleDetail.put("hit", articleData.get("hit"));
+		
+		List<Map<String,Object>> images = new ArrayList<>();
+		Map<String, Object> mainImage = new HashMap<>();
+		mainImage.put("image", articleData.get("image"));
+		mainImage.put("imgDec", articleData.get("description"));
+		mainImage.put("source", articleData.get("source"));
+		images.add(mainImage);
+		articleDetail.put("images", images);
+		
+		Map<String, Object> reporter = new HashMap<>();
+		reporter.put("id", articleData.get("reporter_id"));
+		reporter.put("email", articleData.get("email"));
+		reporter.put("name", articleData.get("name"));
+		articleDetail.put("reporter", reporter);
+		
+		response.setHeader("Links",
+				"</article/emotion?articleId=" + articleDetail.get("id") + ">;"
+				+ " rel=\"emotion\","
+				+ "</article/comment?articleId=" + articleDetail.get("id") + "&commentStartId=0>;"
+				+ " rel=\"comment\"");
+		
+		return new ResponseEntity<Map<String, Object>> (articleDetail, HttpStatus.OK);
 	}
 	
 	/**
@@ -426,7 +425,7 @@ public class ArticleController {
 	public ResponseEntity<List<Map<String, Object>>> latestAll() {
 		Map<String, Object> params = new HashMap<>();
 		List<Map<String, Object>> resultList = new ArrayList<>();
-		params.put("_switch", "latest_arll");
+		params.put("_switch", "latest_all");
 		resultList = articleProcedureService.execuArticleProcedure(params);
 		
 		Map<String, Object> row = new HashMap<>();

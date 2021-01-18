@@ -20,12 +20,19 @@ export default {
     AppBarArticleHeader,
     ArticleTitle,
     HelloWorld
+  },
+  async created() {
+    const articleId = this.$route.query.articleId
+    const { status, article, links } = await this.$store.dispatch('article/article', { articleId })
+    console.log(status)
+    console.log(article)
+    console.log(links)
   }
 }
 </script>
 
 <style scoped>
 .articleBody {
-  padding-top: 45px;
+  padding-top: 100px;
 }
 </style>

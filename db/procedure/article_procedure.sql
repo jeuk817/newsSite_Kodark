@@ -44,16 +44,22 @@ declare checkData int default -1;
 		;
     
     -- 기사 상세페이지(16) -----------------------------------------------------------
- elseif _switch = 'articleDetail' then
-	select article.id, article.title, article.content, article.created_at, article.edited_at, article.hit
+ elseif _switch = 'article_detail' then
+	start transaction;
+	update article set hit = hit + 1 where id = _article_id;
+ 
+	select article.id as article_id, article.title, article.sub_title, article.content, article.hit
+		, DATE_FORMAT(article.created_at, '%Y-%m-%d %H:%i:%S') as created_at
+        , DATE_FORMAT(article.edited_at, '%Y-%m-%d %H:%i:%S') as edited_at
 		,image.image, image.source, image.description
-		, users.id, users.email, user_detail.name
+		, users.id as reporter_id, users.email, user_detail.name
 	from article
-		inner join image on article.id = image.article_id
-		inner join users on reporter_id = users.id
-		inner join user_detail on users.id = user_detail.user_id
-	where article.id = _id;
-
+		left join image on article.id = image.article_id
+		left join users on article.reporter_id = users.id
+		left join user_detail on article.reporter_id = user_detail.user_id
+	where article.id = _article_id;
+	commit;
+    
     /* 기사 감정 데이터
 	   작성자 : 이종현
     */
@@ -132,7 +138,7 @@ if _switch = 'latest' then
     set result_set = 'success';
 end if;
     
-if _switch = 'latest_arll' then
+if _switch = 'latest_all' then
 	(select a.id, c.name as category, a.title, a.sub_title, i.image, i.description as imgDec
 	from article as a 
 	left join image as i on a.id = i.article_id
