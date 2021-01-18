@@ -291,10 +291,13 @@ public class AdminController {
 				map = new HashMap<>();
 				int id = (int) list.get(i).get("id");				
 				int articleId = (int)list.get(i).get("article_id");
+				
+				String createdAt = (String) list.get(i).get("created_at");
+				String formatCreatedAt = createdAt.substring(0, 10);
 				String reason = (String)list.get(i).get("reason");				 				
 				map.put("id",id);
 				map.put("reason", reason);
-				map.put("createdAt", list.get(i).get("created_at"));			
+				map.put("createdAt", formatCreatedAt);			
 				temp.put("id", list.get(i).get("userId"));
 				temp.put("email", list.get(i).get("userEmail"));
 				map.put("user", temp);				

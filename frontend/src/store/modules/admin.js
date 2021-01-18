@@ -59,7 +59,22 @@ const actions = {
     }catch(err){
       return {status: err.response.status}
     }
+  },
+  async getReportedArticles () {
+    try{
+      const res = await axios.get('/admin/report/article',{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = res.data
+      return {data, status: res.status}
+    }catch(err){
+      return {status: err.response.status}
+    }
   }
+
+
 }
 
 export default {

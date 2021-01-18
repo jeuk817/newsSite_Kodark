@@ -1,6 +1,6 @@
 <template>
-  <div class="WaitArticleComponent">
-  <h1 class="title">Wait Article List</h1>
+   <div class="ReportedArticleComponent">
+  <h1 class="title">Reported Article List</h1>
   <v-simple-table
   fixed-header
   >
@@ -8,38 +8,40 @@
     <thead>
       <tr>
         <th class="text-left">
-          Created At
+          Reported At
         </th>
         <th class="text-left">
           Title
         </th>
         <th class="text-left" style="width: 49px;">
-          Hit
+          Reporter
         </th>
         <th class="text-left">
-          Edit
+          Reason
         </th>
-         <th class="text-left">
-          Delete
+        <th class="text-left">
+          Blind
+        </th>
+        <th class="text-left">
+          Send Mail
         </th>
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="article in articles"
+        v-for="article in reportedArticles"
         :key="article.id"
       >
-        <td>{{article["createdAt "]}}</td>
-        <td class="articleTitle"><router-link :to="`/en/article?articleId=${article.id}` ">{{article["title "]}}</router-link></td>
-        <td>{{article.hit}}</td>
+        <td style="width: 85px;">{{article.createdAt}}</td>
+        <td class="articleTitle"><router-link :to="`/en/article?articleId=${article.id}` ">{{article.article.title}}</router-link></td>
+        <td style="width: 150px;">{{article.reporter.email}}</td>
+        <td>{{article.reason}}</td>
         <td>  
-          <v-btn
-          depressed
-          small
-          color="primary"
+          <v-checkbox
+          v-model="checkbox"
+          
           >
-          Edit
-          </v-btn>
+          </v-checkbox>
         </td>
          <td>  
           <v-btn
@@ -47,7 +49,7 @@
           small
           color="primary"
           >
-          Delete
+          Mail
           </v-btn>
         </td>
       </tr>
@@ -65,20 +67,21 @@
 
 <script>
 export default {
- data: () => ({
-    articles: [],
+  data: () => ({
+    reportedArticles: [],
     page: 1,
+    checkbox: true,
   }),
   async created () {
-    const { status, data } = await this.$store.dispatch('reporters/getArticles', {status: 'null'});
+    const { status, data } = await this.$store.dispatch('admin/getReportedArticles');
     if(status === 200) {
       console.log('created')
       console.log(data)
-      this.articles= data
+      this.reportedArticles= data
     }
     
       
-    if(status === 404){
+    if(status === 500){
       //에러처리필요
     }
   }
@@ -95,6 +98,6 @@ export default {
   color: black;
 }
 .page{
-  margin-top: 30px;
+  margin-top: 50px;
 }
 </style>
