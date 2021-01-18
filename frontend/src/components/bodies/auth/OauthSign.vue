@@ -7,12 +7,16 @@
       <v-btn class="oauthBtn text-capitalize" outlined color="black" width="100%" height="45px"
         @click="googleOuath"
       >
-        <v-icon>account_circle</v-icon>Continue with Google
+        <!-- <v-icon>account_circle</v-icon> -->
+        <img width="20" src="../../../assets/img/google.svg">
+        <span class="oauthText">Continue with Google</span>
       </v-btn>
       <v-btn class="oauthBtn text-capitalize" outlined color="black" width="100%" height="45px"
         @click="kakaoOuath"
       >
-        <v-icon>account_circle</v-icon>Continue with Kakao
+        <!-- <v-icon>account_circle</v-icon> -->
+        <img width="20" src="../../../assets/img/kakaotalk.svg">
+        <span class="oauthText">Continue with Kakao</span>
       </v-btn>
       <div class="authDivider">
         <v-divider />
@@ -72,5 +76,9 @@ export default {
   align-items: center;
   text-align: center;
   font-size: 14px;
+}
+
+.oauthText {
+  padding-left: 10px;
 }
 </style>
