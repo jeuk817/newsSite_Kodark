@@ -68,6 +68,18 @@ const actions = {
     }
   },
 
+  async emotion({}, { articleId }) {
+    try {
+      const res = await axios.get(`/article/emotion?articleId=${articleId}`)
+      
+      const emotions = res.data
+      const links = util.parseLinks(res.headers.links)
+      return { status: res.status, emotions, links }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
 }
 
 export default {

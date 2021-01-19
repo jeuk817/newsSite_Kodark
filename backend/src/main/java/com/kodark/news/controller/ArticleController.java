@@ -58,6 +58,7 @@ public class ArticleController {
 		articleDetail.put("createdAt", articleData.get("created_at"));
 		articleDetail.put("editedAt", articleData.get("edited_at"));
 		articleDetail.put("hit", articleData.get("hit"));
+		articleDetail.put("commentCount", articleData.get("comment_count"));
 		
 		List<Map<String,Object>> images = new ArrayList<>();
 		Map<String, Object> mainImage = new HashMap<>();
@@ -90,6 +91,7 @@ public class ArticleController {
 	@GetMapping(path ="/emotion")
 	public ResponseEntity<List<Map<String, Object>>> getEmotionInfo(
 			@RequestParam("articleId") int articleId, HttpServletResponse response){
+		
 		List<Map<String, Object>> list = null;
 		Map<String, Object> params = null;
 		Map<String, Object> map = null;
@@ -104,7 +106,6 @@ public class ArticleController {
 			
 			sb = new StringBuffer();
 			pSize = list.size();
-			
 			for(int i=0; i<pSize; i++) {
 				map = new HashMap<String, Object>();
 				map.put("href","/article/emotion?articleId=" + articleId + "&emotion="+list.get(i).get("emotion"));

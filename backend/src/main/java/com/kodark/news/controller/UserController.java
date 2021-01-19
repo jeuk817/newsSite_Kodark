@@ -485,9 +485,9 @@ public class UserController {
 	 * @param : userId
 	 */
 	@PostMapping(path = "/subscription")
-	public ResponseEntity<String> subscription(@RequestBody Map<String, Object> body){
+	public ResponseEntity<String> subscription(HttpServletRequest request, @RequestBody Map<String, Object> body){
 		int reporterId =Integer.valueOf((String)body.get("id"));//기자아이디
-		int id = 4; //userId httpservletrequest
+		int id = (int)request.getAttribute("id");
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "subs");
 		params.put("_id", id);
@@ -575,16 +575,18 @@ public class UserController {
 	 */
 	@PutMapping(path = "/emotion")
 	public ResponseEntity<List<Map<String, Object>>> chooseEmotion(
-			@RequestParam("articleId") int articleId, @RequestParam("emotion") String emotion){
+			@RequestParam("articleId") int articleId, @RequestParam("emotion") String emotion
+			, HttpServletRequest request){
 		List<Map<String, Object>> list = null;
 		Map<String, Object> params = null;
 		
+		int id = (int)request.getAttribute("id");
 		try {
 			list = new ArrayList<Map<String,Object>>();
 			params = new HashMap<String, Object>();
 			params.put("_switch","choose_emotion");
 			params.put("_id", articleId);
-			params.put("_userId", 3); //임시 이메일
+			params.put("_userId", id); //임시 이메일
 			params.put("_emotion", emotion);
 			list = usersProcedureService.execuUsersProcedureList(params);
 		} catch (Exception e) {

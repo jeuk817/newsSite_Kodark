@@ -183,5 +183,14 @@ if _switch = 'user_update' then
 		set result_set = '404';
 	end if;
 end if;
-   
+
+ -- 35.구독목록    
+if _switch = 'sub_list' then
+  select s.reporter_id, s.user_id, s.letter_accepted , ud.nick_name, (select email from users u where u.id = s.reporter_id)email, ud.image 
+	from subscriber s
+   left outer join users u on u.id = s.user_id
+	left outer join user_detail ud on ud.user_id = s.reporter_id
+	where u.id = _id;
+end if; 
+
 END

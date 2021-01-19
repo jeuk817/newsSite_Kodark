@@ -53,32 +53,24 @@ declare checkData int default -1;
         , DATE_FORMAT(article.edited_at, '%Y-%m-%d %H:%i:%S') as edited_at
 		,image.image, image.source, image.description
 		, users.id as reporter_id, users.email, user_detail.name
+        , count(comment.id) as comment_count
 	from article
 		left join image on article.id = image.article_id
 		left join users on article.reporter_id = users.id
 		left join user_detail on article.reporter_id = user_detail.user_id
+        left join comment on article.id = comment.article_id
 	where article.id = _article_id;
 	commit;
     
     /* 기사 감정 데이터
 	   작성자 : 이종현
+       수정 : 류제욱
     */
     elseif _switch = 'article_emotion' then
-		SELECT count(*) into checkData 
-		FROM article_emotion 
-		WHERE article_id =_id;
-		
-		IF checkData > 0 THEN
-		select emotion,count(*) as count
-		from article_emotion 
-		
-		inner join emotion
-		on article_emotion.emotion_id = emotion.id
-		
-		where article_id= _id
-		group by emotion;
-		set result_set = '200';
-		END IF;
+		select emotion
+			, (select count(*) from article_emotion where article_id = _id and emotion_id = id) as count
+		from emotion
+		;
         
     /* 기사 대댓글 데이터
 	   작성자 : 이종현
