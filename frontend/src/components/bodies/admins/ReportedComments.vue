@@ -77,7 +77,7 @@ export default {
     checkbox: true,
   }),
   async created () {
-    const { status, data } = await this.$store.dispatch('admin/getReportedComments');
+    const { status, data } = await this.$store.dispatch('admin/getReportedComments', {commentStartedId:this.page}, );
     if(status === 200) {
       console.log('created')
       console.log(data)
