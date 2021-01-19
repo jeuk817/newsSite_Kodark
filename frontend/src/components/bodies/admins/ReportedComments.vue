@@ -32,14 +32,18 @@
     </thead>
     <tbody>
       <tr
-        v-for="article in reportedArticles"
-        :key="article.id"
+        v-for="user in reportUsers"
+        :key="user.id"
       >
-        <td style="width: 85px;">{{article.createdAt}}</td>
-        <td class="articleTitle"><router-link :to="`/en/article?articleId=${article.id}` ">{{article.article.title}}</router-link></td>
-        <td style="width: 150px;">{{article.reporter.email}}</td>
-        <td>{{article.reason}}</td>
-        <td>{{article.reason}}</td>
+       <tr
+        v-for="comment in comments"
+        :key="comment.id"
+      >
+        <td style="width: 85px;">{{comment.createdAt}}</td>
+        <td class="articleTitle">{{comment.content}}</td>
+        <td style="width: 150px;">{{user.email}}</td>
+        <td>{{comment.reason}}</td>
+        <td>{{comment.reason}}</td>
         <td>  
           <v-checkbox
           v-model="checkbox"
@@ -72,17 +76,20 @@
 <script>
 export default {
   data: () => ({
-    reportedArticles: [],
+    reportedComments: [],
+    reportUsers: [],
+    comments: [],
+
     page: 1,
     checkbox: true,
   }),
   async created () {
-    const { status, data } = await this.$store.dispatch('admin/getReportedComments', {commentStartedId:this.page}, );
+    console.log('created')
+    const { status, data } = await this.$store.dispatch('admin/getReportedComments', {commentStartedId:6, doneFlag:'F'} );
     if(status === 200) {
-      console.log('created')
       console.log(data)
-      this.reportedArticles= data
-    }
+     
+    }  
     
       
     if(status === 500){

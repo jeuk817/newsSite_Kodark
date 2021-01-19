@@ -74,9 +74,9 @@ const actions = {
     }
   },
  
-  async getReportedComments () {
+  async getReportedComments ({}, {commentStartedId, doneFlag}) {
     try{
-      const res = await axios.get('/admin/report/comment',{
+      const res = await axios.get(`/admin/report/comment?commentStartId=${commentStartedId}&doneFlag=${doneFlag}`,{
         headers: {
           'Content-Type': 'application/json'
         }
