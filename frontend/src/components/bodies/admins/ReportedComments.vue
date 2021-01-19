@@ -1,6 +1,6 @@
 <template>
-   <div class="ReportedArticleComponent">
-  <h1 class="title">Reported Article List</h1>
+   <div class="ReportedCommentComponent">
+  <h1 class="title">Reported Comment List</h1>
   <v-simple-table
   fixed-header
   >
@@ -11,19 +11,22 @@
           Reported At
         </th>
         <th class="text-left">
-          Title
+          Comment
         </th>
         <th class="text-left" style="width: 49px;">
-          Reporter
+          Writer
         </th>
         <th class="text-left">
           Reason
         </th>
         <th class="text-left">
+          Reporter
+        </th>
+        <th class="text-left">
           Blind
         </th>
         <th class="text-left">
-          Send Mail
+          Stop
         </th>
       </tr>
     </thead>
@@ -35,6 +38,7 @@
         <td style="width: 85px;">{{article.createdAt}}</td>
         <td class="articleTitle"><router-link :to="`/en/article?articleId=${article.id}` ">{{article.article.title}}</router-link></td>
         <td style="width: 150px;">{{article.reporter.email}}</td>
+        <td>{{article.reason}}</td>
         <td>{{article.reason}}</td>
         <td>  
           <v-checkbox
@@ -73,8 +77,7 @@ export default {
     checkbox: true,
   }),
   async created () {
-    const commentStratId = this.page;
-    const { status, data } = await this.$store.dispatch('admin/getReportedArticles');
+    const { status, data } = await this.$store.dispatch('admin/getReportedComments');
     if(status === 200) {
       console.log('created')
       console.log(data)

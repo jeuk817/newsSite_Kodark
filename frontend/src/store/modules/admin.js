@@ -72,6 +72,20 @@ const actions = {
     }catch(err){
       return {status: err.response.status}
     }
+  },
+ 
+  async getReportedComments () {
+    try{
+      const res = await axios.get('/admin/report/comment',{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = res.data
+      return {data, status: res.status}
+    }catch(err){
+      return {status: err.response.status}
+    }
   }
 
 

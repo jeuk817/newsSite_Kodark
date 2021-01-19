@@ -18,6 +18,9 @@
        <template v-if="currentRoute === 'article'">
         <ReportedArticle />
       </template>
+      <template v-if="currentRoute === 'comment'">
+        <ReportedComments />
+      </template>
     </div>
   </div>
 </template>
@@ -30,6 +33,7 @@ import ReportList from '../components/bodies/admins/ReportList'
 import WaitArticleList from '../components/bodies/admins/WaitArticleList'
 import UserList from '../components/bodies/admins/UserList'
 import ReportedArticle from '../components/bodies/admins/ReportedArticle'
+import ReportedComments from '../components/bodies/admins/ReportedComments'
 import { utils } from '../components/mixins/utils'
 
 export default {
@@ -41,7 +45,8 @@ export default {
     ReportList,
     WaitArticleList,
     UserList,
-    ReportedArticle
+    ReportedArticle,
+    ReportedComments
   },
   computed: {
     // side menu
