@@ -72,19 +72,24 @@ export default {
 
 <style>
 
-.articleContentContainer p {
+.articleContentContainer p
+, .articleContentContainer div
+, .articleContentContainer h1
+, .articleContentContainer h2
+, .articleContentContainer h3
+{
   position: relative;
   max-width: 600px;
   width: 600px;
-  left: calc((100% - 600px) / 2);
   font-size: 18px;
+  margin: 0 auto;
+  display: grid;
+  justify-content: center;
 }
 
 .articleContentContainer img {
-  position: relative;
   max-width: 1200px;
   object-fit: cover;
-  right: calc(100% / 2);
   margin: 43px auto;
 }
 
