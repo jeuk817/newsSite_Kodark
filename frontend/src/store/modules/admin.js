@@ -86,6 +86,20 @@ const actions = {
     }catch(err){
       return {status: err.response.status}
     }
+  },
+  async getUsers ({}, {startIndex}) {
+    try{
+      const res = await axios.get(`/admin/users?startIndex=${startIndex}`,{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = res.data
+      console.log(data)
+      return {data, status: res.status}
+    }catch(err){
+      return {status: err.response.status}
+    }
   }
 
 

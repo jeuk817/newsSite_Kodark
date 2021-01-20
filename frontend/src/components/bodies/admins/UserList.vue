@@ -19,11 +19,11 @@
         </thead>
         <tbody>
           <tr
-            v-for="item in desserts"
-            :key="item.name"
+            v-for="user in users"
+            :key="user.id"
           >
-            <td>{{ item.id }}</td>
-            <td>{{ item.calories }}</td>
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
             <td style="padding-left: 32px">
               <span class="material-icons stopBtn" @click="onSuspend">stop</span>
             </td>
@@ -42,10 +42,9 @@
       <div class="userEmail">
         <!-- <input type="text" value="TO: userEmail" disabled="disabled"> -->
         <v-text-field
-          value="TO: JohnDoe@gmail.com"
+          value="JohnDoe@gmail.com"
           filled
           readonly
-          dense="false"
           height="40px"
           class="email"
         ></v-text-field>
@@ -54,7 +53,6 @@
         <v-select
           :items="items"
           filled
-          dense="false"
           height="25px"
           label="Suspended Reasons" 
           class="reasonSelect"
@@ -96,58 +94,14 @@
 <script>
 export default {
  data: () => ({
-       desserts: [
-          {
-            id: 1,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-          {
-            id: 2,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-          {
-            id: 3,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-          {
-            id: 4,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-          {
-            id: 5,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-             {
-            id: 1,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-          {
-            id: 2,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-          {
-            id: 3,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-          {
-            id: 4,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-          {
-            id: 5,
-            calories: 'lpr0818@gmail.com',
-            suspended: true
-          },
-        ]
+      users : [],
+      items: [
+              'Inappropriate comments',
+              'Defamation of others',
+              'Continue writing the same comment',
+            ],
+      page: 1,
+
     }),
     methods: {
       onSuspend() {
@@ -158,7 +112,18 @@ export default {
         const sendMailForm = document.querySelector('.sendMailForm');
         sendMailForm.style.display = 'none';
       }
-    }
+    },
+    async created () {
+      console.log('created')
+      const { status, data } = await this.$store.dispatch('admin/getUsers', {startIndex:1} );
+      if(status === 200) {
+        console.log(data)
+        this.users = data;
+      }  
+      if(status === 500){
+        
+      }
+  }
 }
 </script>
 
