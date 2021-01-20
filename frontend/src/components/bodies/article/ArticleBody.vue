@@ -37,7 +37,7 @@
       </div>
     </div>
     <v-navigation-drawer
-    id="scroll-target"
+    id="commentWindow"
     app
     right
     width="450px"
@@ -74,6 +74,15 @@
           <div v-for="(comment, i) in comment.commentList" :key="i">
             <Comment :comment="comment" />
           </div>
+          <template v-if="comment.commentList.length < comment.commentCount">
+            <v-btn depressed class="editBtn text-capitalize white--black"
+            color="white"
+            width="100%"
+            @click="getMoreComments"
+            >
+              More comments
+            </v-btn>
+          </template>
         </template>
         <template v-if="comment.openCommentForm">
           <v-textarea
@@ -256,12 +265,41 @@ export default {
         this.unauthorized = true
       }
     },
+    async getMoreComments() {
+      const last = this.comment.commentList[this.comment.commentList.length - 1]
 
+      const articleId = this.$route.query.articleId
+      const commentStartId = last.id
+      const { status, comments } = await this.$store.dispatch('article/getComments', { articleId, commentStartId })
+      
+      if(status === 200) {
+        let addedCommentList = this.comment.commentList
+        addedCommentList.push(...comments)
+        this.comment.commentList = addedCommentList
+      }
+    }
+
+    // async handleScroll(e){
+    //   console.log('!!!!')
+    //   console.log(e)
+    // },
+    // getCurrentScrollPercentage() {
+    //   return (window.scrollY + window.innerHeight) / document.body.clientHeight * 100
+    // }
   },
   created() {
     this.setArticleDetail()
     this.setEmotionData()
-  }
+  },
+  // mounted() {
+  //   // window.addEventListener('scroll', this.handleScroll)
+  //   document.getElementById('commentWindow').addEventListener('scroll', this.handleScroll)
+  //   document.getElementsByClassName('v-navigation-drawer__content')[0].addEventListener('scroll', this.handleScroll)
+  // },
+  // beforeDestroy() {
+  //   // window.removeEventListener('scroll', this.handleScroll)
+  //   document.getElementById('commentWindow').removeEventListener('scroll', this.handleScroll)
+  // }
 }
 </script>
 
