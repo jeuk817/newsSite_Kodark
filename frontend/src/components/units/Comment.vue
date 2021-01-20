@@ -9,16 +9,16 @@
       </v-list-item-avatar>
       <div>
         <div class="font-weight-black">
-          가나다라
+          {{ comment.user.nickName ? comment.user.nickName : comment.user.email }}
         </div>
         <div>
-          서울 강동구, 2021-01-20
+          {{ comment.user.local ? comment.user.local : 'No local' }}, {{ comment.createdAt}}
         </div>
       </div>
     </div>
     <div class="commentContent">
       <div>
-        가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차
+        {{ comment.delFlag === 'F' ? comment.content : 'This comment has been deleted.' }}
       </div>
       <div class="commentFooter">
         <v-tooltip bottom>
@@ -50,8 +50,8 @@
             >
               <v-badge
               :color="grayColor"
-              :value="likeCount ? true : false"
-              :content="likeCount"
+              :value="comment.reputation.recommend ? true : false"
+              :content="comment.reputation.recommend"
               >
                 <v-icon>thumb_up_alt</v-icon>
               </v-badge>
@@ -69,14 +69,14 @@
             >
               <v-badge
               :color="grayColor"
-              :value="likeCount ? true : false"
-              :content="likeCount"
+              :value="comment.reputation.decommend ? true : false"
+              :content="comment.reputation.decommend "
               >
                 <v-icon>thumb_down_alt</v-icon>
               </v-badge>
             </v-btn>
           </template>
-          <span>Unrecommend</span>
+          <span>Decommend</span>
         </v-tooltip>
 
         <v-tooltip bottom>
@@ -98,6 +98,7 @@
 
 <script>
 export default {
+  props: ['comment'],
   data() {
     return {
       defaultProfileImg: "/img/k.svg",

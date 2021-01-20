@@ -80,6 +80,18 @@ const actions = {
     }
   },
 
+  async getComments({}, { articleId, commentStartId }) {
+    try {
+      const res = await axios.get(`/article/comment?articleId=${articleId}&commentStartId=${commentStartId}`)
+      
+      const comments = res.data
+      // const links = util.parseLinks(res.headers.links)
+      return { status: res.status, comments }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
 }
 
 export default {

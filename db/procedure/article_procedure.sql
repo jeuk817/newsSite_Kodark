@@ -3,7 +3,7 @@ CREATE DEFINER=`jack`@`localhost` PROCEDURE `article_procedure`(
   ,in _article_id int
   ,in _reporter_id int
   ,in _category varchar(20)
-  ,in _commentId int
+  ,inout _commentId int
   ,inout _id int
   ,out _title varchar(200)
   ,out _subTitle varchar(500)
@@ -22,29 +22,48 @@ CREATE DEFINER=`jack`@`localhost` PROCEDURE `article_procedure`(
 BEGIN
 declare checkData int default -1;
 
-	if _switch = 'blind' then
-		update article set status = 'deleted' where reporter_id = _reporter_id and id =_article_id;
-	elseif _switch = 'get_list' then
-		select a.id,a.title,a.content, i.image,i.description 
-        from article a
-        left outer join image i on i.article_id = a.id
-        where a.reporter_id = _reporter_id
-        ;
+if _switch = 'blind' then
+	update article set status = 'deleted' where reporter_id = _reporter_id and id =_article_id;
+end if;
+
+if _switch = 'get_list' then
+	select a.id,a.title,a.content, i.image,i.description 
+	from article a
+	left outer join image i on i.article_id = a.id
+	where a.reporter_id = _reporter_id
+	;
+end if;
 	-- 19. 기사 댓글데이터		
-	elseif _switch = 'comment' then
+if _switch = 'comment' then
+	if _commentId = -1 then
 		select c.id,u.id as userId,u.email,ud.nick_name as nickName,ud.local, c.content
 			,date_format(c.created_at, '%Y-%m-%d %H:%i:%S') as createdAt,c.del_flag as delFlag 
 			,(select count(reputation) from comm_reputation where reputation = 'recommend' and comment_id = c.id ) as recommend
 			,(select count(reputation) from comm_reputation where reputation = 'decommend'and comment_id = c.id ) as decommend
 		from comment as c
-		join users as u on c.user_id = u.id
-		join user_detail as ud on u.id = ud.user_id
+		left join users as u on c.user_id = u.id
+		left join user_detail as ud on u.id = ud.user_id
 		where c.article_id = _article_id
-		limit 15 offset _id
+		order by c.id desc
+		limit 10
 		;
+	else
+		select c.id,u.id as userId,u.email,ud.nick_name as nickName,ud.local, c.content
+			,date_format(c.created_at, '%Y-%m-%d %H:%i:%S') as createdAt,c.del_flag as delFlag 
+			,(select count(reputation) from comm_reputation where reputation = 'recommend' and comment_id = c.id ) as recommend
+			,(select count(reputation) from comm_reputation where reputation = 'decommend'and comment_id = c.id ) as decommend
+		from comment as c
+		left join users as u on c.user_id = u.id
+		left join user_detail as ud on u.id = ud.user_id
+		where c.article_id = _article_id and c.id < _commentId
+		order by c.id desc
+		limit 10
+		;
+	end if;
+end if;
     
     -- 기사 상세페이지(16) -----------------------------------------------------------
- elseif _switch = 'article_detail' then
+if _switch = 'article_detail' then
 	start transaction;
 	update article set hit = hit + 1 where id = _article_id;
  

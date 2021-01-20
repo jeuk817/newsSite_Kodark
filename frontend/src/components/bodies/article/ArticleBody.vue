@@ -4,7 +4,7 @@
       <ArticleTitle :title="title" :subTitle="subTitle" :reporter="reporter" :editedAt="editedAt" />
       <div class="articleTitleMargin">
         <ArticleSubFunction
-        :commentCount="commentCount"
+        :commentCount="comment.commentCount"
         :emotions="emotions"
         @openCommentWindow="openCommentWindow"
         />
@@ -25,7 +25,7 @@
         </p>
         <p>
           <ArticleSubFunction
-          :commentCount="commentCount"
+          :commentCount="comment.commentCount"
           :emotions="emotions"
           @openCommentWindow="openCommentWindow"
           />
@@ -36,7 +36,7 @@
     app
     right
     width="450px"
-    v-model="showCommentWindow"
+    v-model="comment.showCommentWindow"
     >
       <div class="commentCotainer">
         <v-app-bar
@@ -53,32 +53,31 @@
           >
             <v-icon>close</v-icon>
           </v-btn>
-          Comments {{ commentCount }}
+          Comments {{ comment.commentCount }}
         </v-app-bar>
-        <template v-if="!openCommentForm">
+        <template v-if="!comment.openCommentForm">
           <div>
             <v-text-field
               placeholder="Share your toughts."
               solo
-              @click="openCommentForm = true"
+              @click="comment.openCommentForm = true"
             ></v-text-field>
             <div class="commentWelcomeText">
               Kodark Times needs your voice. We welcome your on-topic commentary, criticism and expertise.
             </div>
           </div>
-          <Comment />
-          <Comment />
-          <Comment />
-          <Comment />
+          <div v-for="(comment, i) in comment.commentList" :key="i">
+            <Comment :comment="comment" />
+          </div>
         </template>
-        <template v-if="openCommentForm">
+        <template v-if="comment.openCommentForm">
           <v-textarea
           ref="comment"
           solo
           name="input-7-4"
           label="Enter your voice"
-          :rules="commentRules"
-          v-model="inputComment"
+          :rules="comment.commentRules"
+          v-model="comment.inputComment"
           ></v-textarea>
           <v-btn depressed class="editBtn text-capitalize white--text"
           color="indigo"
@@ -138,16 +137,19 @@ export default {
       content: '',
       createdAt: '',
       editedAt: '',
-      commentCount: '0',
       reporter: {},
       emotions: [],
-      showCommentWindow: false,
-      openCommentForm: false,
-      commentRules: [
-        v => !!v || 'Comment is required',
-        v => v.length <= 250 || 'Comment length must be less than 250'
-      ],
-      inputComment: '',
+      comment: {
+        commentCount: '0',
+        showCommentWindow: false,
+        openCommentForm: false,
+        commentList: [],
+        commentRules: [
+          v => !!v || 'Comment is required',
+          v => v.length <= 250 || 'Comment length must be less than 250'
+        ],
+        inputComment: '',
+      },
       unauthorized: false
     }
   },
@@ -155,14 +157,14 @@ export default {
     async setArticleDetail() {
       const articleId = this.$route.query.articleId
       const { status, article, links } = await this.$store.dispatch('article/article', { articleId })
-      
+      console.log(article)
       if(status === 200) {
         this.title = article.title
         this.subTitle = article.subTitle
         this.content = article.content
         this.createdAt = article.createdAt
         this.editedAt = article.editedAt
-        this.commentCount = article.commentCount
+        this.comment.commentCount = article.commentCount
         this.reporter = article.reporter
         document.getElementById('articleContent').innerHTML = this.content
       }
@@ -174,21 +176,28 @@ export default {
       this.emotions = emotions
     },
     // 댓글창 열기
-    openCommentWindow() {
-      this.showCommentWindow = true
+    async openCommentWindow() {
+      this.comment.showCommentWindow = true
+      const articleId = this.$route.query.articleId
+      const commentStartId = -1
+      const { status, comments } = await this.$store.dispatch('article/getComments', { articleId, commentStartId })
+      
+      if(status === 200) {
+        this.comment.commentList = comments
+      }
     },
     closeCommentWindow() {
-      this.showCommentWindow = false
+      this.comment.showCommentWindow = false
       this.closeCommentForm()
     },
     closeCommentForm() {
-      this.openCommentForm = false
-      this.inputComment = ''
+      this.comment.openCommentForm = false
+      this.comment.inputComment = ''
     },
     async submitComment() {
       if(!this.$refs.comment.validate(true)) return
       const articleId = this.$route.query.articleId
-      const content = this.inputComment
+      const content = this.comment.inputComment
       const { status } = await this.$store.dispatch('users/createComment', { articleId, content })
       console.log(status)
       if(status === 204) {

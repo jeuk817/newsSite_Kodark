@@ -348,11 +348,14 @@ public class ArticleController {
 		Map<String, Object> reputation;
 		Map<String, Object> comment;
 		List<Map<String, Object>> list = new ArrayList<>();
+		List<Map<String, Object>> list2 = new ArrayList<>();
+		
 		params.put("_article_id", articleId);
-		params.put("_start_id", commentStartId-1);
+		params.put("_commentId", commentStartId);
 		params.put("_switch", "comment");		
 		try {
 			list = articleProcedureService.execuArticleProcedure(params);
+			System.out.println(list);
 			for(int i=0;i<list.size();i++) {
 				user = new HashMap<>();
 				reputation = new HashMap<>();
@@ -369,14 +372,15 @@ public class ArticleController {
 				reputation.put("recommend", list.get(i).get("recommend"));
 				reputation.put("decommend", list.get(i).get("decommend"));
 				comment.put("reputation", reputation);
-				list.set(i, comment);
+//				list.set(i, comment);
+				list2.add(comment);
 				
 			}
 			response.setHeader("links", "</article/comment/reply?id>; rel=\"reply\"");
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);// 500
 		}		
-		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);// 200
+		return new ResponseEntity<List<Map<String, Object>>>(list2, HttpStatus.OK);// 200
 	}
   
 	/**
