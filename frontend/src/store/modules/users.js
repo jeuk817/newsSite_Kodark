@@ -101,6 +101,21 @@ const actions = {
     } catch(err) {
       return { status: err.response.status }
     }
+  },
+
+  async createComment({}, { articleId, content }) {
+    try {
+      console.log('createComment')
+      const res = await axios.post(`/users/comment?articleId=${articleId}`, { content }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
   }
 }
 

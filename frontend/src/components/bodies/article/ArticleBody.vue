@@ -49,28 +49,74 @@
           <v-btn text icon
           absolute
           right
-          @click="showCommentWindow = false"
+          @click="closeCommentWindow"
           >
             <v-icon>close</v-icon>
           </v-btn>
           Comments {{ commentCount }}
         </v-app-bar>
-        <div>
-          <v-text-field
-            placeholder="Share your toughts."
-            solo
-            @click="openCommentForm"
-          ></v-text-field>
-          <div class="commentWelcomeText">
-            Kodark Times needs your voice. We welcome your on-topic commentary, criticism and expertise.
+        <template v-if="!openCommentForm">
+          <div>
+            <v-text-field
+              placeholder="Share your toughts."
+              solo
+              @click="openCommentForm = true"
+            ></v-text-field>
+            <div class="commentWelcomeText">
+              Kodark Times needs your voice. We welcome your on-topic commentary, criticism and expertise.
+            </div>
           </div>
-        </div>
-        <Comment />
-        <Comment />
-        <Comment />
-        <Comment />
+          <Comment />
+          <Comment />
+          <Comment />
+          <Comment />
+        </template>
+        <template v-if="openCommentForm">
+          <v-textarea
+          ref="comment"
+          solo
+          name="input-7-4"
+          label="Enter your voice"
+          :rules="commentRules"
+          v-model="inputComment"
+          ></v-textarea>
+          <v-btn depressed class="editBtn text-capitalize white--text"
+          color="indigo"
+          @click="submitComment"
+          >
+            Submit
+          </v-btn>
+          <v-btn depressed class="editBtn text-capitalize white--black"
+          color="white"
+          @click="closeCommentForm"
+          >
+            Cancel
+          </v-btn>
+        </template>
       </div>
     </v-navigation-drawer>
+    <v-dialog
+      v-model="unauthorized"
+      max-width="400"
+      @click:outside="moveRoute"
+    >
+      <v-card>
+        <v-card-title class="headline">This function requires sign in.</v-card-title>
+        <v-card-text>   
+          Would you like to go to the sign in page?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="moveSignInPage"
+          >
+            Go
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -95,7 +141,14 @@ export default {
       commentCount: '0',
       reporter: {},
       emotions: [],
-      showCommentWindow: false
+      showCommentWindow: false,
+      openCommentForm: false,
+      commentRules: [
+        v => !!v || 'Comment is required',
+        v => v.length <= 250 || 'Comment length must be less than 250'
+      ],
+      inputComment: '',
+      unauthorized: false
     }
   },
   methods: {
@@ -124,8 +177,29 @@ export default {
     openCommentWindow() {
       this.showCommentWindow = true
     },
-    openCommentForm() {
-      console.log('openCommentForm')
+    closeCommentWindow() {
+      this.showCommentWindow = false
+      this.closeCommentForm()
+    },
+    closeCommentForm() {
+      this.openCommentForm = false
+      this.inputComment = ''
+    },
+    async submitComment() {
+      if(!this.$refs.comment.validate(true)) return
+      const articleId = this.$route.query.articleId
+      const content = this.inputComment
+      const { status } = await this.$store.dispatch('users/createComment', { articleId, content })
+      console.log(status)
+      if(status === 204) {
+        this.closeCommentForm()
+      } else if(status === 401) {
+        this.unauthorized = true
+      }
+    },
+    moveSignInPage() {
+      this.unauthorized = false
+      this.$router.push({ path: '/en/auth/signIn' })
     }
   },
   created() {

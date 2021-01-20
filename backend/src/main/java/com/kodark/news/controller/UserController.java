@@ -286,22 +286,17 @@ public class UserController {
 	 */
 	@PostMapping(path = "/comment")
 	public ResponseEntity<Map<String, Object>> writeComment(@RequestParam("articleId") int articleId,
-			@RequestBody Map<String, Object> body) {
-		Map<String, Object> params = null;
-		try {
-			params = new HashMap<String, Object>();
-			params.put("_switch", "comment_write");
-			params.put("_id", articleId);
-			params.put("_email", body.get("email"));
-			params.put("_content", body.get("content"));
+			@RequestBody Map<String, Object> body, HttpServletRequest request) {
+		
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "insert_comment");
+		params.put("_id", id);
+		params.put("_article_id", articleId);
+		params.put("_content", body.get("content"));
+		usersProcedureService.execuUsersProcedureList(params);
 
-			usersProcedureService.execuCommentMapProcedure(params);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<Map<String, Object>>(HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 	}
 	
 	/**
@@ -568,33 +563,32 @@ public class UserController {
 	}
 	
 	/**
-	 * 감정 표현 선택
-	 * 설명 : 기사글의 감정표현을 선택시 articleTB의 값을 업데이트를 하고 업데이트된 결과값을 반환한다.
-	 * 작성 날짜 : 2021-01-12
-	 * 작성자 : 이종현
-	 */
-	@PutMapping(path = "/emotion")
-	public ResponseEntity<List<Map<String, Object>>> chooseEmotion(
-			@RequestParam("articleId") int articleId, @RequestParam("emotion") String emotion
-			, HttpServletRequest request){
-		List<Map<String, Object>> list = null;
-		Map<String, Object> params = null;
-		
-		int id = (int)request.getAttribute("id");
-		try {
-			list = new ArrayList<Map<String,Object>>();
-			params = new HashMap<String, Object>();
-			params.put("_switch","choose_emotion");
-			params.put("_id", articleId);
-			params.put("_userId", id); //임시 이메일
-			params.put("_emotion", emotion);
-			list = usersProcedureService.execuUsersProcedureList(params);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
-	}
+    * 감정 표현 선택
+    * 설명 : 기사글의 감정표현을 선택시 articleTB의 값을 업데이트를 하고 업데이트된 결과값을 반환한다.
+    * 작성 날짜 : 2021-01-12
+    * 작성자 : 이종현
+    */
+   @PutMapping(path = "/emotion")
+   public ResponseEntity<List<Map<String, Object>>> chooseEmotion(
+         @RequestParam("articleId") int articleId, @RequestParam("emotion") String emotion, HttpServletRequest request){
+      List<Map<String, Object>> list = null;
+      Map<String, Object> params = null;
+      
+      try {
+         list = new ArrayList<Map<String,Object>>();
+         params = new HashMap<String, Object>();
+         params.put("_switch","choose_emotion");
+         params.put("_id", request.getAttribute("id"));
+         params.put("_article_id", articleId);
+//	         params.put("_userId", request.getAttribute("id")); //임시 이메일
+         params.put("_emotion", emotion);
+         list = usersProcedureService.execuUsersProcedureList(params);
+      } catch (Exception e) {
+         e.printStackTrace();
+         return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+      return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
+   }
 
 	/**
 	 * 회원정보
