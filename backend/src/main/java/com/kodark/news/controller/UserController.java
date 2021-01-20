@@ -481,7 +481,7 @@ public class UserController {
 	 */
 	@PostMapping(path = "/subscription")
 	public ResponseEntity<String> subscription(HttpServletRequest request, @RequestBody Map<String, Object> body){
-		int reporterId =Integer.valueOf((String)body.get("id"));//기자아이디
+		int reporterId = (int)body.get("id");//기자아이디
 		int id = (int)request.getAttribute("id");
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "subs");

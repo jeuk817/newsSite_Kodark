@@ -6,6 +6,7 @@
         :color="grayColor"
         v-bind="attrs"
         v-on="on"
+        @click="subscribeReporter"
         >
           <v-icon>person_add</v-icon>
         </v-btn>
@@ -71,17 +72,41 @@
       </template>
       <span>Comments</span>
     </v-tooltip>
+    <v-snackbar
+      v-model="snack.show"
+      top="true"
+      :color="snack.color"
+      :timeout="5000"
+    >
+      {{ snack.msg }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          class="text-capitalize"
+          dark
+          text
+          v-bind="attrs"
+          @click="snack.show = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['commentCount', 'emotions', 'userEmotion'],
+  props: ['commentCount', 'emotions', 'userEmotion', 'reporter'],
   data() {
     return {
       likeCount: '0',
       hateCount: '0',
       grayColor: 'rgb(150, 150, 150)',
+      snack: {
+        show: false,
+        msg: '',
+        color: ''
+      }
     }
   },
   methods: {
@@ -90,6 +115,22 @@ export default {
     },
     chooseEmotion(emotion) {
       this.$emit('chooseEmotion', emotion)
+    },
+    async subscribeReporter() {
+      const id = this.reporter.id
+      const { status } = await this.$store.dispatch('users/subscribeReporter', { id })
+
+      if(status === 201) {
+        this.snack.msg = `You have subscribed to ${this.reporter.name || this.reporter.email} reporter.`
+        this.snack.color = 'success'
+        this.snack.show = true
+      } else if(status === 409) {
+        this.snack.msg = `You have already subscribed to ${this.reporter.name || this.reporter.email} reporter.`
+        this.snack.color = 'info'
+        this.snack.show = true
+      } else if(status === 401) {
+        this.$emit('openUnauthorizedWindow')
+      }
     }
   },
   watch: {

@@ -143,6 +143,20 @@ const actions = {
       return { status: err.response.status }
     }
   },
+
+  async subscribeReporter({}, { id }) {
+    try {
+      const res = await axios.post('/users/subscription', { id }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
 }
 
 export default {

@@ -7,8 +7,10 @@
         :commentCount="comment.commentCount"
         :emotions="emotions"
         :userEmotion="userEmotion"
+        :reporter="reporter"
         @openCommentWindow="openCommentWindow"
         @chooseEmotion="chooseEmotion"
+        @openUnauthorizedWindow="openUnauthorizedWindow"
         />
       </div>
       <div class="articleContentContainer" id="articleContent"></div>
@@ -30,8 +32,10 @@
           :commentCount="comment.commentCount"
           :emotions="emotions"
           :userEmotion="userEmotion"
+          :reporter="reporter"
           @openCommentWindow="openCommentWindow"
           @chooseEmotion="chooseEmotion"
+          @openUnauthorizedWindow="openUnauthorizedWindow"
           />
         </p>
       </div>
@@ -281,28 +285,11 @@ export default {
     openUnauthorizedWindow() {
       this.unauthorized = true
     }
-
-    // async handleScroll(e){
-    //   console.log('!!!!')
-    //   console.log(e)
-    // },
-    // getCurrentScrollPercentage() {
-    //   return (window.scrollY + window.innerHeight) / document.body.clientHeight * 100
-    // }
   },
   created() {
     this.setArticleDetail()
     this.setEmotionData()
-  },
-  // mounted() {
-  //   // window.addEventListener('scroll', this.handleScroll)
-  //   document.getElementById('commentWindow').addEventListener('scroll', this.handleScroll)
-  //   document.getElementsByClassName('v-navigation-drawer__content')[0].addEventListener('scroll', this.handleScroll)
-  // },
-  // beforeDestroy() {
-  //   // window.removeEventListener('scroll', this.handleScroll)
-  //   document.getElementById('commentWindow').removeEventListener('scroll', this.handleScroll)
-  // }
+  }
 }
 </script>
 
