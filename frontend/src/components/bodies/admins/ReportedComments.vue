@@ -13,7 +13,7 @@
         <th class="text-left">
           Comment
         </th>
-        <th class="text-left" style="width: 49px;">
+        <th class="text-left" style="width: 100px;">
           Writer
         </th>
         <th class="text-left">
@@ -31,17 +31,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="user in reportUsers"
-        :key="user.id"
-      >
        <tr
-        v-for="comment in comments"
+        v-for="comment in reportedComments"
         :key="comment.id"
       >
-        <td style="width: 85px;">{{comment.createdAt}}</td>
-        <td class="articleTitle">{{comment.content}}</td>
-        <td style="width: 150px;">{{user.email}}</td>
+        <td style="width: 85px;">{{(comment.createdAt).substring(0,10)}}</td>
+        <td class="articleTitle">{{comment.comment.content}}</td>
+        <td style="width: 180px;">{{comment.user.email}}</td>
         <td>{{comment.reason}}</td>
         <td>{{comment.reason}}</td>
         <td>  
@@ -77,9 +73,6 @@
 export default {
   data: () => ({
     reportedComments: [],
-    reportUsers: [],
-    comments: [],
-
     page: 1,
     checkbox: true,
   }),
@@ -88,7 +81,9 @@ export default {
     const { status, data } = await this.$store.dispatch('admin/getReportedComments', {commentStartedId:6, doneFlag:'F'} );
     if(status === 200) {
       console.log(data)
-     
+      this.reportedComments = data;
+      
+
     }  
     
       
