@@ -128,6 +128,21 @@ const actions = {
       return { status: err.response.status }
     }
   },
+
+  async chooseReputation({}, { commentId, reputation }) {
+    try {
+      const res = await axios.post(`/users/comment/reputation?commentId=${commentId}`, { reputation }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      const chooseReputation = res.data
+      return { status: res.status, chooseReputation }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
 }
 
 export default {

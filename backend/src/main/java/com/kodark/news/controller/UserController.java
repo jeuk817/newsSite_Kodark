@@ -504,23 +504,20 @@ public class UserController {
 	 */
 	@PostMapping(path = "/comment/reputation")
 	public ResponseEntity<List<Map<String, Object>>> newReputation(
-			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body){
+			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body
+			, HttpServletRequest request){
 		List<Map<String, Object>> list = null;
 		Map<String, Object> params = null;
-		try {
-			list = new ArrayList<Map<String,Object>>();
-			params = new HashMap<String, Object>();
-			params.put("_switch", "comment_reputation");
-			params.put("_id", commentId);
-			params.put("_email", body.get("email"));
-			params.put("_reputation", body.get("reputation"));
+		int id = (int)request.getAttribute("id");
 		
-			list = usersProcedureService.execuCommentListProcedure(params);
+		list = new ArrayList<Map<String,Object>>();
+		params = new HashMap<String, Object>();
+		params.put("_switch", "comment_reputation");
+		params.put("_id", id);
+		params.put("_comment_id", commentId);
+		params.put("_reputation", body.get("reputation"));
+		list = usersProcedureService.execuUsersProcedureList(params);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
 	}
 	/**

@@ -72,7 +72,7 @@
             </div>
           </div>
           <div v-for="(comment, i) in comment.commentList" :key="i">
-            <Comment :comment="comment" />
+            <Comment :comment="comment" @openUnauthorizedWindow="openUnauthorizedWindow" />
           </div>
           <template v-if="comment.commentList.length < comment.commentCount">
             <v-btn depressed class="editBtn text-capitalize white--black"
@@ -172,7 +172,7 @@ export default {
     async setArticleDetail() {
       const articleId = this.$route.query.articleId
       const { status, article, links } = await this.$store.dispatch('article/article', { articleId })
-      console.log(article)
+      
       if(status === 200) {
         this.title = article.title
         this.subTitle = article.subTitle
@@ -277,6 +277,9 @@ export default {
         addedCommentList.push(...comments)
         this.comment.commentList = addedCommentList
       }
+    },
+    openUnauthorizedWindow() {
+      this.unauthorized = true
     }
 
     // async handleScroll(e){

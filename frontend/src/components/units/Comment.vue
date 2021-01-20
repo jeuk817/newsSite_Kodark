@@ -44,12 +44,13 @@
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn text icon
-            :color="grayColor"
+            :color="userReputation === 'recommend' ? 'blue' : grayColor"
             v-bind="attrs"
             v-on="on"
+            @click="chooseReputation('recommend')"
             >
               <v-badge
-              :color="grayColor"
+              :color="userReputation === 'recommend' ? 'blue' : grayColor"
               :value="comment.reputation.recommend ? true : false"
               :content="comment.reputation.recommend"
               >
@@ -63,14 +64,15 @@
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn text icon
-            :color="grayColor"
+            :color="userReputation === 'decommend' ? 'red' : grayColor"
             v-bind="attrs"
             v-on="on"
+            @click="chooseReputation('decommend')"
             >
               <v-badge
-              :color="grayColor"
+              :color="userReputation === 'decommend' ? 'red' : grayColor"
               :value="comment.reputation.decommend ? true : false"
-              :content="comment.reputation.decommend "
+              :content="comment.reputation.decommend"
               >
                 <v-icon>thumb_down_alt</v-icon>
               </v-badge>
@@ -103,8 +105,31 @@ export default {
     return {
       defaultProfileImg: "/img/k.svg",
       grayColor: 'rgb(150, 150, 150)',
-      tmp: "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+      userReputation: undefined
     }
+  },
+  methods: {
+    async chooseReputation(reputation) {
+      const commentId = this.comment.id
+      const { status, chooseReputation } = await this.$store.dispatch('users/chooseReputation'
+                                  , { commentId, reputation })
+      
+      if(status === 200) {
+        if(this.userReputation) this.comment.reputation[this.userReputation]--
+        
+        if(chooseReputation.length) {
+          this.userReputation = chooseReputation[0].reputation
+          if(reputation) this.comment.reputation[this.userReputation]++
+        }
+        else this.userReputation = undefined
+      }
+      else if(status === 401) {
+        this.$emit('openUnauthorizedWindow')
+      }
+    }
+  },
+  created() {
+    this.chooseReputation('')
   }
 }
 </script>
