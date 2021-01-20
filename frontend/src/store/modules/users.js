@@ -116,7 +116,18 @@ const actions = {
     } catch(err) {
       return { status: err.response.status }
     }
-  }
+  },
+
+  async chooseEmotion({}, { articleId, emotion }) {
+    try {
+      const res = await axios.put(`/users/emotion?articleId=${articleId}&emotion=${emotion}`)
+      
+      const chooseResult = res.data
+      return { status: res.status, chooseResult }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
 }
 
 export default {

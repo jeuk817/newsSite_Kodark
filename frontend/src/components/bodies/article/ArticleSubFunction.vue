@@ -16,12 +16,13 @@
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
         <v-btn text icon
-        :color="grayColor"
+        :color="userEmotion === 'like' ? 'blue' : grayColor"
         v-bind="attrs"
         v-on="on"
+        @click="chooseEmotion('like')"
         >
           <v-badge
-          :color="grayColor"
+          :color="userEmotion === 'like' ? 'blue' : grayColor"
           :value="likeCount ? true : false"
           :content="likeCount"
           >
@@ -35,12 +36,13 @@
     <v-tooltip bottom>
       <template v-slot:activator="{ on, attrs }">
         <v-btn text icon
-        :color="grayColor"
+        :color="userEmotion === 'hate' ? 'red' : grayColor"
         v-bind="attrs"
         v-on="on"
+        @click="chooseEmotion('hate')"
         >
           <v-badge
-          :color="grayColor"
+          :color="userEmotion === 'hate' ? 'red' : grayColor"
           :value="hateCount ? true : false"
           :content="hateCount"
           >
@@ -74,17 +76,20 @@
 
 <script>
 export default {
-  props: ['commentCount', 'emotions'],
+  props: ['commentCount', 'emotions', 'userEmotion'],
   data() {
     return {
       likeCount: '0',
       hateCount: '0',
-      grayColor: 'rgb(150, 150, 150)'
+      grayColor: 'rgb(150, 150, 150)',
     }
   },
   methods: {
     openCommentWindow() {
       this.$emit('openCommentWindow')
+    },
+    chooseEmotion(emotion) {
+      this.$emit('chooseEmotion', emotion)
     }
   },
   watch: {

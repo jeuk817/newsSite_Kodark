@@ -6,7 +6,9 @@
         <ArticleSubFunction
         :commentCount="comment.commentCount"
         :emotions="emotions"
+        :userEmotion="userEmotion"
         @openCommentWindow="openCommentWindow"
+        @chooseEmotion="chooseEmotion"
         />
       </div>
       <div class="articleContentContainer" id="articleContent"></div>
@@ -27,12 +29,15 @@
           <ArticleSubFunction
           :commentCount="comment.commentCount"
           :emotions="emotions"
+          :userEmotion="userEmotion"
           @openCommentWindow="openCommentWindow"
+          @chooseEmotion="chooseEmotion"
           />
         </p>
       </div>
     </div>
     <v-navigation-drawer
+    id="scroll-target"
     app
     right
     width="450px"
@@ -139,6 +144,7 @@ export default {
       editedAt: '',
       reporter: {},
       emotions: [],
+      userEmotion: undefined,
       comment: {
         commentCount: '0',
         showCommentWindow: false,
@@ -171,13 +177,29 @@ export default {
     },
     async setEmotionData() {
       const articleId = this.$route.query.articleId
-      const { status, emotions, links } = await this.$store.dispatch('article/emotion', { articleId })
+      var { status, emotions, links } = await this.$store.dispatch('article/emotion', { articleId })
 
       this.emotions = emotions
+      var { status, chooseResult } = await this.$store.dispatch('users/chooseEmotion',
+                                        { articleId, emotion: '' })
+
+      if(status === 200) {
+        for(let i = 0; i < chooseResult.length; i++) {
+          if(chooseResult[i].count) {
+            this.userEmotion = chooseResult[i].emotion
+            break;
+          }
+          else this.userEmotion = undefined
+        }
+      }
+
     },
     // 댓글창 열기
-    async openCommentWindow() {
+    openCommentWindow() {
       this.comment.showCommentWindow = true
+      this.setCommentList()
+    },
+    async setCommentList() {
       const articleId = this.$route.query.articleId
       const commentStartId = -1
       const { status, comments } = await this.$store.dispatch('article/getComments', { articleId, commentStartId })
@@ -193,13 +215,14 @@ export default {
     closeCommentForm() {
       this.comment.openCommentForm = false
       this.comment.inputComment = ''
+      this.setCommentList()
     },
     async submitComment() {
       if(!this.$refs.comment.validate(true)) return
       const articleId = this.$route.query.articleId
       const content = this.comment.inputComment
       const { status } = await this.$store.dispatch('users/createComment', { articleId, content })
-      console.log(status)
+      
       if(status === 204) {
         this.closeCommentForm()
       } else if(status === 401) {
@@ -209,7 +232,31 @@ export default {
     moveSignInPage() {
       this.unauthorized = false
       this.$router.push({ path: '/en/auth/signIn' })
-    }
+    },
+    async chooseEmotion(emotion) {
+      const articleId = this.$route.query.articleId
+      const { status, chooseResult } = await this.$store.dispatch('users/chooseEmotion',
+                                        { articleId, emotion })
+
+      if(status === 200) {
+        let newEmotions = this.emotions.map(el => {
+          if(el.emotion === this.userEmotion) el.count--
+          return el
+        })
+        for(let i = 0; i < chooseResult.length; i++) {
+          if(chooseResult[i].count) {
+            this.userEmotion = chooseResult[i].emotion
+            newEmotions[i].count++
+            break;
+          }
+          else this.userEmotion = undefined
+        }
+        this.emotions = newEmotions
+      } else if(status === 401) {
+        this.unauthorized = true
+      }
+    },
+
   },
   created() {
     this.setArticleDetail()

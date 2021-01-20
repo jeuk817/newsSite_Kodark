@@ -568,27 +568,26 @@ public class UserController {
     * 작성 날짜 : 2021-01-12
     * 작성자 : 이종현
     */
-   @PutMapping(path = "/emotion")
-   public ResponseEntity<List<Map<String, Object>>> chooseEmotion(
-         @RequestParam("articleId") int articleId, @RequestParam("emotion") String emotion, HttpServletRequest request){
-      List<Map<String, Object>> list = null;
-      Map<String, Object> params = null;
-      
-      try {
-         list = new ArrayList<Map<String,Object>>();
-         params = new HashMap<String, Object>();
-         params.put("_switch","choose_emotion");
-         params.put("_id", request.getAttribute("id"));
-         params.put("_article_id", articleId);
-//	         params.put("_userId", request.getAttribute("id")); //임시 이메일
-         params.put("_emotion", emotion);
-         list = usersProcedureService.execuUsersProcedureList(params);
-      } catch (Exception e) {
-         e.printStackTrace();
-         return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-      return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
-   }
+	@PutMapping(path = "/emotion")
+//	@PostMapping(path = "/emotion")
+	public ResponseEntity<List<Map<String, Object>>> chooseEmotion(
+	@RequestParam("articleId") int articleId, @RequestParam("emotion") String emotion, HttpServletRequest request){
+		System.out.println("/emotion");
+		int id = (int) request.getAttribute("id"); 
+		
+		List<Map<String, Object>> list = null;
+		Map<String, Object> params = null;
+		      
+		list = new ArrayList<Map<String,Object>>();
+		params = new HashMap<String, Object>();
+		params.put("_switch","choose_emotion");
+		params.put("_id", id);
+		params.put("_article_id", articleId);
+		params.put("_emotion", emotion);
+		list = usersProcedureService.execuUsersProcedureList(params);
+		
+		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
+	}
 
 	/**
 	 * 회원정보
