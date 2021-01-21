@@ -269,17 +269,23 @@ public class ReporterController {
 	 * date : 2021-01-06
 	 */
 	@GetMapping(path = "/article")
-	public ResponseEntity<List<Map<String, Object>>> pubAndWaitArtlcles(@RequestParam("status") String status,
-			HttpServletResponse response) {
+	public ResponseEntity<List<Map<String, Object>>> pubAndWaitArtlcles(
+			@RequestParam("status") String status
+			, HttpServletResponse response
+			, HttpServletRequest request) {
 		List<Map<String, Object>> list = new ArrayList<>();
 		Map<String, Object> container;
 		List<Map<String, Object>> linkList;
 		Map<String, Object> link1;
 		Map<String, Object> link2;
 		Map<String, Object> link3;
-		String _status = status;
-
-		list = reportersProcedureService.getPubAndWaitArtlcles(_status);
+		
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "get_reporter_article");
+		params.put("_id", id);
+		params.put("_status", status);
+		list = reportersProcedureService.execuReportersProcedure(params);
 
 		for (int i = 0; i < list.size(); i++) {
 			container = new HashMap<String, Object>();
@@ -298,7 +304,7 @@ public class ReporterController {
 			link3 = new HashMap<String, Object>();
 
 			link1.put("rel", "editArticleForm");
-			link1.put("href", "/en/reporters/article");
+			link1.put("href", "/en/reporters/article=" + list.get(i).get("id"));
 			link1.put("method ", "get");
 			linkList.add(link1);
 
@@ -323,9 +329,9 @@ public class ReporterController {
 						+ "</reporters/article/statics\"> ;  rel=\"articlestatics\","
 						+ "</en/article?articleId\">; rel=\"article\",");
 
-		if (reportersProcedureService.getPubAndWaitArtlcles(_status).get(1) == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
-		}
+//		if (reportersProcedureService.getPubAndWaitArtlcles(_status).get(1) == null) {
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);// 404
+//		}
 		return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK); // 200
 	}
 	
