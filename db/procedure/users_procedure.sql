@@ -1,7 +1,13 @@
 CREATE DEFINER=`jack`@`localhost` PROCEDURE `users_procedure`(
-   in _switch varchar(20)
+    in _switch varchar(20)
     , in _id int
+    , in _article_id int
+    , in _comment_id int
+    , in _content varchar(2000)
     , in _reporter_id int
+    , in _reputation varchar(20)
+    , in _reason varchar(20)
+    , in _emotion varchar(30)
     , inout _email varchar(50)  
     , inout _pwd varchar(300)
     , inout _nickName varchar(20)
@@ -12,6 +18,7 @@ CREATE DEFINER=`jack`@`localhost` PROCEDURE `users_procedure`(
     , inout _image varchar(200)
     , out _auth char(8)
     , out result_set varchar(10)
+
 )
 begin
 declare emailCheck int;
@@ -19,6 +26,7 @@ declare idCount int;
 declare letterCheck char(1);
 declare tmp_pwd varchar(300);
 declare nickNameCount int;
+declare _emotion_id int;
 
 -- 회원정보 수정(34)--------------------------------------------
    if _switch = 'update_detail' then
@@ -193,4 +201,67 @@ if _switch = 'sub_list' then
 	where u.id = _id;
 end if; 
 
+   -- 26.기자구독      
+if _switch = 'subs' then
+	select count(*) into idCount from subscriber where  user_id = _id and reporter_id = _reporter_id;
+	if idCount > 0 then
+		set result_set = '409';
+	else    
+		insert into subscriber(reporter_id, user_id) values(_reporter_id,_id);
+		set result_set = '201';
+	end if;
+end if;
+
+/* 댓글 입력 */
+if _switch = 'insert_comment' then
+	insert into comment(user_id, article_id, content) values(_id, _article_id, _content);
+end if;
+
+/*감정표현 선택*/
+if _switch = 'choose_emotion' then
+	if _emotion != '' then
+		select id into _emotion_id from emotion where emotion = _emotion;
+
+		select count(*) into idCount from article_emotion
+		where article_id = _article_id and user_id = _id and emotion_id = _emotion_id;
+		delete from article_emotion where article_id = _article_id and user_id = _id;
+		
+		if idCount <= 0 then
+			insert into article_emotion(user_id,article_id,emotion_id) 
+			values(_id, _article_id, _emotion_id);
+		end if;
+	end if;
+    
+	select emotion
+		, (select count(*) from article_emotion 
+			where article_id = _article_id 
+				and emotion_id = id 
+				and user_id = _id
+			) as count
+	from emotion
+	;
+end if;
+
+if _switch = 'comment_reputation' then
+	if _reputation != '' then
+		select count(*) into idCount from comm_reputation
+        where comment_id = _comment_id and user_id = _id and reputation = _reputation;
+        
+		delete from comm_reputation where comment_id = _comment_id and user_id = _id;
+        
+        if idCount <= 0 then
+			insert into comm_reputation(user_id, comment_id, reputation) values(_id, _comment_id, _reputation);
+        end if;
+    end if;
+    
+    select reputation
+	from comm_reputation
+    where comment_id = _comment_id and user_id = _id
+	;
+end if;
+
+if _switch = 'comment_reply' then
+	-- _id, _article_id, _comment_id, _content
+    insert into comment(parent_id, user_id, article_id, content) values(_comment_id, _id, _article_id, _content);
+end if;
 END

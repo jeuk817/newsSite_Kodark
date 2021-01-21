@@ -43,7 +43,7 @@ if _switch = 'comment' then
 		from comment as c
 		left join users as u on c.user_id = u.id
 		left join user_detail as ud on u.id = ud.user_id
-		where c.article_id = _article_id
+		where c.article_id = _article_id and c.parent_id is null
 		order by c.id desc
 		limit 10
 		;
@@ -55,7 +55,7 @@ if _switch = 'comment' then
 		from comment as c
 		left join users as u on c.user_id = u.id
 		left join user_detail as ud on u.id = ud.user_id
-		where c.article_id = _article_id and c.id < _commentId
+		where c.article_id = _article_id and c.id < _commentId and c.parent_id is null
 		order by c.id desc
 		limit 10
 		;
@@ -78,41 +78,53 @@ if _switch = 'article_detail' then
 		left join users on article.reporter_id = users.id
 		left join user_detail on article.reporter_id = user_detail.user_id
         left join comment on article.id = comment.article_id
-	where article.id = _article_id;
+	where article.id = _article_id and comment.parent_id is null
+    ;
 	commit;
-    
+end if;
+  
     /* 기사 감정 데이터
 	   작성자 : 이종현
        수정 : 류제욱
     */
-    elseif _switch = 'article_emotion' then
-		select emotion
-			, (select count(*) from article_emotion where article_id = _id and emotion_id = id) as count
-		from emotion
-		;
-        
+if _switch = 'article_emotion' then
+	select emotion
+		, (select count(*) from article_emotion where article_id = _id and emotion_id = id) as count
+	from emotion
+	;
+ end if;
+ 
     /* 기사 대댓글 데이터
 	   작성자 : 이종현
     */
-    elseif _switch = 'article_comment_reply' then
-		select
-		c.id
-		,u.id as userId
-		,u.email
-		,ud.nick_name as nickName
-		,ud.local
-		, c.content
-		,date_format(c.created_at, '%Y-%m-%d %H:%i:%S') as createdAt
-		,c.del_flag as delFlag 
-		,(select count(reputation) from comm_reputation where reputation = 'recommend' and comment_id = c.id ) as recommend
-		,(select count(reputation) from comm_reputation where reputation = 'decommend'and comment_id = c.id ) as decommend
+if _switch = 'get_comment_reply' then
+	if _commentId = -1 then
+		select c.id,u.id as userId,u.email,ud.nick_name as nickName,ud.local, c.content
+			,date_format(c.created_at, '%Y-%m-%d %H:%i:%S') as createdAt,c.del_flag as delFlag 
+			,(select count(reputation) from comm_reputation where reputation = 'recommend' and comment_id = c.id ) as recommend
+			,(select count(reputation) from comm_reputation where reputation = 'decommend'and comment_id = c.id ) as decommend
 		from comment as c
-		join users as u on c.user_id = u.id
-		join user_detail as ud on u.id = ud.user_id
-	    where c.article_id = _id AND c.parent_id = _commentId
+		left join users as u on c.user_id = u.id
+		left join user_detail as ud on u.id = ud.user_id
+		where c.parent_id = _id
+		order by c.id desc
+		limit 10
 		;
-    end if;
-
+	else
+		select c.id,u.id as userId,u.email,ud.nick_name as nickName,ud.local, c.content
+			,date_format(c.created_at, '%Y-%m-%d %H:%i:%S') as createdAt,c.del_flag as delFlag 
+			,(select count(reputation) from comm_reputation where reputation = 'recommend' and comment_id = c.id ) as recommend
+			,(select count(reputation) from comm_reputation where reputation = 'decommend'and comment_id = c.id ) as decommend
+		from comment as c
+		left join users as u on c.user_id = u.id
+		left join user_detail as ud on u.id = ud.user_id
+		where c.parent_id = _id and c.id < _commentId
+		order by c.id desc
+		limit 10
+		;
+	end if;
+end if;
+	
 -- 핫뉴스(6) -------------------------------------------------------
 	if _switch = 'popular' then
 		if _category = 'all' then
