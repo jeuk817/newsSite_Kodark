@@ -331,22 +331,18 @@ public class UserController {
 	 */
 	@PostMapping(path = "/comment/report")
 	public ResponseEntity<String> commentReport(
-			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body){
-		Map<String, Object> params = null;
-		try {
+			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body
+			, HttpServletRequest request){
 			
-			params = new HashMap<String, Object>();
-			params.put("_switch", "comment_report");
-			params.put("_id", commentId);
-			params.put("_email", body.get("email"));
-			params.put("_reason", body.get("reason"));
-			usersProcedureService.execuCommentMapProcedure(params);
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_switch", "comment_report");
+		params.put("_id", id);
+		params.put("_comment_id", commentId);
+		params.put("_reason", body.get("reason"));
+		usersProcedureService.execuUsersProcedureList(params);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 
 	/**

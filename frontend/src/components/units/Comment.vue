@@ -87,12 +87,46 @@
             :color="grayColor"
             v-bind="attrs"
             v-on="on"
+            @click="reportWindow = !reportWindow"
             >
               <v-icon>report</v-icon>
             </v-btn>
           </template>
           <span>Report</span>
         </v-tooltip>
+
+        <v-dialog
+        v-model="reportWindow"
+        max-width="290"
+        @click:outside="moveRoute"
+        >
+          <v-card>
+            <v-card-title class="headline">Report comment</v-card-title>
+            <v-card-text>
+              <div>Report Inappropriate Comment</div>
+              <div class="reportContainer">
+                <v-checkbox
+                v-for="reason in reportList" :key="reason"
+                class="checkbox" dense v-model="reasons"
+                :label="reason" :value="reason"
+                />
+              </div>
+            </v-card-text>
+            <div>
+            </div>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="red darken-1"
+                text
+                @click="reportComment"
+              >
+                Submit
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
       </div>
       <template v-if="openCommentForm">
         <CommentForm
@@ -142,7 +176,10 @@ export default {
       grayColor: 'rgb(150, 150, 150)',
       userReputation: undefined,
       openCommentForm: false,
-      replies: []
+      replies: [],
+      reportWindow: false,
+      reasons: [],
+      reportList: ['Inflammatory', 'Off Topic', 'Personal Attack', 'Vulgar', 'Spam']
     }
   },
   methods: {
@@ -180,7 +217,7 @@ export default {
         this.closeCommentForm()
         this.setCommentReplies(-1)
       } else if(status === 401) {
-        this.$emit('openUnauthorizedWindow')
+        this.openUnauthorizedWindow()
       }
     },
     async setCommentReplies(commentStartId) {
@@ -200,6 +237,18 @@ export default {
         const addedReplies = this.replies
         addedReplies.push(...commentReplies)
         this.replies = addedReplies
+      }
+    },
+    async reportComment() {
+      const reason = this.reasons.join(', ')
+      const commentId = this.comment.id
+      const { status } = await this.$store.dispatch('users/reportComment', { commentId, reason })
+
+      if(status === 201) {
+        this.reasons = []
+        this.reportWindow = false
+      } else if(status === 401) {
+        this.openUnauthorizedWindow()
       }
     }
   },
@@ -237,4 +286,13 @@ export default {
 .commentReply {
   border-left: 1px solid rgb(215, 215, 215);
 }
+.reportContainer {
+  margin: 5px 0;
+}
+.checkbox {
+  height: 30px;
+  margin: 0;
+  padding: 0;
+}
+
 </style>
