@@ -85,8 +85,19 @@ const actions = {
       const res = await axios.get(`/article/comment?articleId=${articleId}&commentStartId=${commentStartId}`)
       
       const comments = res.data
-      // const links = util.parseLinks(res.headers.links)
       return { status: res.status, comments }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async getCommentReplies({}, { commentId, commentStartId }) {
+    try {
+      console.log('getCommentReplies')
+      const res = await axios.get(`/article/comment/reply?commentId=${commentId}&commentStartId=${commentStartId}`)
+      
+      const commentReplies = res.data
+      return { status: res.status, commentReplies }
     } catch(err) {
       return { status: err.response.status }
     }

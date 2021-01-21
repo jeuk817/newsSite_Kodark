@@ -96,29 +96,21 @@
       </div>
       <template v-if="openCommentForm">
         <CommentForm
+        :targetComment="comment.user.nickName ? `@${comment.user.nickName} ` : `@${comment.user.email} `"
         @submitComment="submitComment"
         @closeCommentForm="closeCommentForm"
         />
       </template>
-      <div v-for="(reply, i) in replies" :key="i">
-        <CommentReply
-        :comment="reply"
-        @openUnauthorizedWindow="openUnauthorizedWindow"
-        @submitComment="submitComment"
-        />
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 import CommentForm from './CommentForm'
-import CommentReply from './CommentReply'
 
 export default {
   components: {
-    CommentForm,
-    CommentReply
+    CommentForm
   },
   props: ['comment'],
   data() {
@@ -147,37 +139,19 @@ export default {
       }
       else if(status === 401) {
         if(reputation)
-          this.openUnauthorizedWindow()
+          this.$emit('openUnauthorizedWindow')
       }
-    },
-    openUnauthorizedWindow() {
-      this.$emit('openUnauthorizedWindow')
     },
     closeCommentForm() {
       this.openCommentForm = false
     },
     async submitComment(content) {
-      const articleId = this.$route.query.articleId
-      const commentId = this.comment.id
-      const { status } = await this.$store.dispatch('users/createCommentReply', { articleId, commentId, content })
-
-      if(status === 204) {
-        this.closeCommentForm()
-        this.setCommentReplies(-1)
-      } else if(status === 401) {
-        this.$emit('openUnauthorizedWindow')
-      }
-    },
-    async setCommentReplies(commentStartId) {
-      const commentId = this.comment.id
-      const { status, commentReplies } = await this.$store.dispatch('article/getCommentReplies', { commentId, commentStartId })
-
-      this.replies = commentReplies
+      this.$emit('submitComment', content)
+      this.closeCommentForm()
     }
   },
   created() {
     this.chooseReputation('')
-    this.setCommentReplies(-1)
   },
 }
 </script>

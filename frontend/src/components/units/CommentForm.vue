@@ -25,13 +25,14 @@
 
 <script>
 export default {
+  props: ['targetComment'],
   data() {
     return {
       commentRules: [
         v => !!v || 'Comment is required',
         v => v.length <= 250 || 'Comment length must be less than 250'
       ],
-      inputComment: ''
+      inputComment: this.targetComment
     }
   },
   methods: {

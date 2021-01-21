@@ -146,52 +146,40 @@ public class ArticleController {
 	 */
 	@GetMapping(path ="/comment/reply")
 	public ResponseEntity<List<Map<String,Object>>> getCommentReply(
-			@RequestParam("articleId") int articleId, @RequestParam("commentStartId") int commentStartId){
+			@RequestParam("commentId") int commentId
+			, @RequestParam("commentStartId") int commentStartId){
 		
-		List<Map<String, Object>> list = null;
-		List<Map<String, Object>> tempList = null;
-		Map<String,Object> params = null;
-		Map<String,Object> map = null;
-		Map<String,Object> temp = null;
-		try {
-			list = new ArrayList<Map<String,Object>>();
-			params = new HashMap<String, Object>();
-			tempList = new ArrayList<Map<String,Object>>();
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("_switch", "get_comment_reply");
+		params.put("_id", commentId);
+		params.put("_commentId", commentStartId);
+		
+		List<Map<String, Object>> list = articleProcedureService.execuArticleProcedure(params);
+		List<Map<String, Object>> commentList = new ArrayList<Map<String,Object>>();
+		for(int i=0; i<list.size(); i++) {
+			Map<String,Object> comment = new HashMap<String, Object>();
+			comment.put("id", list.get(i).get("id"));
 			
-			params.put("_switch", "article_comment_reply");
-			params.put("_id", articleId);
-			params.put("_commentId", commentStartId);
+			Map<String,Object> user = new HashMap<String, Object>();
+			user.put("id", list.get(i).get("userId"));
+			user.put("email", list.get(i).get("email"));
+			user.put("nickName", list.get(i).get("nickName"));
+			user.put("local", list.get(i).get("local"));
+			comment.put("user", user);
 			
-			list = articleProcedureService.execuArticleProcedure(params);
-			for(int i=0; i<list.size(); i++) {
-				map = new HashMap<String, Object>();
-				temp = new HashMap<String, Object>();
-				map.put("user", list.get(i).get("userId"));
-				map.put("email", list.get(i).get("email"));
-				map.put("nickName", list.get(i).get("nickName"));
-				map.put("local", list.get(i).get("local"));
-				
-				temp.put("user", map);
-				temp.put("id", list.get(i).get("id"));
-				temp.put("content", list.get(i).get("content"));
-				temp.put("createdAt", list.get(i).get("createdAt"));
-				temp.put("delFlag", list.get(i).get("delFlag"));
-				tempList.add(temp);
-			}
+			comment.put("content", list.get(i).get("content"));
+			comment.put("createdAt", list.get(i).get("createdAt"));
+			comment.put("delFlag", list.get(i).get("delFlag"));
 			
-			for(int i=0; i<list.size(); i++) {
-				map = new HashMap<String, Object>();
-				temp = new HashMap<String, Object>();
-				
-				map.put("recommend", list.get(i).get("recommend"));
-				map.put("decommend", list.get(i).get("decommend"));
-				temp.put("reputation", map);
-				tempList.add(temp);
-			}
-		} catch (Exception e) {
-			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);//500
+			Map<String,Object> reputation = new HashMap<String, Object>();
+			reputation.put("recommend", list.get(i).get("recommend"));
+			reputation.put("decommend", list.get(i).get("decommend"));
+			comment.put("reputation", reputation);
+			
+			commentList.add(comment);
 		}
-		return new ResponseEntity<List<Map<String,Object>>>(tempList,HttpStatus.OK);//200
+		
+		return new ResponseEntity<List<Map<String,Object>>>(commentList,HttpStatus.OK);//200
 	}
 
 	/**
