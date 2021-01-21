@@ -105,7 +105,6 @@ const actions = {
 
   async createComment({}, { articleId, content }) {
     try {
-      console.log('createComment')
       const res = await axios.post(`/users/comment?articleId=${articleId}`, { content }, {
         headers: {
           'Content-Type': 'application/json'

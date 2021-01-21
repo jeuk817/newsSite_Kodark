@@ -100,12 +100,27 @@
         @closeCommentForm="closeCommentForm"
         />
       </template>
-      <div v-for="(reply, i) in replies" :key="i">
-        <CommentReply
-        :comment="reply"
-        @openUnauthorizedWindow="openUnauthorizedWindow"
-        @submitComment="submitComment"
-        />
+      <div v-if="comment.repliesCount">
+        {{ comment.repliesCount > 1 ? comment.repliesCount + ' Replies' : comment.repliesCount + ' Reply' }} 
+      </div>
+      <div class="commentReply">
+        <div v-for="(reply, i) in replies" :key="i">
+          <CommentReply
+          :comment="reply"
+          @openUnauthorizedWindow="openUnauthorizedWindow"
+          @submitComment="submitComment"
+          />
+        </div>
+
+        <template v-if="replies.length < comment.repliesCount">
+          <v-btn depressed class="editBtn text-capitalize white--black"
+          color="white"
+          width="100%"
+          @click="getMoreReplies"
+          >
+            More replies
+          </v-btn>
+        </template>
       </div>
     </div>
   </div>
@@ -172,7 +187,20 @@ export default {
       const commentId = this.comment.id
       const { status, commentReplies } = await this.$store.dispatch('article/getCommentReplies', { commentId, commentStartId })
 
-      this.replies = commentReplies
+      if(status === 200) {
+        this.replies = commentReplies
+      }
+    },
+    async getMoreReplies() {
+      const commentId = this.comment.id
+      const commentStartId = this.replies[this.replies.length - 1].id
+      const { status, commentReplies } = await this.$store.dispatch('article/getCommentReplies', { commentId, commentStartId })
+
+      if(status === 200) {
+        const addedReplies = this.replies
+        addedReplies.push(...commentReplies)
+        this.replies = addedReplies
+      }
     }
   },
   created() {
@@ -204,5 +232,9 @@ export default {
   width: 250px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+}
+
+.commentReply {
+  border-left: 1px solid rgb(215, 215, 215);
 }
 </style>

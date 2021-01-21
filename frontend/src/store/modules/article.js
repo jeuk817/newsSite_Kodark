@@ -93,7 +93,6 @@ const actions = {
 
   async getCommentReplies({}, { commentId, commentStartId }) {
     try {
-      console.log('getCommentReplies')
       const res = await axios.get(`/article/comment/reply?commentId=${commentId}&commentStartId=${commentStartId}`)
       
       const commentReplies = res.data
