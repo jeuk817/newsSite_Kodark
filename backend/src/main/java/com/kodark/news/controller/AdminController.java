@@ -291,10 +291,13 @@ public class AdminController {
 				map = new HashMap<>();
 				int id = (int) list.get(i).get("id");				
 				int articleId = (int)list.get(i).get("article_id");
+				
+				String createdAt = (String) list.get(i).get("created_at");
+				String formatCreatedAt = createdAt.substring(0, 10);
 				String reason = (String)list.get(i).get("reason");				 				
 				map.put("id",id);
 				map.put("reason", reason);
-				map.put("createdAt", list.get(i).get("created_at"));			
+				map.put("createdAt", formatCreatedAt);			
 				temp.put("id", list.get(i).get("userId"));
 				temp.put("email", list.get(i).get("userEmail"));
 				map.put("user", temp);				
@@ -551,10 +554,12 @@ public class AdminController {
 			@RequestParam("commentStartId") int commentStartId, @RequestParam("doneFlag") String doneFlag){
 		List<Map<String, Object>> list = null;
 		List<Map<String, Object>> listTemp = null;
+		List<Map<String, Object>> linkList = null;
 		Map<String, Object> params = null;
 		Map<String, Object> map = null;
 		try {
 			list = new ArrayList<Map<String,Object>>();
+			linkList = new ArrayList<Map<String,Object>>();
 			listTemp = new ArrayList<Map<String,Object>>();
 			params = new HashMap<String, Object>();
 			params.put("_switch","comment_report_list");
@@ -578,28 +583,41 @@ public class AdminController {
 				params.put("id", list.get(i).get("commentId"));
 				params.put("content", list.get(i).get("content"));
 				params.put("delFlag", list.get(i).get("delFlag"));
-				
 				map.put("comment", params);
+				
+				params = new HashMap<String, Object>();
+				params.put("rel", "blindComment");
+				params.put("href", "admin/report/comment="+commentStartId+"&delFlag=T");
+				params.put("method", "patch");
+				linkList.add(params);
+				
+				params = new HashMap<String, Object>();
+				params.put("rel", "blindComment");
+				params.put("href", "admin/report/comment="+commentStartId+"&delFlag=F");
+				params.put("method", "patch");
+				linkList.add(params);
+				
+				map.put("_links", linkList);
 				listTemp.add(map);	
 			}
 			
-			list = new ArrayList<Map<String,Object>>();
-			map = new HashMap<String, Object>();
-			
-			params = new HashMap<String, Object>();
-			params.put("rel", "blindComment");
-			params.put("href", "admin/report/comment="+commentStartId+"&delFlag=T");
-			params.put("method", "patch");
-			list.add(params);
-			
-			params = new HashMap<String, Object>();
-			params.put("rel", "blindComment");
-			params.put("href", "admin/report/comment="+commentStartId+"&delFlag=F");
-			params.put("method", "patch");
-			list.add(params);
-			
-			map.put("_links", list);
-			listTemp.add(map);
+//			list = new ArrayList<Map<String,Object>>();
+//			map = new HashMap<String, Object>();
+//			
+//			params = new HashMap<String, Object>();
+//			params.put("rel", "blindComment");
+//			params.put("href", "admin/report/comment="+commentStartId+"&delFlag=T");
+//			params.put("method", "patch");
+//			list.add(params);
+//			
+//			params = new HashMap<String, Object>();
+//			params.put("rel", "blindComment");
+//			params.put("href", "admin/report/comment="+commentStartId+"&delFlag=F");
+//			params.put("method", "patch");
+//			list.add(params);
+//			
+//			map.put("_links", list);
+//			listTemp.add(map);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

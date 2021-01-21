@@ -59,7 +59,50 @@ const actions = {
     }catch(err){
       return {status: err.response.status}
     }
+  },
+  async getReportedArticles () {
+    try{
+      const res = await axios.get('/admin/report/article',{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = res.data
+      return {data, status: res.status}
+    }catch(err){
+      return {status: err.response.status}
+    }
+  },
+ 
+  async getReportedComments ({}, {commentStartedId, doneFlag}) {
+    try{
+      const res = await axios.get(`/admin/report/comment?commentStartId=${commentStartedId}&doneFlag=${doneFlag}`,{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = res.data
+      return {data, status: res.status}
+    }catch(err){
+      return {status: err.response.status}
+    }
+  },
+  async getUsers ({}, {startIndex}) {
+    try{
+      const res = await axios.get(`/admin/users?startIndex=${startIndex}`,{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const data = res.data
+      console.log(data)
+      return {data, status: res.status}
+    }catch(err){
+      return {status: err.response.status}
+    }
   }
+
+
 }
 
 export default {

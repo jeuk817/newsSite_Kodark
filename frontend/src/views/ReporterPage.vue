@@ -9,6 +9,9 @@
       <template v-if="currentRoute === 'new-post'">
         <ArticleWriteBody />
       </template>
+      <template v-if="currentRoute === 'article'">
+        <WaitArticleList />
+      </template>
     </div>
   </div>
 </template>
@@ -18,6 +21,7 @@ import MyPageHeader from '../components/headers/MyPageHeader'
 import IntroduceSideBar from '../components/sidebars/IntroduceSideBar'
 import ProfileEditBody from '../components/bodies/ProfileEditBody'
 import ArticleWriteBody from '../components/bodies/reporters/ArticleWriteBody'
+import WaitArticleList from '../components/bodies/reporters/WaitArticleList'
 import { utils } from '../components/mixins/utils'
 
 export default {
@@ -26,7 +30,8 @@ export default {
     MyPageHeader,
     IntroduceSideBar,
     ProfileEditBody,
-    ArticleWriteBody
+    ArticleWriteBody,
+    WaitArticleList
   },
   computed: {
     // side menu
