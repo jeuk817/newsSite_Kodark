@@ -305,23 +305,23 @@ public class UserController {
 	 * 작성자 : 이종현
 	 */
 	@PostMapping(path = "/comment/reply")
-	public ResponseEntity<Map<String, Object>> writeCommentReply(@RequestParam("commentId") int commentId,
-			@RequestBody Map<String, Object> body) {
-		Map<String, Object> params = null;
-		try {
-			params = new HashMap<String, Object>();
-			params.put("_switch", "comment_reply");
-			params.put("_id", commentId);
-			params.put("_email", body.get("email"));
-			params.put("_content", body.get("content"));
+	public ResponseEntity<Map<String, Object>> writeCommentReply(
+			@RequestParam("commentId") int commentId,
+			@RequestParam("articleId") int articleId,
+			@RequestBody Map<String, Object> body,
+			HttpServletRequest request) {
+		int id = (int)request.getAttribute("id");
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_switch", "comment_reply");
+		params.put("_id", id);
+		params.put("_article_id", articleId);
+		params.put("_comment_id", commentId);
+		params.put("_content", body.get("content"));
 
-			usersProcedureService.execuCommentMapProcedure(params);
+		usersProcedureService.execuUsersProcedureList(params);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<Map<String, Object>>(HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 	}
 	/**
 	 * 댓글 신고

@@ -89,26 +89,10 @@
           </template>
         </template>
         <template v-if="comment.openCommentForm">
-          <v-textarea
-          ref="comment"
-          solo
-          name="input-7-4"
-          label="Enter your voice"
-          :rules="comment.commentRules"
-          v-model="comment.inputComment"
-          ></v-textarea>
-          <v-btn depressed class="editBtn text-capitalize white--text"
-          color="indigo"
-          @click="submitComment"
-          >
-            Submit
-          </v-btn>
-          <v-btn depressed class="editBtn text-capitalize white--black"
-          color="white"
-          @click="closeCommentForm"
-          >
-            Cancel
-          </v-btn>
+          <CommentForm
+          @submitComment="submitComment"
+          @closeCommentForm="closeCommentForm"
+          />
         </template>
       </div>
     </v-navigation-drawer>
@@ -141,12 +125,14 @@
 import ArticleTitle from './ArticleTitle'
 import ArticleSubFunction from './ArticleSubFunction'
 import Comment from '../../units/Comment'
+import CommentForm from '../../units/CommentForm'
 
 export default {
   components: {
     ArticleTitle,
     ArticleSubFunction,
-    Comment
+    Comment,
+    CommentForm
   },
   data() {
     return {
@@ -162,12 +148,7 @@ export default {
         commentCount: '0',
         showCommentWindow: false,
         openCommentForm: false,
-        commentList: [],
-        commentRules: [
-          v => !!v || 'Comment is required',
-          v => v.length <= 250 || 'Comment length must be less than 250'
-        ],
-        inputComment: '',
+        commentList: []
       },
       unauthorized: false
     }
@@ -227,13 +208,11 @@ export default {
     },
     closeCommentForm() {
       this.comment.openCommentForm = false
-      this.comment.inputComment = ''
       this.setCommentList()
     },
-    async submitComment() {
-      if(!this.$refs.comment.validate(true)) return
+    async submitComment(content) {
+      // if(!this.$refs.comment.validate(true)) return
       const articleId = this.$route.query.articleId
-      const content = this.comment.inputComment
       const { status } = await this.$store.dispatch('users/createComment', { articleId, content })
       
       if(status === 204) {

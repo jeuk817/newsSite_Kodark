@@ -27,7 +27,7 @@
             :color="grayColor"
             v-bind="attrs"
             v-on="on"
-            @click="openCommentWindow"
+            @click="openCommentForm = !openCommentForm"
             >
               <v-badge
               :color="grayColor"
@@ -38,7 +38,7 @@
               </v-badge>
             </v-btn>
           </template>
-          <span>Replies</span>
+          <span>Reply</span>
         </v-tooltip>
 
         <v-tooltip bottom>
@@ -94,18 +94,30 @@
           <span>Report</span>
         </v-tooltip>
       </div>
+      <template v-if="openCommentForm">
+        <CommentForm
+        @submitComment="submitComment"
+        @closeCommentForm="closeCommentForm"
+        />
+      </template>
     </div>
   </div>
 </template>
 
 <script>
+import CommentForm from './CommentForm'
+
 export default {
+  components: {
+    CommentForm
+  },
   props: ['comment'],
   data() {
     return {
       defaultProfileImg: "/img/k.svg",
       grayColor: 'rgb(150, 150, 150)',
-      userReputation: undefined
+      userReputation: undefined,
+      openCommentForm: false
     }
   },
   methods: {
@@ -124,13 +136,29 @@ export default {
         else this.userReputation = undefined
       }
       else if(status === 401) {
+        if(reputation)
+          this.$emit('openUnauthorizedWindow')
+      }
+    },
+    closeCommentForm() {
+      this.openCommentForm = false
+    },
+    async submitComment(content) {
+      const articleId = this.$route.query.articleId
+      const commentId = this.comment.id
+      const { status } = await this.$store.dispatch('users/createCommentReply', { articleId, commentId, content })
+
+      console.log(status)
+      if(status === 204) {
+        this.closeCommentForm()
+      } else if(status === 401) {
         this.$emit('openUnauthorizedWindow')
       }
     }
   },
   created() {
     this.chooseReputation('')
-  }
+  },
 }
 </script>
 

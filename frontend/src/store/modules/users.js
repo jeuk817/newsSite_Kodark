@@ -157,6 +157,20 @@ const actions = {
       return { status: err.response.status }
     }
   },
+
+  async createCommentReply({}, { articleId, commentId, content }) {
+    try {
+      const res = await axios.post(`/users/comment/reply?articleId=${articleId}&commentId=${commentId}`, { content }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
 }
 
 export default {
