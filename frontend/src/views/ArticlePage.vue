@@ -1,31 +1,22 @@
 <template>
   <div>
     <AppBarArticleHeader />
-    <div class="articleBody">
-      <ArticleTitle /> 
-      article page
-      <HelloWorld />
-      <HelloWorld />
-    </div>
+    <ArticleBody />
   </div>
 </template>
 
 <script>
 import AppBarArticleHeader from '../components/headers/AppBarArticleHeader'
-import ArticleTitle from '../components/bodies/article/ArticleTitle'
-import HelloWorld from '../components/HelloWorld'
+import ArticleBody from '../components/bodies/article/ArticleBody'
 
 export default {
   components: {
     AppBarArticleHeader,
-    ArticleTitle,
-    HelloWorld
+    ArticleBody
   }
 }
 </script>
 
 <style scoped>
-.articleBody {
-  padding-top: 45px;
-}
+
 </style>

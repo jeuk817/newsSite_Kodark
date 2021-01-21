@@ -56,6 +56,53 @@ const actions = {
     }
   },
 
+  async article({}, { articleId }) {
+    try {
+      const res = await axios.get(`/article?articleId=${articleId}`)
+      
+      const article = res.data
+      const links = util.parseLinks(res.headers.links)
+      return { status: res.status, article, links }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async emotion({}, { articleId }) {
+    try {
+      const res = await axios.get(`/article/emotion?articleId=${articleId}`)
+      
+      const emotions = res.data
+      const links = util.parseLinks(res.headers.links)
+      return { status: res.status, emotions, links }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async getComments({}, { articleId, commentStartId }) {
+    try {
+      const res = await axios.get(`/article/comment?articleId=${articleId}&commentStartId=${commentStartId}`)
+      
+      const comments = res.data
+      return { status: res.status, comments }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async getCommentReplies({}, { commentId, commentStartId }) {
+    try {
+      console.log('getCommentReplies')
+      const res = await axios.get(`/article/comment/reply?commentId=${commentId}&commentStartId=${commentStartId}`)
+      
+      const commentReplies = res.data
+      return { status: res.status, commentReplies }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
 }
 
 export default {
