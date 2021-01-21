@@ -25,8 +25,8 @@
         <th class="text-left">
           Blind
         </th>
-        <th class="text-left">
-          Stop
+        <th class="text-left" style="width: 76px;">
+              Stop
         </th>
       </tr>
     </thead>
@@ -48,13 +48,9 @@
           </v-checkbox>
         </td>
          <td>  
-          <v-btn
-          depressed
-          small
-          color="primary"
-          >
-          Mail
-          </v-btn>
+        <span class="material-icons stopBtn">
+          block
+        </span>
         </td>
       </tr>
     </tbody>
@@ -105,5 +101,8 @@ export default {
 }
 .page{
   margin-top: 50px;
+}
+.stopBtn{
+  cursor: pointer;
 }
 </style>

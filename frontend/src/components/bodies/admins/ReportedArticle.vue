@@ -44,14 +44,20 @@
           </v-checkbox>
         </td>
          <td>  
-          <v-btn
+          <!-- <v-btn
           depressed
           small
           color="primary"
           @click="onSuspend"
           >
           Mail
-          </v-btn>
+          </v-btn> -->
+            <span 
+            class="material-icons mailBtn" 
+            style="padding-top: 4px;" 
+            @click="onSuspend">
+              mail_outline
+            </span>
         </td>
       </tr>
     </tbody>
@@ -63,6 +69,7 @@
       :length="6"
     ></v-pagination>
   </div>
+
   <!-- Email Form -->
     <div class="sendMailForm">
       <div class="userEmail">
@@ -193,6 +200,9 @@ export default {
 .btns{
   display: grid;
   grid-template-columns: 4fr 1fr;
+}
+.mailBtn{
+  cursor: pointer;
 }
 .submitBtn{
   justify-self: end;

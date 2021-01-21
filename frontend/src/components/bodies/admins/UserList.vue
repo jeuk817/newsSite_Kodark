@@ -12,8 +12,8 @@
             <th class="text-left">
               E-mail
             </th>
-            <th class="text-left">
-              Suspended
+            <th class="text-left" style="padding-left: 32px;">
+              Stop
             </th>
           </tr>
         </thead>
@@ -25,7 +25,7 @@
             <td>{{ user.id }}</td>
             <td>{{ user.email }}</td>
             <td style="padding-left: 32px">
-              <span class="material-icons stopBtn" @click="onSuspend">stop</span>
+              <span class="material-icons stopBtn" @click="onSuspend">block</span>
             </td>
           </tr>
         </tbody>
