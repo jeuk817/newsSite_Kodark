@@ -87,8 +87,9 @@ declare _emotion_id int;
       select count(*) into idCount from users where  id = _id;   
 
       if idCount > 0 then
-         select nick_name, name, local, DATE_FORMAT(birth, '%Y-%m-%d %H:%i:%S') as birth, gender, image into _nickName, _name,  _local,  _birth, _gender, _image from user_detail where user_id = _id;
-            
+         select nick_name, name, local, DATE_FORMAT(birth, '%Y-%m-%d %H:%i:%S') as birth, gender, image
+         from user_detail where user_id = _id;
+         
          set result_set = '200';
             
       elseif idCount < 0 or idCount = 0 then 
