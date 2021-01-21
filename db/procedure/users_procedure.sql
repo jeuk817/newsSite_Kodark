@@ -269,4 +269,8 @@ if _switch = 'comment_report' then
 	insert into comm_report(user_id, comment_id, reason) values(_id, _comment_id, _reason);
 end if;
 
+if _switch = 'article_report' then
+	insert into article_report(user_id, article_id, reason) values(_id, _article_id, _reason);
+end if;
+
 END

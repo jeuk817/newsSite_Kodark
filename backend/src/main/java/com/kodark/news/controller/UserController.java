@@ -679,6 +679,22 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
 		}
 	}
+	
+	@PostMapping(path = "/article/report")
+	public ResponseEntity<String> articleReport(
+			@RequestParam("articleId") int articleId, @RequestBody Map<String,Object> body
+			, HttpServletRequest request){
+			
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_switch", "article_report");
+		params.put("_id", id);
+		params.put("_article_id", articleId);
+		params.put("_reason", body.get("reason"));
+		usersProcedureService.execuUsersProcedureList(params);
+
+		return new ResponseEntity<String>(HttpStatus.CREATED);
+	}
 
 }
 

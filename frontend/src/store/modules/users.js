@@ -184,6 +184,20 @@ const actions = {
       return { status: err.response.status }
     }
   },
+
+  async reportArticle({}, { articleId, reason }) {
+    try {
+      const res = await axios.post(`/users/article/report?articleId=${articleId}`, { reason }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
 }
 
 export default {
