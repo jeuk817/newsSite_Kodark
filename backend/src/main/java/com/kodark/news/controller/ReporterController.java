@@ -286,7 +286,7 @@ public class ReporterController {
 
 			container.put("id", list.get(i).get("id"));
 			container.put("category", list.get(i).get("category"));
-			container.put("title ", list.get(i).get("title "));
+			container.put("title ", list.get(i).get("title"));
 			container.put("createdAt ", list.get(i).get("createdAt"));
 			container.put("editedAt ", list.get(i).get("editedAt"));
 			container.put("hit", list.get(i).get("hit"));

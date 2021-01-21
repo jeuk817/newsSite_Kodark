@@ -12,8 +12,14 @@
       <template v-if="currentRoute === 'reporters'">
         <ReportList />
       </template>
-      <template v-if="currentRoute === 'article/new'">
+      <template v-if="currentRoute === 'waiting'">
         <WaitArticleList />
+      </template>
+       <template v-if="currentRoute === 'article'">
+        <ReportedArticle />
+      </template>
+      <template v-if="currentRoute === 'comment'">
+        <ReportedComments />
       </template>
     </div>
   </div>
@@ -26,6 +32,8 @@ import CreateReporterForm from '../components/bodies/admins/CreateReporterForm'
 import ReportList from '../components/bodies/admins/ReportList'
 import WaitArticleList from '../components/bodies/admins/WaitArticleList'
 import UserList from '../components/bodies/admins/UserList'
+import ReportedArticle from '../components/bodies/admins/ReportedArticle'
+import ReportedComments from '../components/bodies/admins/ReportedComments'
 import { utils } from '../components/mixins/utils'
 
 export default {
@@ -36,7 +44,9 @@ export default {
     CreateReporterForm,
     ReportList,
     WaitArticleList,
-    UserList
+    UserList,
+    ReportedArticle,
+    ReportedComments
   },
   computed: {
     // side menu

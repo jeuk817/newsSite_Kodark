@@ -1,50 +1,84 @@
 <template>
-  <div class="UserListComponent">
-      <h1 class="title">User List</h1>
-      <v-simple-table
-    >
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th class="text-left">
-              ID
-            </th>
-            <th class="text-left">
-              E-mail
-            </th>
-            <th class="text-left" style="padding-left: 32px;">
-              Stop
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="user in users"
-            :key="user.id"
+   <div class="ReportedArticleComponent">
+  <h1 class="title">Reported Article List</h1>
+  <v-simple-table
+  fixed-header
+  >
+  <template v-slot:default>
+    <thead>
+      <tr>
+        <th class="text-left">
+          Reported At
+        </th>
+        <th class="text-left">
+          Title
+        </th>
+        <th class="text-left" style="width: 49px;">
+          Reporter
+        </th>
+        <th class="text-left">
+          Reason
+        </th>
+        <th class="text-left">
+          Blind
+        </th>
+        <th class="text-left">
+          Send Mail
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="article in reportedArticles"
+        :key="article.id"
+      >
+        <td style="width: 85px;">{{article.createdAt}}</td>
+        <td class="articleTitle"><router-link :to="`/en/article?articleId=${article.id}` ">{{article.article.title}}</router-link></td>
+        <td style="width: 150px;">{{article.reporter.email}}</td>
+        <td>{{article.reason}}</td>
+        <td>  
+          <v-checkbox
+          v-model="checkbox"
+          
           >
-            <td>{{ user.id }}</td>
-            <td>{{ user.email }}</td>
-            <td style="padding-left: 32px">
-              <span class="material-icons stopBtn" @click="onSuspend">block</span>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
-    <div class="text-center paging">
-      <v-pagination
-        v-model="page"
-        :length="6"
-      ></v-pagination>
-    </div>
-    <!-- Email Form -->
+          </v-checkbox>
+        </td>
+         <td>  
+          <!-- <v-btn
+          depressed
+          small
+          color="primary"
+          @click="onSuspend"
+          >
+          Mail
+          </v-btn> -->
+            <span 
+            class="material-icons mailBtn" 
+            style="padding-top: 4px;" 
+            @click="onSuspend">
+              mail_outline
+            </span>
+        </td>
+      </tr>
+    </tbody>
+  </template>
+  </v-simple-table>
+   <div class="text-center page">
+    <v-pagination
+      v-model="page"
+      :length="6"
+    ></v-pagination>
+  </div>
+
+  <!-- Email Form -->
     <div class="sendMailForm">
       <div class="userEmail">
         <!-- <input type="text" value="TO: userEmail" disabled="disabled"> -->
         <v-text-field
-          value="JohnDoe@gmail.com"
+          value="TO: JohnDoe@gmail.com"
           filled
           readonly
+          dense="false"
           height="40px"
           class="email"
         ></v-text-field>
@@ -53,6 +87,7 @@
         <v-select
           :items="items"
           filled
+          dense="false"
           height="25px"
           label="Suspended Reasons" 
           class="reasonSelect"
@@ -93,17 +128,12 @@
 
 <script>
 export default {
- data: () => ({
-      users : [],
-      items: [
-              'Inappropriate comments',
-              'Defamation of others',
-              'Continue writing the same comment',
-            ],
-      page: 1,
-
-    }),
-    methods: {
+  data: () => ({
+    reportedArticles: [],
+    page: 1,
+    checkbox: true,
+  }),
+  methods: {
       onSuspend() {
         const sendMailForm = document.querySelector('.sendMailForm');
         sendMailForm.style.display = 'block';
@@ -112,17 +142,20 @@ export default {
         const sendMailForm = document.querySelector('.sendMailForm');
         sendMailForm.style.display = 'none';
       }
-    },
-    async created () {
+  },
+  async created () {
+    const commentStratId = this.page;
+    const { status, data } = await this.$store.dispatch('admin/getReportedArticles');
+    if(status === 200) {
       console.log('created')
-      const { status, data } = await this.$store.dispatch('admin/getUsers', {startIndex:1} );
-      if(status === 200) {
-        console.log(data)
-        this.users = data;
-      }  
-      if(status === 500){
-        
-      }
+      console.log(data)
+      this.reportedArticles= data
+    }
+    
+      
+    if(status === 500){
+      //에러처리필요
+    }
   }
 }
 </script>
@@ -133,14 +166,13 @@ export default {
   border-bottom: 1px solid black;
   margin-bottom: 50px;
 }
-
-.stopBtn{
-  cursor: pointer;
+.articleTitle a{
+  color: black;
+}
+.page{
+  margin-top: 50px;
 }
 
-.paging{
-  margin: 60px 175px 0 0;
-}
 .sendMailForm{
   display: none;
   margin-top: 30px;
@@ -169,6 +201,9 @@ export default {
   display: grid;
   grid-template-columns: 4fr 1fr;
 }
+.mailBtn{
+  cursor: pointer;
+}
 .submitBtn{
   justify-self: end;
   margin-right: 60px;
@@ -181,6 +216,4 @@ export default {
 .cancleBtn span{
   color: white;
 }
-
-
 </style>
