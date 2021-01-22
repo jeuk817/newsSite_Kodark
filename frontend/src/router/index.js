@@ -47,6 +47,10 @@ const routes = [
     component: ReporterPage
   },
   {
+    path: '/en/reporters/article/detail',
+    component: MyPage
+  },
+  {
     path: '/en/reporters/*',
     component: ReporterPage
   },

@@ -42,11 +42,11 @@ const actions = {
       return {status: err.response.status}
     }
   },
-  async getWaitArticles () {
+  async getArticles () {
     try{
       const res = await axios.get('/admin/article',{
         params: {
-          status: 'wait'
+          status: 'null' // null, publish, blind
         }
       } 
       ,{

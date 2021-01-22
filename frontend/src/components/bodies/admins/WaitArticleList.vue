@@ -9,16 +9,16 @@
     <thead>
       <tr>
         <th class="text-left">
-          Article Title
+          Title
         </th>
         <th class="text-left">
-          Reporter Name
+          Reporter
         </th>
         <th class="text-left">
           Email
         </th>
         <th class="text-left">
-          Article ID
+          ID
         </th>
       </tr>
     </thead>
@@ -28,9 +28,9 @@
         :key="article.id"
       >
         <td class="acticleTitle">
-        <router-link :to="`/en/article?articleId=${article.article.id}` ">
-        <!-- <router-link :to="`${article._link.href}` "> -->
-          {{article.article.title}}
+        <router-link :to="`/en${article._link.href}` ">
+          {{ article.article.title.length < 45 ?
+          article.article.title : article.article.title.substring(0, 45) + '...'}}
         </router-link>
         </td>
         <td>{{article.reporter.name}}</td>
@@ -49,7 +49,7 @@ export default {
     waitArticles: []
   }),
   async created () {
-    const { status, data } = await this.$store.dispatch('admin/getWaitArticles');
+    const { status, data } = await this.$store.dispatch('admin/getArticles');
     if(status === 200) {
       console.log(data)
       this.waitArticles = data;
