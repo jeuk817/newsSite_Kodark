@@ -9,6 +9,7 @@ import ReporterPage from '../views/ReporterPage'
 import SectionPage from '../views/SectionPage'
 import ArticlePage from '../views/ArticlePage'
 import NotFoundPage from '../views/404NotFoundPage'
+import ServerErrorPage from '../views/500ServerErrorPage'
 
 
 Vue.use(VueRouter)
