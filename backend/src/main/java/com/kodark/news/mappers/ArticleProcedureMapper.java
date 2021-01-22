@@ -25,7 +25,7 @@ public interface ArticleProcedureMapper {
 			+ ",#{_article_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
 			+ ",#{_reporter_id, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
 			+ ",#{_category, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String }"
-			+ ",#{_commentId, mode=IN, jdbcType=INTEGER, javaType=java.lang.Integer }"
+			+ ",#{_commentId, mode=INOUT, jdbcType=INTEGER, javaType=java.lang.Integer }"
 			+ ",#{_id, mode=INOUT, jdbcType=INTEGER, javaType=java.lang.Integer }"
 			+ ",#{_title, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"
 			+ ",#{_subTitle, mode=OUT, jdbcType=VARCHAR, javaType=java.lang.String}"

@@ -24,9 +24,11 @@ BEGIN
    declare _dataInt int;
 
    if _switch = 'create_reporter' then
-      insert into  users (email, pwd, auth) values (_email, _pwd, _auth);
-        set @result = (select id from users where email = _email);
-      insert into user_detail (user_id, nick_name, name, local, birth, gender, image) values (@result, _nickName, _name, _local, _birth, _gender, _image );
+		insert into  users (email, pwd, auth) values (_email, _pwd, _auth);
+		set @result = (select id from users where email = _email);
+	
+		insert into user_detail (user_id, nick_name, name, local, birth, gender, image)
+		values (@result, _nickName, _name, _local, _birth, _gender, _image );
         
     elseif _switch = 'navigation' then
       select count(*) into idCount from users where id = _id;

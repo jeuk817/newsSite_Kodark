@@ -101,7 +101,103 @@ const actions = {
     } catch(err) {
       return { status: err.response.status }
     }
-  }
+  },
+
+  async createComment({}, { articleId, content }) {
+    try {
+      const res = await axios.post(`/users/comment?articleId=${articleId}`, { content }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async chooseEmotion({}, { articleId, emotion }) {
+    try {
+      const res = await axios.put(`/users/emotion?articleId=${articleId}&emotion=${emotion}`)
+      
+      const chooseResult = res.data
+      return { status: res.status, chooseResult }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async chooseReputation({}, { commentId, reputation }) {
+    try {
+      const res = await axios.post(`/users/comment/reputation?commentId=${commentId}`, { reputation }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      const chooseReputation = res.data
+      return { status: res.status, chooseReputation }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async subscribeReporter({}, { id }) {
+    try {
+      const res = await axios.post('/users/subscription', { id }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async createCommentReply({}, { articleId, commentId, content }) {
+    try {
+      const res = await axios.post(`/users/comment/reply?articleId=${articleId}&commentId=${commentId}`, { content }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async reportComment({}, { commentId, reason }) {
+    try {
+      const res = await axios.post(`/users/comment/report?commentId=${commentId}`, { reason }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async reportArticle({}, { articleId, reason }) {
+    try {
+      const res = await axios.post(`/users/article/report?articleId=${articleId}`, { reason }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
 }
 
 export default {

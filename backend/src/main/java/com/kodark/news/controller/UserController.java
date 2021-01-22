@@ -286,22 +286,17 @@ public class UserController {
 	 */
 	@PostMapping(path = "/comment")
 	public ResponseEntity<Map<String, Object>> writeComment(@RequestParam("articleId") int articleId,
-			@RequestBody Map<String, Object> body) {
-		Map<String, Object> params = null;
-		try {
-			params = new HashMap<String, Object>();
-			params.put("_switch", "comment_write");
-			params.put("_id", articleId);
-			params.put("_email", body.get("email"));
-			params.put("_content", body.get("content"));
+			@RequestBody Map<String, Object> body, HttpServletRequest request) {
+		
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<>();
+		params.put("_switch", "insert_comment");
+		params.put("_id", id);
+		params.put("_article_id", articleId);
+		params.put("_content", body.get("content"));
+		usersProcedureService.execuUsersProcedureList(params);
 
-			usersProcedureService.execuCommentMapProcedure(params);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<Map<String, Object>>(HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 	}
 	
 	/**
@@ -310,23 +305,23 @@ public class UserController {
 	 * 작성자 : 이종현
 	 */
 	@PostMapping(path = "/comment/reply")
-	public ResponseEntity<Map<String, Object>> writeCommentReply(@RequestParam("commentId") int commentId,
-			@RequestBody Map<String, Object> body) {
-		Map<String, Object> params = null;
-		try {
-			params = new HashMap<String, Object>();
-			params.put("_switch", "comment_reply");
-			params.put("_id", commentId);
-			params.put("_email", body.get("email"));
-			params.put("_content", body.get("content"));
+	public ResponseEntity<Map<String, Object>> writeCommentReply(
+			@RequestParam("commentId") int commentId,
+			@RequestParam("articleId") int articleId,
+			@RequestBody Map<String, Object> body,
+			HttpServletRequest request) {
+		int id = (int)request.getAttribute("id");
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_switch", "comment_reply");
+		params.put("_id", id);
+		params.put("_article_id", articleId);
+		params.put("_comment_id", commentId);
+		params.put("_content", body.get("content"));
 
-			usersProcedureService.execuCommentMapProcedure(params);
+		usersProcedureService.execuUsersProcedureList(params);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<Map<String, Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<Map<String, Object>>(HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.NO_CONTENT);
 	}
 	/**
 	 * 댓글 신고
@@ -336,22 +331,18 @@ public class UserController {
 	 */
 	@PostMapping(path = "/comment/report")
 	public ResponseEntity<String> commentReport(
-			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body){
-		Map<String, Object> params = null;
-		try {
+			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body
+			, HttpServletRequest request){
 			
-			params = new HashMap<String, Object>();
-			params.put("_switch", "comment_report");
-			params.put("_id", commentId);
-			params.put("_email", body.get("email"));
-			params.put("_reason", body.get("reason"));
-			usersProcedureService.execuCommentMapProcedure(params);
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_switch", "comment_report");
+		params.put("_id", id);
+		params.put("_comment_id", commentId);
+		params.put("_reason", body.get("reason"));
+		usersProcedureService.execuUsersProcedureList(params);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 
 	/**
@@ -485,9 +476,9 @@ public class UserController {
 	 * @param : userId
 	 */
 	@PostMapping(path = "/subscription")
-	public ResponseEntity<String> subscription(@RequestBody Map<String, Object> body){
-		int reporterId =Integer.valueOf((String)body.get("id"));//기자아이디
-		int id = 4; //userId httpservletrequest
+	public ResponseEntity<String> subscription(HttpServletRequest request, @RequestBody Map<String, Object> body){
+		int reporterId = (int)body.get("id");//기자아이디
+		int id = (int)request.getAttribute("id");
 		Map<String, Object> params = new HashMap<>();
 		params.put("_switch", "subs");
 		params.put("_id", id);
@@ -509,23 +500,20 @@ public class UserController {
 	 */
 	@PostMapping(path = "/comment/reputation")
 	public ResponseEntity<List<Map<String, Object>>> newReputation(
-			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body){
+			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body
+			, HttpServletRequest request){
 		List<Map<String, Object>> list = null;
 		Map<String, Object> params = null;
-		try {
-			list = new ArrayList<Map<String,Object>>();
-			params = new HashMap<String, Object>();
-			params.put("_switch", "comment_reputation");
-			params.put("_id", commentId);
-			params.put("_email", body.get("email"));
-			params.put("_reputation", body.get("reputation"));
+		int id = (int)request.getAttribute("id");
 		
-			list = usersProcedureService.execuCommentListProcedure(params);
+		list = new ArrayList<Map<String,Object>>();
+		params = new HashMap<String, Object>();
+		params.put("_switch", "comment_reputation");
+		params.put("_id", id);
+		params.put("_comment_id", commentId);
+		params.put("_reputation", body.get("reputation"));
+		list = usersProcedureService.execuUsersProcedureList(params);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
 	}
 	/**
@@ -568,29 +556,29 @@ public class UserController {
 	}
 	
 	/**
-	 * 감정 표현 선택
-	 * 설명 : 기사글의 감정표현을 선택시 articleTB의 값을 업데이트를 하고 업데이트된 결과값을 반환한다.
-	 * 작성 날짜 : 2021-01-12
-	 * 작성자 : 이종현
-	 */
+    * 감정 표현 선택
+    * 설명 : 기사글의 감정표현을 선택시 articleTB의 값을 업데이트를 하고 업데이트된 결과값을 반환한다.
+    * 작성 날짜 : 2021-01-12
+    * 작성자 : 이종현
+    */
 	@PutMapping(path = "/emotion")
+//	@PostMapping(path = "/emotion")
 	public ResponseEntity<List<Map<String, Object>>> chooseEmotion(
-			@RequestParam("articleId") int articleId, @RequestParam("emotion") String emotion){
+	@RequestParam("articleId") int articleId, @RequestParam("emotion") String emotion, HttpServletRequest request){
+		System.out.println("/emotion");
+		int id = (int) request.getAttribute("id"); 
+		
 		List<Map<String, Object>> list = null;
 		Map<String, Object> params = null;
+		      
+		list = new ArrayList<Map<String,Object>>();
+		params = new HashMap<String, Object>();
+		params.put("_switch","choose_emotion");
+		params.put("_id", id);
+		params.put("_article_id", articleId);
+		params.put("_emotion", emotion);
+		list = usersProcedureService.execuUsersProcedureList(params);
 		
-		try {
-			list = new ArrayList<Map<String,Object>>();
-			params = new HashMap<String, Object>();
-			params.put("_switch","choose_emotion");
-			params.put("_id", articleId);
-			params.put("_userId", 3); //임시 이메일
-			params.put("_emotion", emotion);
-			list = usersProcedureService.execuUsersProcedureList(params);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<List<Map<String,Object>>>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
 		return new ResponseEntity<List<Map<String,Object>>>(list,HttpStatus.OK);
 	}
 
@@ -598,46 +586,32 @@ public class UserController {
 	 * 회원정보
 	 * 작성 날짜 : 2021-01-10
 	 * 작성자 : 이푸름
+	 * 수정 : 류제욱 2021-01-22
 	 */
 	
 	@GetMapping(path = "/my-page/detail")
 	public ResponseEntity<Map<String, Object>> myPageDetail(HttpServletResponse response, HttpServletRequest request) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		Map<String, Object> link1;
 		
 		int id = (int)request.getAttribute("id");
-		params.put("_id", id);
-
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_switch", "mypage_detail");
-		usersProcedureService.execuUsersProcedure(params);
-		
-		String NickName= (String) params.get("_nickName");
-		String name= (String) params.get("_name");
-		String local= (String) params.get("_local");
-		String birth = (String) params.get("_birth");
-	
-		String formatBirth = birth.substring(0, 10);
-		String gender= (String) params.get("_gender");
-		String image = (String) params.get("_image");
-//		Date beforeFormatBirth= (Date) params.get("_birth"); 
-//		String pattern = "yyyy-MM-dd";
-//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-//		String birth = simpleDateFormat.format(beforeFormatBirth);
+		params.put("_id", id);
+		List<Map<String,Object>> list = usersProcedureService.execuUsersProcedureList(params);
+		Map<String,Object> detailData = list.get(0);
 		
 		Map<String, Object> result = new HashMap<String, Object>();
-		link1 = new HashMap<String, Object>();
-		link1.put("rel", "editUserDetail");
-		link1.put("href", "/users/detail");
-		link1.put("method ", "put");
+		Map<String, Object> link = new HashMap<String, Object>();
+		link.put("rel", "editUserDetail");
+		link.put("href", "/users/detail");
+		link.put("method ", "put");
 		
-		result.put("nickName", NickName);
-		result.put("name", name);
-		result.put("local", local);
-		result.put("birth", formatBirth);
-		result.put("gender", gender);
-		result.put("image", image);
-		result.put("_link", link1);
-		
+		result.put("nickName", detailData.get("nick_name"));
+		result.put("name", detailData.get("name"));
+		result.put("local", detailData.get("local"));
+		result.put("birth", detailData.get("birth"));
+		result.put("gender", detailData.get("gender"));
+		result.put("image", detailData.get("image"));
+		result.put("_link", link);
 
 		response.setHeader("Links",
 						"</users/my-page>; 						rel=\"myPage\","
@@ -690,6 +664,22 @@ public class UserController {
 		else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
 		}
+	}
+	
+	@PostMapping(path = "/article/report")
+	public ResponseEntity<String> articleReport(
+			@RequestParam("articleId") int articleId, @RequestBody Map<String,Object> body
+			, HttpServletRequest request){
+			
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_switch", "article_report");
+		params.put("_id", id);
+		params.put("_article_id", articleId);
+		params.put("_reason", body.get("reason"));
+		usersProcedureService.execuUsersProcedureList(params);
+
+		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 
 }

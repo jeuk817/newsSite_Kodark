@@ -1,4 +1,4 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reporter_procedure`(
+CREATE DEFINER=`jack`@`localhost` PROCEDURE `reporter_procedure`(
 	in _switch varchar(50)
 	,in _id int
     ,in _article_id int
@@ -7,6 +7,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `reporter_procedure`(
     ,in _title varchar(200)
     ,in _sub_title varchar(500)
     ,in _content varchar(5000)
+    ,in _status varchar(10)
     ,in _main_image_url varchar(200)
     ,in _main_image_source varchar(200)
     ,in _main_image_description varchar(200)
@@ -76,24 +77,45 @@ declare last_article_id int default -1;
     
 	end IF;
     
-	if _switch = 'new_post' then
-		-- 트랜잭션
-		start transaction;
-		insert into article(reporter_id, category_id, title, sub_title, content)
-        values(_reporter_id, _category_id, _title, _sub_title, _content);
-        
-        set last_article_id = last_insert_id();
-        
-        if last_article_id != -1 then
-			insert into image(article_id, image, source, description)
-            values(last_article_id, _main_image_url, _main_image_source, _main_image_description);
-            commit;
-            set result_set = 'success';
-		else
-			rollback;
-            set result_set = 'fail';
-		end if;
-        
+if _switch = 'new_post' then
+	-- 트랜잭션
+	start transaction;
+	insert into article(reporter_id, category_id, title, sub_title, content)
+	values(_reporter_id, _category_id, _title, _sub_title, _content);
+	
+	set last_article_id = last_insert_id();
+	
+	if last_article_id != -1 then
+		insert into image(article_id, image, source, description)
+		values(last_article_id, _main_image_url, _main_image_source, _main_image_description);
+		commit;
+		set result_set = 'success';
+	else
+		rollback;
+		set result_set = 'fail';
 	end if;
+	
+end if;
+
+if _switch = 'get_reporter_article' then
+	if _status !='null' then
+		select
+			article.id, (select category.name where category.id=article.category_id) as category,
+			title, status,  DATE_FORMAT(created_at, '%Y-%m-%d') as createdAt, DATE_FORMAT(edited_at, '%Y-%m-%d') as editedAt, hit
+		from article
+			inner join category on category.id = article.category_id
+		where status =_status and article.reporter_id = _id
+        ;
+      
+    else
+		select
+			article.id, category.name  as category,
+			title, status,  DATE_FORMAT(created_at, '%Y-%m-%d') as createdAt, DATE_FORMAT(edited_at, '%Y-%m-%d') as editedAt, hit
+		from article
+			inner join category on category.id = article.category_id
+        where article.reporter_id = _id
+        ;
+   end if;
+end if;
     
 END

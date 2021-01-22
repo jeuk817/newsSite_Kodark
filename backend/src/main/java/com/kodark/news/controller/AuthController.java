@@ -191,7 +191,7 @@ public class AuthController {
 			@RequestParam(value = "error", required = false) String error, HttpServletResponse response)
 			throws IOException {
 		if (error != null && error.equals("access_denied")) {
-			response.sendRedirect("http://localhost:8081/en/auth/signIn");
+			response.sendRedirect("/en/auth/signIn");
 			return;
 		}
 
@@ -213,7 +213,7 @@ public class AuthController {
 		Cookie jwt = util.makeJwtCookie("jwt", parameter);
 
 		response.addCookie(jwt);
-		response.sendRedirect("http://localhost:8081/en/home");
+		response.sendRedirect("/en/home");
 	}
 
 	/*
@@ -235,7 +235,7 @@ public class AuthController {
 			@RequestParam(value = "error", required = false) String error, HttpServletResponse response)
 			throws IOException {
 		if (error != null && error.equals("access_denied")) {
-			response.sendRedirect("http://localhost:8081/en/auth/signIn");
+			response.sendRedirect("/en/auth/signIn");
 			return;
 		}
 
@@ -260,6 +260,6 @@ public class AuthController {
 		Cookie jwt = util.makeJwtCookie("jwt", parameter);
 
 		response.addCookie(jwt);
-		response.sendRedirect("http://localhost:8081/en/home");
+		response.sendRedirect("/en/home");
 	}
 }

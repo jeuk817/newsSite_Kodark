@@ -21,6 +21,7 @@ public interface ReportersProcedureMapper {
 		+ ",#{_title, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
 		+ ",#{_sub_title, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
 		+ ",#{_content, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
+		+ ",#{_status, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
 		+ ",#{_main_image_url, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
 		+ ",#{_main_image_source, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"
 		+ ",#{_main_image_description, mode=IN, jdbcType=VARCHAR, javaType=java.lang.String}"

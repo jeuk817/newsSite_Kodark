@@ -39,9 +39,9 @@ const actions = {
           'Content-Type': 'application/json'
         }
       })
-      console.log(res.headers.links)
+      
       const links = util.parseLinks(res.headers.links)
-      console.log(links)
+      
       return { status: res.status, links }
     } catch(err) {
       return { status: err.response.status }
