@@ -8,6 +8,8 @@ import AdminPage from '../views/AdminPage'
 import ReporterPage from '../views/ReporterPage'
 import SectionPage from '../views/SectionPage'
 import ArticlePage from '../views/ArticlePage'
+import NotFoundPage from '../views/404NotFoundPage'
+import ServerErrorPage from '../views/500ServerErrorPage'
 
 
 Vue.use(VueRouter)
@@ -46,6 +48,10 @@ const routes = [
     path: '/en/reporters',
     component: ReporterPage
   },
+  // {
+  //   path: '/en/reporters/article/detail',
+  //   component: MyPage
+  // },
   {
     path: '/en/reporters/*',
     component: ReporterPage
@@ -57,6 +63,10 @@ const routes = [
   {
     path: '/en/article',
     component: ArticlePage
+  },
+  {
+    path: '*',
+    component: NotFoundPage
   }
 ]
 
