@@ -6,7 +6,7 @@ CREATE DEFINER=`jack`@`localhost` PROCEDURE `users_procedure`(
     , in _content varchar(2000)
     , in _reporter_id int
     , in _reputation varchar(20)
-    , in _reason varchar(20)
+    , in _reason varchar(200)
     , in _emotion varchar(30)
     , inout _email varchar(50)  
     , inout _pwd varchar(300)
@@ -87,8 +87,9 @@ declare _emotion_id int;
       select count(*) into idCount from users where  id = _id;   
 
       if idCount > 0 then
-         select nick_name, name, local, DATE_FORMAT(birth, '%Y-%m-%d %H:%i:%S') as birth, gender, image into _nickName, _name,  _local,  _birth, _gender, _image from user_detail where user_id = _id;
-            
+         select nick_name, name, local, DATE_FORMAT(birth, '%Y-%m-%d %H:%i:%S') as birth, gender, image
+         from user_detail where user_id = _id;
+         
          set result_set = '200';
             
       elseif idCount < 0 or idCount = 0 then 
@@ -264,4 +265,13 @@ if _switch = 'comment_reply' then
 	-- _id, _article_id, _comment_id, _content
     insert into comment(parent_id, user_id, article_id, content) values(_comment_id, _id, _article_id, _content);
 end if;
+
+if _switch = 'comment_report' then
+	insert into comm_report(user_id, comment_id, reason) values(_id, _comment_id, _reason);
+end if;
+
+if _switch = 'article_report' then
+	insert into article_report(user_id, article_id, reason) values(_id, _article_id, _reason);
+end if;
+
 END

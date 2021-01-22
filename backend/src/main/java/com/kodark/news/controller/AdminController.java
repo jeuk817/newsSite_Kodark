@@ -241,7 +241,6 @@ public class AdminController {
 	 */
 	@PatchMapping(path = "/report/article")
 	public ResponseEntity<Map<String, Object>> articleBlind(@RequestBody Map<String, Object> body){
-		System.out.println("aaa:"+body);
 		Map<String, Object> params = new HashMap<>();
 		int articleId = Integer.valueOf((String)body.get("articleId"));
 		String status = (String)body.get("status");
@@ -356,7 +355,6 @@ public class AdminController {
 		Map<String, Object> params = new HashMap<>();
 		Map<String, Object> maps = new HashMap<>();
 		Map<String, Object> userInfo = new HashMap<>();
-		 System.out.println(status+":"+sId);
 		int id = sId;	
 		params.put("_switch","question_list");
 		params.put("_id", id-1);		
@@ -365,7 +363,6 @@ public class AdminController {
 		
 		list = adminProcedureService.execuAdminProcedure(params);		
 		for(int i=0;i<list.size();i++) {
-			System.out.println("list:"+list.get(i));
 			maps = new HashMap<>();
 			temp = new ArrayList<>();			
 			userInfo = new HashMap<>();
@@ -418,10 +415,8 @@ public class AdminController {
 			params.put("_switch", "suspension");
 			params.put("_input", reason);
 			adminProcedureService.execuAdminProcedure(params);
-			System.out.println("param:"+params);
 			mail.setMailFrom(env.getProperty("email.username"));
 			String email = (String) params.get("_email");
-			System.out.println("email:"+email);
 			mail.setMailTo(email);
 			mail.setMailSubject("Kodark Times 이용정지안내");
 			mail.setMailContent("<h3>reason : </h3>"+reason+"<br><p>Period : "+startDate+" ~ "+endDate+"</p>");

@@ -105,7 +105,6 @@ const actions = {
 
   async createComment({}, { articleId, content }) {
     try {
-      console.log('createComment')
       const res = await axios.post(`/users/comment?articleId=${articleId}`, { content }, {
         headers: {
           'Content-Type': 'application/json'
@@ -161,6 +160,34 @@ const actions = {
   async createCommentReply({}, { articleId, commentId, content }) {
     try {
       const res = await axios.post(`/users/comment/reply?articleId=${articleId}&commentId=${commentId}`, { content }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async reportComment({}, { commentId, reason }) {
+    try {
+      const res = await axios.post(`/users/comment/report?commentId=${commentId}`, { reason }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    } catch(err) {
+      return { status: err.response.status }
+    }
+  },
+
+  async reportArticle({}, { articleId, reason }) {
+    try {
+      const res = await axios.post(`/users/article/report?articleId=${articleId}`, { reason }, {
         headers: {
           'Content-Type': 'application/json'
         }

@@ -72,6 +72,53 @@
       </template>
       <span>Comments</span>
     </v-tooltip>
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn text icon
+        :color="grayColor"
+        v-bind="attrs"
+        v-on="on"
+        @click="reportWindow = !reportWindow"
+        >
+          <v-icon>report</v-icon>
+        </v-btn>
+      </template>
+      <span>Report</span>
+    </v-tooltip>
+
+    <v-dialog
+    v-model="reportWindow"
+    max-width="290"
+    @click:outside="moveRoute"
+    >
+      <v-card>
+        <v-card-title class="headline">Report article</v-card-title>
+        <v-card-text>
+          <div>Report Inappropriate Article</div>
+          <div class="reportContainer">
+            <v-checkbox
+            v-for="reason in reportList" :key="reason"
+            class="checkbox" dense v-model="reasons"
+            :label="reason" :value="reason"
+            />
+          </div>
+        </v-card-text>
+        <div>
+        </div>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="red darken-1"
+            text
+            @click="reportArticle"
+          >
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-snackbar
       v-model="snack.show"
       top="true"
@@ -106,7 +153,10 @@ export default {
         show: false,
         msg: '',
         color: ''
-      }
+      },
+      reportWindow: false,
+      reasons: [],
+      reportList: ['Inflammatory', 'Off Topic', 'Personal Attack', 'Vulgar', 'Spam']
     }
   },
   methods: {
@@ -131,6 +181,21 @@ export default {
       } else if(status === 401) {
         this.$emit('openUnauthorizedWindow')
       }
+    },
+    async reportArticle() {
+      const reason = this.reasons.join(', ')
+      const articleId = this.$route.query.articleId
+      const { status } = await this.$store.dispatch('users/reportArticle', { articleId, reason })
+
+      if(status === 201) {
+        this.reasons = []
+        this.reportWindow = false
+        this.snack.msg = 'This article has been reported.'
+        this.snack.color = 'success'
+        this.snack.show = true
+      } else if(status === 401) {
+        this.$emit('openUnauthorizedWindow')
+      }
     }
   },
   watch: {
@@ -150,9 +215,17 @@ export default {
 
 <style scoped>
 .articleSubFunctionContainer {
-  width: 250px;
+  width: 350px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 }
 
+.reportContainer {
+  margin: 5px 0;
+}
+.checkbox {
+  height: 30px;
+  margin: 0;
+  padding: 0;
+}
 </style>
