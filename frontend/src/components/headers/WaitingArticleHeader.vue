@@ -19,6 +19,12 @@
       </router-link>
     </div>
     <div class="publishBtn">
+      <v-btn depressed class="text-capitalize black--text"
+      color="gray"
+      width="100px"
+      @click="backToList">
+        Back
+      </v-btn>
       <v-btn depressed class="text-capitalize white--text"
       color="indigo"
       width="100px"
@@ -66,7 +72,7 @@ export default {
 
       console.log('status', status)
       if(status === 201) {
-        this.$router.push({ path: '/en/admin/article/waiting' })
+        this.backToList()
       } else if(status === 401) {
         this.unauthorized = true
       }
@@ -75,6 +81,9 @@ export default {
       this.unauthorized = false
       this.$router.push({ path: '/en/auth/signIn' })
     },
+    backToList() {
+      this.$router.push({ path: '/en/admin/article/waiting' })
+    }
   }
 }
 </script>
@@ -118,7 +127,9 @@ export default {
 }
 
 .publishBtn {
-  justify-self: end;
+  display: grid;
+  grid-template-columns: 110px 110px;
+  justify-content: end;
 }
 
 </style>
