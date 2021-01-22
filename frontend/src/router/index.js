@@ -8,6 +8,7 @@ import AdminPage from '../views/AdminPage'
 import ReporterPage from '../views/ReporterPage'
 import SectionPage from '../views/SectionPage'
 import ArticlePage from '../views/ArticlePage'
+import WaitingArticlePage from '../views/WaitingArticlePage'
 import NotFoundPage from '../views/404NotFoundPage'
 
 
@@ -47,10 +48,10 @@ const routes = [
     path: '/en/reporters',
     component: ReporterPage
   },
-  // {
-  //   path: '/en/reporters/article/detail',
-  //   component: MyPage
-  // },
+  {
+    path: '/en/reporters/article/detail',
+    component: WaitingArticlePage
+  },
   {
     path: '/en/reporters/*',
     component: ReporterPage

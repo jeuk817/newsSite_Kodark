@@ -87,6 +87,7 @@ const actions = {
       return {status: err.response.status}
     }
   },
+
   async getUsers ({}, {startIndex}) {
     try{
       const res = await axios.get(`/admin/users?startIndex=${startIndex}`,{
@@ -100,7 +101,17 @@ const actions = {
     }catch(err){
       return {status: err.response.status}
     }
-  }
+  },
+
+  async publishArticle({}, { articleId }) {
+    try{
+      const res = await axios.patch(`/admin/article/publish?articleId=${articleId}`)
+      
+      return { status: res.status }
+    }catch(err){
+      return {status: err.response.status}
+    }
+  },
 
 
 }

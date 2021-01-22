@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -686,6 +687,18 @@ public class AdminController {
 			return new ResponseEntity<Map<String,Object>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<Map<String,Object>>(mapAll,HttpStatus.OK);
+	}
+	
+	@PatchMapping(path = "/article/publish")
+	public ResponseEntity<Map<String, Object>> publishArticle(
+			@RequestParam(name = "articleId")int articleId) {
+		
+		Map<String, Object> params = new HashMap<>(); 
+		params.put("_switch", "publish_article");
+		params.put("_id", articleId);
+		adminProcedureService.execuAdminProcedure(params);
+		
+		return new ResponseEntity<Map<String,Object>>(HttpStatus.CREATED);
 	}
 
 }

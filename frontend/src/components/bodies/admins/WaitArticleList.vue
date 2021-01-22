@@ -29,8 +29,7 @@
       >
         <td class="acticleTitle">
         <router-link :to="`/en${article._link.href}` ">
-          {{ article.article.title.length < 45 ?
-          article.article.title : article.article.title.substring(0, 45) + '...'}}
+          {{ formatedTitle(article.article.title) }}
         </router-link>
         </td>
         <td>{{article.reporter.name}}</td>
@@ -48,6 +47,11 @@ export default {
   data: () => ({
     waitArticles: []
   }),
+  methods: {
+    formatedTitle(title) {
+      return title.length <= 45 ? title : title.substring(0, 45) + '...'
+    }
+  }, 
   async created () {
     const { status, data } = await this.$store.dispatch('admin/getArticles');
     if(status === 200) {
