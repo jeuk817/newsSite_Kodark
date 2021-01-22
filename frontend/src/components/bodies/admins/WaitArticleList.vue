@@ -28,8 +28,8 @@
         :key="article.id"
       >
         <td class="acticleTitle">
-        <!-- <router-link :to="`/en/article?articleId=${article.article.id}` "> -->
-        <router-link :to="`${article._link.href}` ">
+        <router-link :to="`/en/article?articleId=${article.article.id}` ">
+        <!-- <router-link :to="`${article._link.href}` "> -->
           {{article.article.title}}
         </router-link>
         </td>
