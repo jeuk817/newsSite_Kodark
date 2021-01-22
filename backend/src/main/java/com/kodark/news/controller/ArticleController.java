@@ -360,6 +360,7 @@ public class ArticleController {
 				reputation.put("recommend", list.get(i).get("recommend"));
 				reputation.put("decommend", list.get(i).get("decommend"));
 				comment.put("reputation", reputation);
+				comment.put("repliesCount", list.get(i).get("replies_count"));
 //				list.set(i, comment);
 				list2.add(comment);
 				

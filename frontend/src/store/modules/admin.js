@@ -16,7 +16,7 @@ const actions = {
       formData.append('birth', birth)
       formData.append('gender', gender)
       formData.append('image', image)
-      console.log(formData)
+      
       const res = await axios.post('/admin/reporters', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -94,8 +94,8 @@ const actions = {
           'Content-Type': 'application/json'
         }
       })
+      
       const data = res.data
-      console.log(data)
       return {data, status: res.status}
     }catch(err){
       return {status: err.response.status}

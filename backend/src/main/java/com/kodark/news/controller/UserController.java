@@ -331,22 +331,18 @@ public class UserController {
 	 */
 	@PostMapping(path = "/comment/report")
 	public ResponseEntity<String> commentReport(
-			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body){
-		Map<String, Object> params = null;
-		try {
+			@RequestParam("commentId") int commentId, @RequestBody Map<String,Object> body
+			, HttpServletRequest request){
 			
-			params = new HashMap<String, Object>();
-			params.put("_switch", "comment_report");
-			params.put("_id", commentId);
-			params.put("_email", body.get("email"));
-			params.put("_reason", body.get("reason"));
-			usersProcedureService.execuCommentMapProcedure(params);
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_switch", "comment_report");
+		params.put("_id", id);
+		params.put("_comment_id", commentId);
+		params.put("_reason", body.get("reason"));
+		usersProcedureService.execuUsersProcedureList(params);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 
 	/**
@@ -590,46 +586,32 @@ public class UserController {
 	 * 회원정보
 	 * 작성 날짜 : 2021-01-10
 	 * 작성자 : 이푸름
+	 * 수정 : 류제욱 2021-01-22
 	 */
 	
 	@GetMapping(path = "/my-page/detail")
 	public ResponseEntity<Map<String, Object>> myPageDetail(HttpServletResponse response, HttpServletRequest request) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		Map<String, Object> link1;
 		
 		int id = (int)request.getAttribute("id");
-		params.put("_id", id);
-
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("_switch", "mypage_detail");
-		usersProcedureService.execuUsersProcedure(params);
-		
-		String NickName= (String) params.get("_nickName");
-		String name= (String) params.get("_name");
-		String local= (String) params.get("_local");
-		String birth = (String) params.get("_birth");
-	
-		String formatBirth = birth.substring(0, 10);
-		String gender= (String) params.get("_gender");
-		String image = (String) params.get("_image");
-//		Date beforeFormatBirth= (Date) params.get("_birth"); 
-//		String pattern = "yyyy-MM-dd";
-//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-//		String birth = simpleDateFormat.format(beforeFormatBirth);
+		params.put("_id", id);
+		List<Map<String,Object>> list = usersProcedureService.execuUsersProcedureList(params);
+		Map<String,Object> detailData = list.get(0);
 		
 		Map<String, Object> result = new HashMap<String, Object>();
-		link1 = new HashMap<String, Object>();
-		link1.put("rel", "editUserDetail");
-		link1.put("href", "/users/detail");
-		link1.put("method ", "put");
+		Map<String, Object> link = new HashMap<String, Object>();
+		link.put("rel", "editUserDetail");
+		link.put("href", "/users/detail");
+		link.put("method ", "put");
 		
-		result.put("nickName", NickName);
-		result.put("name", name);
-		result.put("local", local);
-		result.put("birth", formatBirth);
-		result.put("gender", gender);
-		result.put("image", image);
-		result.put("_link", link1);
-		
+		result.put("nickName", detailData.get("nick_name"));
+		result.put("name", detailData.get("name"));
+		result.put("local", detailData.get("local"));
+		result.put("birth", detailData.get("birth"));
+		result.put("gender", detailData.get("gender"));
+		result.put("image", detailData.get("image"));
+		result.put("_link", link);
 
 		response.setHeader("Links",
 						"</users/my-page>; 						rel=\"myPage\","
@@ -682,6 +664,22 @@ public class UserController {
 		else {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // 500
 		}
+	}
+	
+	@PostMapping(path = "/article/report")
+	public ResponseEntity<String> articleReport(
+			@RequestParam("articleId") int articleId, @RequestBody Map<String,Object> body
+			, HttpServletRequest request){
+			
+		int id = (int)request.getAttribute("id");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_switch", "article_report");
+		params.put("_id", id);
+		params.put("_article_id", articleId);
+		params.put("_reason", body.get("reason"));
+		usersProcedureService.execuUsersProcedureList(params);
+
+		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 
 }
