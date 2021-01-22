@@ -27,10 +27,15 @@
         v-for="article in waitArticles"
         :key="article.id"
       >
-        <td class="acticleTitle"><router-link :to="`/en/article?articleId=${article.id}` ">{{article.title}}</router-link></td>
-        <td>{{article.name}}</td>
-        <td>{{article.email}}</td>
-        <td>{{article.id}}</td>
+        <td class="acticleTitle">
+        <router-link :to="`/en/article?articleId=${article.article.id}` ">
+        <!-- <router-link :to="`${article._link.href}` "> -->
+          {{article.article.title}}
+        </router-link>
+        </td>
+        <td>{{article.reporter.name}}</td>
+        <td>{{article.reporter.email}}</td>
+        <td>{{article.article.id}}</td>
       </tr>
     </tbody>
   </template>
@@ -46,13 +51,9 @@ export default {
   async created () {
     const { status, data } = await this.$store.dispatch('admin/getWaitArticles');
     if(status === 200) {
-      for(let i=0; i<data.length; i++){
-        const waitArticleItem = new Object();
-        waitArticleItem = Object.assign({},data[i].article,data[i].reporter);
-        this.waitArticles.push(waitArticleItem)
-      }
+      console.log(data)
+      this.waitArticles = data;
     }
-      
     if(status === 404){
       //에러처리필요
     }

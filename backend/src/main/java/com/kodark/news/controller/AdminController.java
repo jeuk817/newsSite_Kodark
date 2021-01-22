@@ -110,21 +110,25 @@ public class AdminController {
 	public ResponseEntity<List<Map<String, Object>>> waitingArticle(@RequestParam("status") String status,
 			HttpServletResponse response) {
 		String _status = status;
+		Map<String, Object> params = null;
 		List<Map<String, Object>> list = new ArrayList<>();
 		Map<String, Object> container;
 		Map<String, Object> reporter;
 		Map<String, Object> article;
 		Map<String, Object> link;
-		list = adminProcedureService.getWaitArticles(_status);
+
+		params = new HashMap<String, Object>();
+		params.put("_switch", "admin_wait_article");
+		params.put("_status", _status);
+		list = adminProcedureService.execuAdminProcedure(params);
 
 		for (int i = 0; i < list.size(); i++) {
 			reporter = new HashMap<>();
 			article = new HashMap<>();
 			container = new HashMap<>();
 			link = new HashMap<>();
-
 			link.put("rel", "waitingArticleDetail");
-			link.put("href", "/admin/article?articleId&status=waiting");
+			link.put("href", "/admin/article="+list.get(i).get("id")+"&status=waiting");
 			link.put("method", "get");
 
 			reporter.put("name", list.get(i).get("name"));
