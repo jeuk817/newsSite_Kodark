@@ -113,6 +113,20 @@ const actions = {
     }
   },
 
+  async sendEmail({}, { email, title, content }) {
+    try{
+      const res = await axios.post('/admin/reporters/email', { email, title, content }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      return { status: res.status }
+    }catch(err){
+      return {status: err.response.status}
+    }
+  },
+
 
 }
 

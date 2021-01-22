@@ -222,16 +222,13 @@ public class AdminController {
 		String email = (String) body.get("email");
 		String title = (String) body.get("title");
 		String content = (String) body.get("content");
+		
 		Mail mail = new Mail();
-		try {
-			mail.setMailFrom(env.getProperty("email.username"));
-			mail.setMailTo(email);
-			mail.setMailSubject(title);
-			mail.setMailContent(content);
-			mailService.sendMail(mail);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 500
-		}
+		mail.setMailFrom(env.getProperty("email.username"));
+		mail.setMailTo(email);
+		mail.setMailSubject(title);
+		mail.setMailContent(content);
+		mailService.sendMail(mail);
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);// 204
 	}
